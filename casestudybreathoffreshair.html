@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breath of Fresh Air — Amorino Toongart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersLight = !window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'light' || (!saved && prefersLight)) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg:           #0e0e0e;
+      --bg-2:         #161616;
+      --bg-3:         #1e1e1e;
+      --text:         #f0ede8;
+      --text-muted:   #8a8680;
+      --accent:       #5b9bd5;
+      --accent-dim:   rgba(91,155,213,0.12);
+      --accent-mid:   rgba(91,155,213,0.35);
+      --border:       rgba(255,255,255,0.07);
+      --radius:       12px;
+      --transition:   0.3s ease;
+
+      /* BOFA palette pulled from the project's own colour system */
+      --bofa-red:     #ea324c;
+      --bofa-amber:   #f2ac42;
+      --bofa-green:   #00b38a;
+    }
+    [data-theme="light"] {
+      --bg:           #f5f2ed;
+      --bg-2:         #ede9e2;
+      --bg-3:         #e4dfd7;
+      --text:         #1a1816;
+      --text-muted:   #6b6560;
+      --border:       rgba(0,0,0,0.08);
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: rgba(14,14,14,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+    [data-theme="light"] .nav { background: rgba(245,242,237,0.85); }
+    .nav__logo {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      opacity: 0.9;
+    }
+    .nav__logo:hover { opacity: 1; }
+    .nav__right { display: flex; align-items: center; gap: 2rem; }
+    .nav__back {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+    .nav__back:hover { color: var(--accent); }
+    .theme-toggle {
+      width: 36px; height: 20px;
+      border-radius: 10px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: background var(--transition);
+    }
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: transform var(--transition), background var(--transition);
+    }
+    [data-theme="light"] .theme-toggle::after { transform: translateX(16px); background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 2.5rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cs-hero__bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #eef6ff 0%, #ffffff 55%, #f0fff8 100%);
+      z-index: 0;
+    }
+    /* Data grid decoration mimicking IEQ heatmap aesthetic */
+    .cs-hero__grid {
+      position: absolute; inset: 0; z-index: 1; opacity: 0.08;
+      background-image:
+        linear-gradient(var(--accent) 1px, transparent 1px),
+        linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    /* Colour blobs echoing the red/amber/green palette */
+    .cs-hero__blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); z-index: 1; pointer-events: none;
+    }
+    .cs-hero__blob--1 { width: 400px; height: 400px; top: 10%; right: 5%; background: rgba(91,155,213,0.3); }
+    .cs-hero__blob--2 { width: 300px; height: 300px; top: 30%; right: 20%; background: rgba(0,179,138,0.2); }
+    .cs-hero__blob--3 { width: 250px; height: 250px; bottom: 20%; left: 10%; background: rgba(234,50,76,0.15); }
+
+    .cs-hero__content { position: relative; z-index: 2; max-width: 900px; color: #1a1816; }
+    .cs-hero__title { color: #1a1816 !important; }
+    .cs-hero__meta { border-top-color: rgba(0,0,0,0.12) !important; }
+    .cs-hero__meta-value { color: #1a1816 !important; }
+    .cs-hero__meta-label { color: #6b6560 !important; }
+    .scroll-indicator { color: #6b6560 !important; }
+    .scroll-indicator__line { background: #6b6560 !important; }
+    .cs-hero__eyebrow {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid var(--accent-mid);
+      border-radius: 20px;
+    }
+    .cs-hero__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .cs-hero__title em { font-style: italic; color: var(--accent); }
+    .cs-hero__meta {
+      display: flex; gap: 2.5rem; flex-wrap: wrap;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .cs-hero__meta-item { display: flex; flex-direction: column; gap: 0.3rem; }
+    .cs-hero__meta-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted);
+    }
+    .cs-hero__meta-value { font-size: 0.95rem; font-weight: 500; }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-indicator {
+      position: absolute; bottom: 2rem; right: 2.5rem; z-index: 2;
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
+    }
+    .scroll-indicator__line {
+      width: 40px; height: 1px; background: var(--text-muted);
+      transform-origin: left; animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine { 0%,100%{transform:scaleX(1)} 50%{transform:scaleX(0.4)} }
+
+    /* ── CASE STUDY BODY ── */
+    .cs-body { max-width: 780px; margin: 0 auto; padding: 6rem 2.5rem; }
+
+    /* Section labels */
+    .cs-section { margin-bottom: 5rem; }
+    .cs-section-label {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem; display: block;
+    }
+    .cs-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700; line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+    .cs-section p { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 1.0rem; line-height: 1.8; }
+    .cs-section p strong { color: var(--text); font-weight: 500; }
+
+    /* ── PROBLEM STATEMENT CALLOUT ── */
+    .cs-problem {
+      background: var(--bg-2);
+      border-left: 3px solid var(--bofa-red);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+    }
+    .cs-problem__quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    /* ── EQUATION CALLOUT ── */
+    .cs-equation {
+      display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-mid);
+      border-radius: var(--radius);
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+    }
+    .cs-equation__term {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--text);
+    }
+    .cs-equation__op { font-size: 1.6rem; color: var(--text-muted); }
+    .cs-equation__result {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* ── STAT GRID ── */
+    .cs-stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 2.5rem 0;
+    }
+    .cs-stat {
+      background: var(--bg-2);
+      padding: 1.75rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .cs-stat__num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--accent); line-height: 1;
+    }
+    .cs-stat__label { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── COLOUR PALETTE SWATCHES ── */
+    .cs-palette {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    .cs-swatch {
+      display: flex; flex-direction: column; gap: 0.5rem; min-width: 100px;
+    }
+    .cs-swatch__block {
+      height: 60px; border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .cs-swatch__label { font-size: 0.72rem; color: var(--text-muted); }
+    .cs-swatch__hex { font-size: 0.78rem; font-weight: 500; }
+
+    /* ── VARIABLE PILLS ── */
+    .cs-pills { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.5rem 0; }
+    .cs-pill {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem; font-weight: 500;
+      border: 1px solid;
+    }
+    .cs-pill--red    { background: rgba(234,50,76,0.1);  border-color: rgba(234,50,76,0.4);  color: #ea324c; }
+    .cs-pill--green  { background: rgba(0,179,138,0.1); border-color: rgba(0,179,138,0.4); color: #00b38a; }
+    .cs-pill--amber  { background: rgba(242,172,66,0.1); border-color: rgba(242,172,66,0.4); color: #f2ac42; }
+    .cs-pill--blue   { background: var(--accent-dim);   border-color: var(--accent-mid);    color: var(--accent); }
+    .cs-pill--dark   { background: var(--bg-3);          border-color: var(--border);        color: var(--text); }
+
+    /* ── TIMELINE / ITERATION STEPS ── */
+    .cs-timeline { margin: 2.5rem 0; display: flex; flex-direction: column; gap: 0; }
+    .cs-step {
+      display: grid; grid-template-columns: 2rem 1fr;
+      gap: 0 1.5rem; position: relative;
+    }
+    .cs-step::before {
+      content: ''; position: absolute;
+      left: 0.9rem; top: 2.5rem; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .cs-step:last-child::before { display: none; }
+    .cs-step__dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--accent-dim); border: 1px solid var(--accent);
+      margin-top: 1.8rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: var(--accent);
+    }
+    .cs-step__body { padding: 1.5rem 0 2rem; }
+    .cs-step__title { font-weight: 500; margin-bottom: 0.4rem; font-size: 0.95rem; }
+    .cs-step__desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── FINDING CARDS ── */
+    .cs-findings { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 600px) { .cs-findings { grid-template-columns: 1fr; } }
+    .cs-finding {
+      background: var(--bg-2); border-radius: var(--radius);
+      padding: 1.5rem; border: 1px solid var(--border);
+    }
+    .cs-finding__icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .cs-finding__title { font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .cs-finding__body { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── PARTICIPANT BREAKDOWN ── */
+    .cs-participants {
+      display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;
+    }
+    .cs-participant-group {
+      flex: 1; min-width: 140px;
+      background: var(--bg-2); border-radius: var(--radius);
+      padding: 1.25rem; text-align: center;
+      border: 1px solid var(--border);
+    }
+    .cs-participant-group__num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 700; color: var(--accent);
+    }
+    .cs-participant-group__label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* ── QUOTE BLOCK ── */
+    .cs-quote {
+      padding: 2rem 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      margin: 2.5rem 0;
+      position: relative;
+    }
+    .cs-quote::before {
+      content: '"';
+      position: absolute; top: -0.5rem; left: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem; color: var(--accent); line-height: 1; opacity: 0.4;
+    }
+    .cs-quote__text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-size: 1.05rem;
+      color: var(--text); line-height: 1.65;
+    }
+    .cs-quote__source { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; }
+
+    /* ── CHANGES LIST ── */
+    .cs-changes { margin: 1.5rem 0; display: flex; flex-direction: column; gap: 0.75rem; }
+    .cs-change {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-2); border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;
+    }
+    .cs-change__icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+    /* ── REFLECTION ── */
+    .cs-reflection {
+      background: var(--bg-2);
+      border-radius: var(--radius);
+      padding: 3rem;
+      margin: 3rem 0;
+      border: 1px solid var(--border);
+    }
+    .cs-reflection h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; margin-bottom: 1rem;
+    }
+    .cs-reflection p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; }
+    .cs-reflection p + p { margin-top: 1rem; }
+
+    /* ── HANDWRITTEN ANNOTATION ── */
+    .cs-annotation {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: var(--accent);
+      transform: rotate(-1.5deg);
+      display: inline-block;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    /* ── NEXT PROJECT NAV ── */
+    .cs-next {
+      padding: 5rem 2.5rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .cs-next__label {
+      font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 1rem; display: block;
+    }
+    .cs-next__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 2rem;
+    }
+    .cs-next__links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      position: relative; overflow: hidden;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
+                  transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    .btn:not(.btn--ghost)::after {
+      content: ''; position: absolute; top: -50%; left: -60%;
+      width: 28%; height: 200%;
+      background: rgba(255,255,255,0.22);
+      transform: skewX(-20deg); transition: left 0.5s ease; pointer-events: none;
+    }
+    .btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 28px rgba(91,155,213,0.3); }
+    .btn:not(.btn--ghost):hover::after { left: 130%; }
+    .btn:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.08s; }
+    .btn--ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-muted);
+    }
+    .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── IMAGE PLACEHOLDER ── */
+    .cs-img-block { margin: 2.5rem 0; }
+    .cs-img-block img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); display: block; }
+    .cs-img-block figcaption { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem; font-style: italic; }
+    .cs-placeholder {
+      width: 100%;
+      background: var(--bg-2);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .cs-placeholder strong { color: var(--text); font-size: 0.9rem; }
+    .cs-placeholder--tall { min-height: 360px; }
+    .cs-placeholder--short { min-height: 240px; }
+    .cs-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.5rem 0; }
+    @media (max-width: 600px) { .cs-img-row { grid-template-columns: 1fr; } }
+
+    /* ── FULL-WIDTH IMAGE WRAPPER ── */
+    .cs-img-full {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      background: var(--bg-3);
+      padding: 1px 0;
+    }
+    .cs-img-full img {
+      width: 100%; max-height: 600px; object-fit: cover; object-position: top;
+    }
+    .cs-img-caption {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+
+    /* ── REVEAL ANIMATION ── */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 768px) {
+      .cs-hero { padding: 0 1.5rem 4rem; }
+      .cs-body { padding: 4rem 1.5rem; }
+      .cs-equation { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .nav { padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav__logo">amorino</a>
+    <div class="nav__right">
+      <a href="index.html#work" class="nav__back">← All Work</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="cs-hero">
+    <div class="cs-hero__bg"></div>
+    <div class="cs-hero__grid"></div>
+    <div class="cs-hero__blob cs-hero__blob--1"></div>
+    <div class="cs-hero__blob cs-hero__blob--2"></div>
+    <div class="cs-hero__blob cs-hero__blob--3"></div>
+
+    <div class="cs-hero__content">
+      <span class="cs-hero__eyebrow">DECO3100 · Data Visualisation · 2025</span>
+      <h1 class="cs-hero__title">
+        Breath of<br />
+        <em>Fresh Air</em>
+      </h1>
+      <p style="color: #6b6560; max-width: 560px; font-size: 1.05rem; line-height: 1.75;">
+        An interactive IEQ dashboard that helps office managers detect ventilation problems
+        before staff ever need to complain.
+      </p>
+      <div class="cs-hero__meta">
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Role</span>
+          <span class="cs-hero__meta-value">UX/UI + Data Vis Designer</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Tools</span>
+          <span class="cs-hero__meta-value">Figma · JavaScript · Plotly.js · CSV</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Duration</span>
+          <span class="cs-hero__meta-value">Semester 1, 2025</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Context</span>
+          <span class="cs-hero__meta-value">University of Sydney · DECO3100</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-indicator__line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- CASE STUDY BODY -->
+  <div class="cs-body">
+
+    <!-- 01 OVERVIEW -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">01 — Overview</span>
+      <h2>What if your office could tell you it was struggling?</h2>
+      <p>
+        Modern buildings track dozens of comfort metrics continuously — temperature, CO₂, airspeed, humidity — yet most office managers only hear about problems <strong>after staff complain</strong>. By then, the discomfort has persisted for hours, productivity has already taken a hit, and whatever caused it has often become harder to fix.
+      </p>
+      <p>
+        Breath of Fresh Air turns raw IEQ (Indoor Environmental Quality) sensor data from the University of Sydney's SAMBA system into a <strong>clear, scannable dashboard</strong> — designed specifically for the non-technical office manager who needs answers at a glance, not a spreadsheet.
+      </p>
+
+      <div class="cs-equation">
+        <span class="cs-equation__term">Healthier Space</span>
+        <span class="cs-equation__op">+</span>
+        <span class="cs-equation__term">Action</span>
+        <span class="cs-equation__op">=</span>
+        <span class="cs-equation__result">"Better" Results</span>
+      </div>
+    </section>
+
+    <!-- DASHBOARD HERO SCREENSHOT -->
+    <div class="cs-img-block reveal">
+      <div class="cs-placeholder cs-placeholder--tall">
+        <strong>Dashboard — hero screenshot</strong>
+        <span>Full view of the finished dashboard in browser — severity score, gauges, zone map, calendar</span>
+        <span style="opacity:0.5;">assets/images/bofa-dashboard.jpg</span>
+      </div>
+      <figcaption>Breath of Fresh Air — final dashboard, single-screen view</figcaption>
+    </div>
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">02 — Problem Statement</span>
+      <h2>The gap between data and decision</h2>
+      <p>
+        The IEQ Lab's SAMBA system captures 10 environmental metrics every <strong>5 minutes</strong> across multiple floors, for a full year. That's an extraordinary volume of data. But without clear visualisation, it's invisible to the people who need it most.
+      </p>
+
+      <div class="cs-problem">
+        <p class="cs-problem__quote">
+          "Although the IEQ Lab's SAMBA system continuously captures airflow, CO₂, and other comfort metrics every five minutes across all office zones, without clear, easy-to-digest visualisations, office managers can't detect under-ventilated areas until staff complain — by which time the problem has persisted, causing discomfort, health risks, and expensive emergency interventions."
+        </p>
+      </div>
+
+      <p>
+        External research backed this up — a 2016 study by Allen et al. found that cognitive performance in better-ventilated spaces was measurably higher: workers in "Green+" environments scored <strong>over 100% better</strong> on cognitive tests than those in conventional offices. The stakes aren't abstract.
+      </p>
+    </section>
+
+    <!-- 03 DATA & INSIGHTS -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">03 — Data & Insights</span>
+      <h2>Finding the signal in the noise</h2>
+      <p>
+        I focused on three zones (48, 49, 50) from the SAMBA dataset — a full year of five-minute readings per zone. After running exploratory analysis in Tableau, five variables emerged as most meaningful for comfort monitoring:
+      </p>
+
+      <div class="cs-pills">
+        <span class="cs-pill cs-pill--red">🌡 Air Temperature (ta)</span>
+        <span class="cs-pill cs-pill--amber">💨 Air Speed (a_s)</span>
+        <span class="cs-pill cs-pill--green">🌿 CO₂ Levels (co2)</span>
+        <span class="cs-pill cs-pill--blue">📊 Predicted Mean Vote (PMV)</span>
+        <span class="cs-pill cs-pill--dark">📅 Date</span>
+      </div>
+
+      <p>
+        Two key correlations shaped the entire dashboard design. First, there's a <strong>clear inverse relationship between CO₂ and airspeed</strong> — when airflow improves, CO₂ drops. Second, <strong>temperature and PMV track closely</strong> — warmer air reliably pushes PMV higher (towards "too warm"). These relationships aren't just interesting; they mean a manager who fixes airflow often fixes multiple metrics at once.
+      </p>
+
+      <div class="cs-stats">
+        <div class="cs-stat">
+          <span class="cs-stat__num">3</span>
+          <span class="cs-stat__label">Building zones analysed (48, 49, 50)</span>
+        </div>
+        <div class="cs-stat">
+          <span class="cs-stat__num">10</span>
+          <span class="cs-stat__label">IEQ metrics captured per reading</span>
+        </div>
+        <div class="cs-stat">
+          <span class="cs-stat__num">5 min</span>
+          <span class="cs-stat__label">Sensor reading frequency</span>
+        </div>
+        <div class="cs-stat">
+          <span class="cs-stat__num">1 yr</span>
+          <span class="cs-stat__label">Full dataset span (2019)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLEAU / DATA EXPLORATION SCREENSHOT -->
+    <div class="cs-img-block reveal">
+      <div class="cs-placeholder cs-placeholder--short">
+        <strong>Tableau exploratory analysis</strong>
+        <span>Screenshot from your Tableau workbook — the CO₂ vs airspeed or temperature vs PMV correlation</span>
+        <span style="opacity:0.5;">assets/images/bofa-tableau.jpg</span>
+      </div>
+      <figcaption>Exploratory analysis in Tableau — finding the CO₂ / airspeed correlation</figcaption>
+    </div>
+
+    <!-- 04 DESIGN DECISIONS -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">04 — Design Decisions</span>
+      <h2>Designing for comprehension, not cleverness</h2>
+      <p>
+        My target user is an <strong>older office manager</strong> — someone who values getting things done, not learning a new interface. Two research-backed principles shaped every choice:
+      </p>
+      <p>
+        <strong>Large fonts, big visuals.</strong> Rello et al. (2016) found comprehension improved significantly at font sizes 18+ — so I leaned into large numbers, bold gauges, and spacious layouts rather than information density.
+      </p>
+      <p>
+        <strong>Familiar contextual cues.</strong> The colour system was directly inspired by the <em>NSW Fire Danger Rating signs</em> — one of the most universally understood severity scales in Australia. Red means bad. Green means good. Nobody needs to learn it.
+      </p>
+
+      <div class="cs-palette">
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#ea324c;"></div>
+          <span class="cs-swatch__label">Alert / Critical</span>
+          <span class="cs-swatch__hex">#ea324c</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#f2ac42;"></div>
+          <span class="cs-swatch__label">Warning / Caution</span>
+          <span class="cs-swatch__hex">#f2ac42</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#00b38a;"></div>
+          <span class="cs-swatch__label">Good / Comfortable</span>
+          <span class="cs-swatch__hex">#00b38a</span>
+        </div>
+      </div>
+
+      <p>
+        The dashboard lives on <strong>a single screen</strong> — no tabs, no drill-down navigation. A severity score gives an at-a-glance number. Gauge charts show the three key metrics. A zone map visualises spatial distribution. A monthly calendar lets managers track trends over time. Everything a manager needs is visible without scrolling.
+      </p>
+    </section>
+
+    <!-- DESIGN DECISIONS — WIREFRAME / SKETCH -->
+    <div class="cs-img-row reveal">
+      <div class="cs-img-block" style="margin:0;">
+        <div class="cs-placeholder cs-placeholder--short">
+          <strong>Early sketch / hand-drawn layout</strong>
+          <span>Your A1 hand-sketched dashboard layout with semicircle gauges, zone dropdown, and CTA</span>
+          <span style="opacity:0.5;">assets/images/bofa-sketch.jpg</span>
+        </div>
+        <figcaption>Early sketch — layout before any code</figcaption>
+      </div>
+      <div class="cs-img-block" style="margin:0;">
+        <div class="cs-placeholder cs-placeholder--short">
+          <strong>Figma wireframe / lo-fi</strong>
+          <span>Figma low-fidelity frames or component structure before building in JS</span>
+          <span style="opacity:0.5;">assets/images/bofa-wireframe.jpg</span>
+        </div>
+        <figcaption>Low fidelity — structure before colour and data</figcaption>
+      </div>
+    </div>
+
+    <!-- 05 ITERATION -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">05 — Iteration</span>
+      <h2>From A1 sketch to A2 dashboard</h2>
+      <p>
+        After A1 feedback, I had a clear brief for what was missing: stronger call-to-action design and clearer interpretation aids. Here's how the design evolved:
+      </p>
+
+      <div class="cs-timeline">
+        <div class="cs-step">
+          <div class="cs-step__dot">①</div>
+          <div class="cs-step__body">
+            <p class="cs-step__title">Early Sketch → Initial Prototype</p>
+            <p class="cs-step__desc">Hand-sketched layout with semicircle gauges for Temperature, CO₂, and Air Speed. Zone dropdown selector, severity score, time/date sliders, and a report/share CTA. Two views: detail panel and building floor map.</p>
+          </div>
+        </div>
+        <div class="cs-step">
+          <div class="cs-step__dot">②</div>
+          <div class="cs-step__body">
+            <p class="cs-step__title">A1 Feedback → Key Changes</p>
+            <p class="cs-step__desc">Added a "Today's Dashboard" status panel with live Current Status summary. Moved the zone map to the main screen. Improved gauge styling using Plotly.js with colour-coded arcs and labelled thresholds.</p>
+          </div>
+        </div>
+        <div class="cs-step">
+          <div class="cs-step__dot">③</div>
+          <div class="cs-step__body">
+            <p class="cs-step__title">Usability Testing → Final Polish</p>
+            <p class="cs-step__desc">Added "ⓘ" tooltip icons across all components. Introduced plain-English labels below gauges ("Comfortable", "Drafty", "Still"). Updated severity score with emoji and colour shifts. Improved spacing, contrast, and calendar interaction.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- A1 vs A2 BEFORE/AFTER COMPARISON -->
+    <div class="cs-img-row reveal">
+      <div class="cs-img-block" style="margin:0;">
+        <div class="cs-placeholder cs-placeholder--short">
+          <strong>A1 — initial prototype</strong>
+          <span>Screenshot of the A1 version before feedback — original gauge layout, no status panel</span>
+          <span style="opacity:0.5;">assets/images/bofa-a1.jpg</span>
+        </div>
+        <figcaption>A1 submission — before feedback iteration</figcaption>
+      </div>
+      <div class="cs-img-block" style="margin:0;">
+        <div class="cs-placeholder cs-placeholder--short">
+          <strong>A2 — final dashboard</strong>
+          <span>Screenshot of the A2 version with status panel, tooltips, and improved gauges added</span>
+          <span style="opacity:0.5;">assets/images/bofa-a2.jpg</span>
+        </div>
+        <figcaption>A2 submission — after iteration and usability testing</figcaption>
+      </div>
+    </div>
+
+    <!-- 06 USABILITY TESTING -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">06 — Usability Testing</span>
+      <h2>Testing with real people, not just peers</h2>
+      <p>
+        Testing ran in two rounds. The first — 3 design students — validated early prototype choices from A1 feedback. The second was more rigorous: 10 participants including <strong>4 non-design adults</strong> representing the actual target audience of office managers.
+      </p>
+
+      <div class="cs-participants">
+        <div class="cs-participant-group">
+          <div class="cs-participant-group__num">4</div>
+          <div class="cs-participant-group__label">Non-design adults (target audience)</div>
+        </div>
+        <div class="cs-participant-group">
+          <div class="cs-participant-group__num">5</div>
+          <div class="cs-participant-group__label">Design students (detailed critique)</div>
+        </div>
+        <div class="cs-participant-group">
+          <div class="cs-participant-group__num">1</div>
+          <div class="cs-participant-group__label">Industry designer</div>
+        </div>
+      </div>
+
+      <p>Each participant completed three tasks:</p>
+      <div class="cs-changes">
+        <div class="cs-change">
+          <span class="cs-change__icon">①</span>
+          Find the latest data on Zone 50 and interpret how it is performing.
+        </div>
+        <div class="cs-change">
+          <span class="cs-change__icon">②</span>
+          Navigate to January using the date slider and explain whether ventilation conditions were improving or worsening.
+        </div>
+        <div class="cs-change">
+          <span class="cs-change__icon">③</span>
+          Use the severity score and gauges to assess Zone 48's comfort level and identify contributing factors.
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTING SESSION PHOTO -->
+    <div class="cs-img-block reveal">
+      <div class="cs-placeholder cs-placeholder--short">
+        <strong>Usability testing session</strong>
+        <span>Photo or screen-recording still from a think-aloud session with a participant</span>
+        <span style="opacity:0.5;">assets/images/bofa-testing.jpg</span>
+      </div>
+      <figcaption>Testing with non-design adults — the target office manager audience</figcaption>
+    </div>
+
+    <!-- 07 FINDINGS -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">07 — Key Findings</span>
+      <h2>What worked, what didn't</h2>
+
+      <div class="cs-findings">
+        <div class="cs-finding">
+          <div class="cs-finding__icon">✅</div>
+          <p class="cs-finding__title">Large numbers landed immediately</p>
+          <p class="cs-finding__body">Even the adult participants grasped the severity score and gauge values without prompting. The single-page layout reduced navigation confusion to zero.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">✅</div>
+          <p class="cs-finding__title">Colour system was universal</p>
+          <p class="cs-finding__body">All participants correctly identified red as "bad" and green as "good" without any instruction — the Fire Danger Rating inspiration paid off.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">⚠️</div>
+          <p class="cs-finding__title">Thresholds weren't obvious</p>
+          <p class="cs-finding__body">Several participants didn't know whether 26°C or 567 ppm CO₂ was "acceptable". The visual was clear; the benchmark wasn't.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">⚠️</div>
+          <p class="cs-finding__title">PMV was unfamiliar jargon</p>
+          <p class="cs-finding__body">Non-design adults consistently paused at PMV. The label alone wasn't enough — context was needed.</p>
+        </div>
+      </div>
+
+      <div class="cs-quote">
+        <p class="cs-quote__text">The colours and smiley face helped, but I didn't know what number was considered too high for CO₂ or Air Speed.</p>
+        <p class="cs-quote__source">— Usability testing participant</p>
+      </div>
+
+      <p>In response, I added tooltip "ⓘ" icons to every metric, plain-English labels under each gauge, and a "Did You Know?" callout in the sidebar that surfaced contextual facts (e.g. "Air speed below 0.1 m/s is considered still — try improving circulation!").</p>
+    </section>
+
+    <!-- 08 REFLECTION -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">08 — Reflection</span>
+      <h2>What I actually learned</h2>
+
+      <div class="cs-reflection">
+        <h3>Designing for non-designers is humbling</h3>
+        <p>
+          The biggest gap wasn't between the data and the interface — it was between <em>my</em> understanding of the data and the user's. I knew what 600 ppm CO₂ meant; my participants didn't. Usability testing made this gap impossible to ignore, and it's the kind of thing you simply cannot catch by testing with design students alone.
+        </p>
+        <p>
+          The Fire Danger Rating insight came early and held up throughout. When you anchor a new interface to something people already trust, you eliminate a whole category of confusion. Context borrowed from the real world is worth more than any custom icon system.
+        </p>
+        <p>
+          I also got more comfortable with Plotly.js than I expected. Working through async data loading, dual-axis graphs, and responsive gauge layouts taught me a lot about how data visualisation libraries actually behave in a browser — which is messier and more specific than the docs suggest.
+        </p>
+      </div>
+
+      <span class="cs-annotation">still think about the colour system for this one →</span>
+    </section>
+
+  </div><!-- /cs-body -->
+
+  <!-- NEXT PROJECT -->
+  <div class="cs-next">
+    <span class="cs-next__label">Keep exploring</span>
+    <h2 class="cs-next__title">See more work</h2>
+    <div class="cs-next__links">
+      <a href="casestudyroamy.html" class="btn">Roamy — Cultural Discovery App</a>
+      <a href="casestudyathlyst.html" class="btn btn--ghost">Athlyst — Olympic Card Trading App</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>© 2026 Amorino Toongart</span>
+    <span>Built by hand in VS Code.</span>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle');
+    toggle.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

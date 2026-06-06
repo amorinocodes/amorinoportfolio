@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roamy — Amorino Toongart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersLight = !window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'light' || (!saved && prefersLight)) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg:           #0e0e0e;
+      --bg-2:         #161616;
+      --bg-3:         #1e1e1e;
+      --text:         #f0ede8;
+      --text-muted:   #8a8680;
+      --accent:       #5b9bd5;
+      --accent-dim:   rgba(91,155,213,0.12);
+      --accent-mid:   rgba(91,155,213,0.35);
+      --border:       rgba(255,255,255,0.07);
+      --radius:       12px;
+      --transition:   0.3s ease;
+
+      /* Roamy project palette — actual brand colors */
+      --roamy-blue:   #4DC1FF;   /* Deep Sky Blue — primary */
+      --roamy-purple: #8452A5;   /* Royal Purple */
+      --roamy-green:  #46BB69;   /* Forest Green */
+      --roamy-grey:   #8C8C8C;   /* Battleship Gray */
+    }
+    [data-theme="light"] {
+      --bg:           #f5f2ed;
+      --bg-2:         #ede9e2;
+      --bg-3:         #e4dfd7;
+      --text:         #1a1816;
+      --text-muted:   #6b6560;
+      --border:       rgba(0,0,0,0.08);
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: rgba(14,14,14,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    [data-theme="light"] .nav { background: rgba(245,242,237,0.85); }
+    .nav__logo {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      opacity: 0.9;
+      color: var(--text);
+    }
+    .nav__logo:hover { opacity: 1; }
+    .nav__right { display: flex; align-items: center; gap: 2rem; }
+    .nav__back {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+    .nav__back:hover { color: var(--roamy-blue); }
+    .theme-toggle {
+      width: 36px; height: 20px;
+      border-radius: 10px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: background var(--transition);
+    }
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: transform var(--transition), background var(--transition);
+    }
+    [data-theme="light"] .theme-toggle::after { transform: translateX(16px); background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 2.5rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cs-hero__bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #0d0620 0%, #1a0a2e 40%, #130525 70%, #0a0d1f 100%);
+      z-index: 0;
+    }
+    .cs-hero__grid {
+      position: absolute; inset: 0; z-index: 1; opacity: 0.06;
+      background-image:
+        linear-gradient(var(--roamy-purple) 1px, transparent 1px),
+        linear-gradient(90deg, var(--roamy-purple) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .cs-hero__blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); z-index: 1; pointer-events: none;
+    }
+    .cs-hero__blob--1 { width: 500px; height: 500px; top: 0%; right: 0%; background: rgba(132,82,165,0.35); }
+    .cs-hero__blob--2 { width: 360px; height: 360px; top: 40%; right: 18%; background: rgba(77,193,255,0.18); }
+    .cs-hero__blob--3 { width: 300px; height: 300px; bottom: 10%; left: 5%; background: rgba(132,82,165,0.22); }
+
+    .cs-hero__content { position: relative; z-index: 2; max-width: 900px; }
+    .cs-hero__eyebrow {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--roamy-blue);
+      margin-bottom: 1.25rem;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid rgba(77,193,255,0.4);
+      border-radius: 20px;
+    }
+    .cs-hero__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .cs-hero__title em { font-style: italic; color: var(--roamy-blue); }
+    .cs-hero__meta {
+      display: flex; gap: 2.5rem; flex-wrap: wrap;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .cs-hero__meta-item { display: flex; flex-direction: column; gap: 0.3rem; }
+    .cs-hero__meta-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted);
+    }
+    .cs-hero__meta-value { font-size: 0.95rem; font-weight: 500; }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-indicator {
+      position: absolute; bottom: 2rem; right: 2.5rem; z-index: 2;
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
+    }
+    .scroll-indicator__line {
+      width: 40px; height: 1px; background: var(--text-muted);
+      transform-origin: left; animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine { 0%,100%{transform:scaleX(1)} 50%{transform:scaleX(0.4)} }
+
+    /* ── CASE STUDY BODY ── */
+    .cs-body { max-width: 780px; margin: 0 auto; padding: 6rem 2.5rem; }
+
+    .cs-section { margin-bottom: 5rem; }
+    .cs-section-label {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--roamy-blue); margin-bottom: 1rem; display: block;
+    }
+    .cs-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700; line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+    .cs-section p { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 1.0rem; line-height: 1.8; }
+    .cs-section p strong { color: var(--text); font-weight: 500; }
+
+    /* ── PROBLEM CALLOUT ── */
+    .cs-problem {
+      background: var(--bg-2);
+      border-left: 3px solid var(--roamy-blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+    }
+    .cs-problem__quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    /* ── EQUATION CALLOUT ── */
+    .cs-equation {
+      display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+      background: rgba(77,193,255,0.08);
+      border: 1px solid rgba(77,193,255,0.3);
+      border-radius: var(--radius);
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+    }
+    .cs-equation__term {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--text);
+    }
+    .cs-equation__op { font-size: 1.6rem; color: var(--text-muted); }
+    .cs-equation__result {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--roamy-blue);
+    }
+
+    /* ── STAT GRID ── */
+    .cs-stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 2.5rem 0;
+    }
+    .cs-stat {
+      background: var(--bg-2);
+      padding: 1.75rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .cs-stat__num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--roamy-blue); line-height: 1;
+    }
+    .cs-stat__label { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── COLOUR PALETTE ── */
+    .cs-palette {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    .cs-swatch {
+      display: flex; flex-direction: column; gap: 0.5rem; min-width: 100px;
+    }
+    .cs-swatch__block {
+      height: 60px; border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .cs-swatch__label { font-size: 0.72rem; color: var(--text-muted); }
+    .cs-swatch__hex { font-size: 0.78rem; font-weight: 500; }
+
+    /* ── PILLS ── */
+    .cs-pills { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.5rem 0; }
+    .cs-pill {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem; font-weight: 500;
+      border: 1px solid;
+    }
+    .cs-pill--coral  { background: rgba(77,193,255,0.1);   border-color: rgba(77,193,255,0.4);   color: #4DC1FF; }
+    .cs-pill--amber  { background: rgba(132,82,165,0.1);  border-color: rgba(132,82,165,0.4);  color: #8452A5; }
+    .cs-pill--teal   { background: rgba(70,187,105,0.1);  border-color: rgba(70,187,105,0.4);  color: #46BB69; }
+    .cs-pill--blue   { background: var(--accent-dim);     border-color: var(--accent-mid);     color: var(--accent); }
+    .cs-pill--dark   { background: var(--bg-3);            border-color: var(--border);         color: var(--text); }
+
+    /* ── TIMELINE ── */
+    .cs-timeline { margin: 2.5rem 0; display: flex; flex-direction: column; gap: 0; }
+    .cs-step {
+      display: grid; grid-template-columns: 2rem 1fr;
+      gap: 0 1.5rem; position: relative;
+    }
+    .cs-step::before {
+      content: ''; position: absolute;
+      left: 0.9rem; top: 2.5rem; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .cs-step:last-child::before { display: none; }
+    .cs-step__dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(77,193,255,0.1); border: 1px solid var(--roamy-blue);
+      margin-top: 1.8rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: var(--roamy-blue);
+    }
+    .cs-step__body { padding: 1.5rem 0 2rem; }
+    .cs-step__title { font-weight: 500; margin-bottom: 0.4rem; font-size: 0.95rem; color: var(--text); }
+    .cs-step__desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── FINDING CARDS ── */
+    .cs-findings { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 600px) { .cs-findings { grid-template-columns: 1fr; } }
+    .cs-finding {
+      background: var(--bg-2); border-radius: var(--radius);
+      padding: 1.5rem; border: 1px solid var(--border);
+    }
+    .cs-finding__icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .cs-finding__title { font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text); }
+    .cs-finding__body { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── PARTICIPANT BREAKDOWN ── */
+    .cs-participants {
+      display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;
+    }
+    .cs-participant-group {
+      flex: 1; min-width: 140px;
+      background: var(--bg-2); border-radius: var(--radius);
+      padding: 1.25rem; text-align: center;
+      border: 1px solid var(--border);
+    }
+    .cs-participant-group__num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 700; color: var(--roamy-blue);
+    }
+    .cs-participant-group__label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* ── QUOTE BLOCK ── */
+    .cs-quote {
+      padding: 2rem 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      margin: 2.5rem 0;
+      position: relative;
+    }
+    .cs-quote::before {
+      content: '"';
+      position: absolute; top: -0.5rem; left: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem; color: var(--roamy-blue); line-height: 1; opacity: 0.4;
+    }
+    .cs-quote__text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-size: 1.05rem;
+      color: var(--text); line-height: 1.65;
+    }
+    .cs-quote__source { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; }
+
+    /* ── OUTCOME NUMBERS ── */
+    .cs-outcomes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2.5rem 0; }
+    .cs-outcome {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.75rem 1.5rem; text-align: center;
+    }
+    .cs-outcome__num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--roamy-blue); line-height: 1;
+      display: block; margin-bottom: 0.5rem;
+    }
+    .cs-outcome__label { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── IMAGE PLACEHOLDER ── */
+    .cs-img-block { margin: 2.5rem 0; }
+    .cs-img-block img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); display: block; }
+    .cs-img-block figcaption { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem; font-style: italic; }
+    .cs-placeholder {
+      width: 100%;
+      background: var(--bg-2);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .cs-placeholder strong { color: var(--text); font-size: 0.9rem; }
+    .cs-placeholder--tall { min-height: 360px; }
+    .cs-placeholder--short { min-height: 240px; }
+    .cs-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.5rem 0; }
+
+    /* ── REFLECTION ── */
+    .cs-reflection {
+      background: var(--bg-2);
+      border-radius: var(--radius);
+      padding: 3rem;
+      margin: 3rem 0;
+      border: 1px solid var(--border);
+    }
+    .cs-reflection h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; margin-bottom: 1rem; color: var(--text);
+    }
+    .cs-reflection p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; }
+    .cs-reflection p + p { margin-top: 1rem; }
+
+    /* ── HANDWRITTEN ANNOTATION ── */
+    .cs-annotation {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: var(--roamy-blue);
+      transform: rotate(-1.5deg);
+      display: inline-block;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    /* ── NEXT PROJECT ── */
+    .cs-next {
+      padding: 5rem 2.5rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .cs-next__label {
+      font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 1rem; display: block;
+    }
+    .cs-next__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 2rem;
+    }
+    .cs-next__links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      position: relative; overflow: hidden;
+      background: var(--roamy-blue);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
+                  transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    .btn:not(.btn--ghost)::after {
+      content: ''; position: absolute; top: -50%; left: -60%;
+      width: 28%; height: 200%;
+      background: rgba(255,255,255,0.22);
+      transform: skewX(-20deg); transition: left 0.5s ease; pointer-events: none;
+    }
+    .btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 28px rgba(77,193,255,0.3); }
+    .btn:not(.btn--ghost):hover::after { left: 130%; }
+    .btn:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.08s; }
+    .btn--ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-muted);
+    }
+    .btn--ghost:hover { border-color: var(--roamy-blue); color: var(--roamy-blue); }
+
+    /* ── FOOTER ── */
+    .footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+
+    /* ── VIDEO EMBED ── */
+    .cs-video-wrap {
+      margin: 2.5rem 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      position: relative;
+    }
+    .cs-video-wrap video {
+      width: 100%;
+      display: block;
+      max-height: 520px;
+      object-fit: cover;
+    }
+
+    /* ── RECOGNITION / AWARDS ── */
+    .cs-recognition {
+      margin: 4rem 0 0;
+      padding: 3rem;
+      background: linear-gradient(135deg, rgba(77,193,255,0.06) 0%, rgba(132,82,165,0.06) 100%);
+      border: 1px solid rgba(77,193,255,0.2);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .cs-recognition__eyebrow {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--roamy-blue); margin-bottom: 1rem; display: block;
+    }
+    .cs-recognition h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700; line-height: 1.2;
+      margin-bottom: 1rem; color: var(--text);
+    }
+    .cs-recognition p {
+      color: var(--text-muted); font-size: 1rem; line-height: 1.8;
+      max-width: 580px; margin: 0 auto 2.5rem;
+    }
+    .cs-badges {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .cs-badge {
+      display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+      padding: 1.5rem 2rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      min-width: 160px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease;
+    }
+    .cs-badge:hover { transform: translateY(-4px); border-color: var(--roamy-blue); }
+    .cs-badge__icon { font-size: 2.5rem; line-height: 1; }
+    .cs-badge__title { font-size: 0.8rem; font-weight: 600; color: var(--text); text-align: center; line-height: 1.3; }
+    .cs-badge__sub { font-size: 0.7rem; color: var(--text-muted); text-align: center; }
+    .cs-trophy {
+      font-size: 5rem; line-height: 1;
+      display: block; margin: 0 auto 1rem;
+      animation: trophy-bob 3s ease-in-out infinite;
+    }
+    @keyframes trophy-bob {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50%       { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 768px) {
+      .cs-hero { padding: 0 1.5rem 4rem; }
+      .cs-body { padding: 4rem 1.5rem; }
+      .cs-equation { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .cs-img-row { grid-template-columns: 1fr; }
+      .nav { padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav__logo">amorino</a>
+    <div class="nav__right">
+      <a href="index.html#work" class="nav__back">← All Work</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="cs-hero">
+    <div class="cs-hero__bg"></div>
+    <div class="cs-hero__grid"></div>
+    <div class="cs-hero__blob cs-hero__blob--1"></div>
+    <div class="cs-hero__blob cs-hero__blob--2"></div>
+    <div class="cs-hero__blob cs-hero__blob--3"></div>
+
+    <div class="cs-hero__content">
+      <span class="cs-hero__eyebrow">DECO3200 · Mobile App · UX/UI Design</span>
+      <h1 class="cs-hero__title">
+        Roamy —<br />
+        <em>Cultural Discovery</em>
+      </h1>
+      <p style="color: var(--text-muted); max-width: 580px; font-size: 1.05rem; line-height: 1.75;">
+        A cultural discovery app connecting young Australian travellers with authentic,
+        locally-hosted experiences across Asia — like having a friend in every city.
+      </p>
+      <div class="cs-hero__meta">
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Role</span>
+          <span class="cs-hero__meta-value">UX Designer & Ideation Lead</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Team</span>
+          <span class="cs-hero__meta-value">Amorino, Kittu, Tyler, Ruben</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Tools</span>
+          <span class="cs-hero__meta-value">Figma · FigJam</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Context</span>
+          <span class="cs-hero__meta-value">DECO3200 · University of Sydney</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-indicator__line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- CASE STUDY BODY -->
+  <div class="cs-body">
+
+    <!-- 01 OVERVIEW -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">01 — Overview</span>
+      <h2>What if travel felt more like being a local?</h2>
+      <p>
+        Young Australians are one of the fastest-growing traveller demographics in Asia — but most end up
+        in the same tourist traps, disconnected from the communities they're visiting. Not because they don't
+        want authentic experiences, but because <strong>no platform exists to connect them</strong> with the
+        people who can actually provide them.
+      </p>
+      <p>
+        Roamy is a marketplace where local hosts offer personal, guided experiences — from a tea ceremony
+        in Kyoto to a street food tour in Bangkok. Think Airbnb Experiences, but designed around the actual
+        human on the other side rather than reviews and throughput.
+      </p>
+
+      <div class="cs-equation">
+        <span class="cs-equation__term">Traveller curiosity</span>
+        <span class="cs-equation__op">+</span>
+        <span class="cs-equation__term">Local trust</span>
+        <span class="cs-equation__op">=</span>
+        <span class="cs-equation__result">Genuine cultural exchange</span>
+      </div>
+    </section>
+
+    <!-- HERO IMAGE PLACEHOLDER -->
+    <div class="cs-img-block reveal">
+      <div class="cs-placeholder cs-placeholder--tall">
+        <strong>Roamy — Hero Mockup</strong>
+        <span>Add your best app mockup or dashboard screenshot here</span>
+        <span style="opacity:0.5;">assets/images/roamy-cover.jpg</span>
+      </div>
+      <figcaption>Roamy high fidelity prototype — Explore and Experience screens</figcaption>
+    </div>
+
+    <!-- PROMO / DEMO VIDEO -->
+    <div class="cs-img-block reveal">
+      <div class="cs-video-wrap">
+        <video controls preload="metadata" poster="">
+          <source src="assets/FInal ROamy with copy changes.MP4" type="video/mp4" />
+          Your browser does not support the video element.
+        </video>
+      </div>
+      <figcaption>Roamy promo &amp; demo video — final prototype walkthrough</figcaption>
+    </div>
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">02 — Problem Statement</span>
+      <h2>The trust gap between travellers and locals</h2>
+      <p>
+        Our team came to this problem personally — we share backgrounds across Japan, Thailand, the Philippines,
+        and Indonesia, and all of us had felt the friction of navigating unfamiliar cultures. Secondary research
+        confirmed what we already knew: the problem isn't lack of interest, it's that there's <strong>no trusted
+        way to connect travellers with the right local people</strong>.
+      </p>
+
+      <div class="cs-problem">
+        <p class="cs-problem__quote">
+          "Young travellers in the Asia-Pacific increasingly prefer under-the-radar destinations
+          and culturally rich itineraries — valuing genuine local connection over curated tourist experiences."
+        </p>
+      </div>
+
+      <div class="cs-stats">
+        <div class="cs-stat">
+          <span class="cs-stat__num">58%</span>
+          <span class="cs-stat__label">of 18–25 yr old Australians planned overseas trips in 2024</span>
+        </div>
+        <div class="cs-stat">
+          <span class="cs-stat__num">40–50%</span>
+          <span class="cs-stat__label">of tourism earnings leak out of local economies</span>
+        </div>
+        <div class="cs-stat">
+          <span class="cs-stat__num">64%</span>
+          <span class="cs-stat__label">of young travellers knew about destination resources</span>
+        </div>
+        <div class="cs-stat">
+          <span class="cs-stat__num">37%</span>
+          <span class="cs-stat__label">actually used them — the trust gap in numbers</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 RESEARCH -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">03 — Research</span>
+      <h2>Understanding who we were designing for</h2>
+      <p>
+        We ran surveys, interviews, and focus groups to understand how young Australians actually engage with
+        international travel. From this, we built three distinct personas representing different relationships
+        with cultural exploration — from the frequent traveller who craves depth, to the social-media-led
+        tourist who doesn't know where to start.
+      </p>
+      <p>
+        A key theme across every interview: <strong>people engaged more when they knew who they were meeting.</strong>
+        Even just a name and a reason someone hosted changed how participants talked about the hypothetical experience.
+        That became one of our core design principles — surface the person before the product.
+      </p>
+
+      <!-- Persona image placeholder -->
+      <div class="cs-img-row reveal">
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>Persona cards</strong>
+            <span>assets/images/roamy-personas.jpg</span>
+          </div>
+          <figcaption>User personas — traveller archetypes</figcaption>
+        </div>
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>User journey map</strong>
+            <span>assets/images/roamy-journey.jpg</span>
+          </div>
+          <figcaption>Hassan's journey — from curiosity to booking</figcaption>
+        </div>
+      </div>
+
+      <p>
+        We mapped a detailed journey for one of our key personas — someone who only picks up travel ideas
+        from social media, never from dedicated apps. The gap kept appearing in the same place:
+        <strong>the moment of curiosity is there, but there's nowhere real to take it.</strong>
+        They want to go deeper; there's just no clear door.
+      </p>
+
+      <div class="cs-pills">
+        <span class="cs-pill cs-pill--coral">🌏 Young Australians 18–25</span>
+        <span class="cs-pill cs-pill--amber">🏡 Local host communities</span>
+        <span class="cs-pill cs-pill--teal">🤝 Cultural exchange</span>
+        <span class="cs-pill cs-pill--dark">📱 Mobile-first discovery</span>
+      </div>
+    </section>
+
+    <!-- RESEARCH SYNTHESIS PLACEHOLDER -->
+    <div class="cs-img-block reveal">
+      <div class="cs-placeholder cs-placeholder--short">
+        <strong>Research synthesis / affinity map</strong>
+        <span>FigJam board, sticky-note clusters, or interview notes grouped by theme</span>
+        <span style="opacity:0.5;">assets/images/roamy-affinity.jpg</span>
+      </div>
+      <figcaption>Affinity mapping — themes emerging from interviews and surveys</figcaption>
+    </div>
+
+    <!-- 04 SOLUTION -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">04 — Solution</span>
+      <h2>Roamy — booking culture, not just activities</h2>
+      <p>
+        Roamy is a marketplace for locally-hosted cultural experiences. Travellers browse, book, and attend
+        experiences run by verified local hosts — from tier-one (a 1-hour coffee tasting) to tier-three
+        (a full-day fishing trip with a family). Each experience is built around cultural depth and personal
+        connection, not tourist throughput.
+      </p>
+
+      <div class="cs-findings">
+        <div class="cs-finding">
+          <div class="cs-finding__icon">🗺️</div>
+          <p class="cs-finding__title">Explore</p>
+          <p class="cs-finding__body">Personalised discovery of locally-hosted experiences, organised by type, tier, and cultural focus area — not by popularity score.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">🏅</div>
+          <p class="cs-finding__title">Roamy Local Badge</p>
+          <p class="cs-finding__body">Verified host profiles with trust badges build confidence for first-time users. Safety and authenticity, baked in structurally.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">📱</div>
+          <p class="cs-finding__title">QR Ticket</p>
+          <p class="cs-finding__body">Secure digital QR tickets for each booking ensure easy check-in and verified host identity — one less thing to worry about abroad.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">🏆</div>
+          <p class="cs-finding__title">Achievements & Network</p>
+          <p class="cs-finding__body">Collect badges, compare with friends, and build a travel network of fellow Roamers — turning solo exploration into community.</p>
+        </div>
+      </div>
+
+      <!-- App screen placeholders -->
+      <div class="cs-img-row">
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>Lo-fi wireframes</strong>
+            <span>Early sketches or Figma frames showing the core booking flow</span>
+            <span style="opacity:0.5;">assets/images/roamy-wireframes.jpg</span>
+          </div>
+          <figcaption>Low fidelity — information architecture</figcaption>
+        </div>
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>Explore screen — hi-fi</strong>
+            <span>Final high fidelity Explore or Experience detail screen</span>
+            <span style="opacity:0.5;">assets/images/roamy-explore.jpg</span>
+          </div>
+          <figcaption>High fidelity — Explore view</figcaption>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 VISUAL IDENTITY -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">05 — Visual Design</span>
+      <h2>A palette built on global connection</h2>
+      <p>
+        Roamy's visual identity was designed to feel youthful, inclusive, and optimistic. Sky blue
+        and royal purple anchor the brand — bright enough to feel energetic, distinct enough to stand
+        out from generic travel apps. Forest green signals trust and growth, while the neutral greys
+        keep the UI calm and legible.
+      </p>
+
+      <div class="cs-palette">
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#8C8C8C;"></div>
+          <span class="cs-swatch__label">Battleship Gray</span>
+          <span class="cs-swatch__hex">#8C8C8C</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#8452A5;"></div>
+          <span class="cs-swatch__label">Royal Purple</span>
+          <span class="cs-swatch__hex">#8452A5</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#FFFFFF; border: 1px solid #ddd;"></div>
+          <span class="cs-swatch__label">White</span>
+          <span class="cs-swatch__hex">#FFFFFF</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#F4F4F4; border: 1px solid #ddd;"></div>
+          <span class="cs-swatch__label">White Smoke</span>
+          <span class="cs-swatch__hex">#F4F4F4</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#4DC1FF;"></div>
+          <span class="cs-swatch__label">Deep Sky Blue</span>
+          <span class="cs-swatch__hex">#4DC1FF</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#46BB69;"></div>
+          <span class="cs-swatch__label">Forest Green</span>
+          <span class="cs-swatch__hex">#46BB69</span>
+        </div>
+      </div>
+
+      <!-- Hi-fi screens placeholder -->
+      <div class="cs-img-block">
+        <div class="cs-placeholder cs-placeholder--tall">
+          <strong>High fidelity screens</strong>
+          <span>Explore, Profile, QR Ticket, and Host card views</span>
+          <span style="opacity:0.5;">assets/images/roamy-hifi.jpg</span>
+        </div>
+        <figcaption>Roamy final high fidelity prototype — key flows</figcaption>
+      </div>
+    </section>
+
+    <!-- 06 TESTING -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">06 — Testing</span>
+      <h2>Validating before we built a single screen</h2>
+      <p>
+        We validated the core concept using a <strong>pantomime scenario</strong> — participants engaged in a
+        simulated cultural exchange experience set in Thailand or Japan, before any high-fidelity prototype
+        existed. This gave us signal on willingness to pay and emotional response to the concept itself,
+        not just the interface.
+      </p>
+
+      <div class="cs-timeline">
+        <div class="cs-step">
+          <div class="cs-step__dot">①</div>
+          <div class="cs-step__body">
+            <p class="cs-step__title">Pantomime Scenario (Concept Validation)</p>
+            <p class="cs-step__desc">Participants simulated a cultural exchange in a café setting. Pre/post Likert surveys measured cultural confidence, emotional connection, and intent to use. We needed proof the concept would resonate before building.</p>
+          </div>
+        </div>
+        <div class="cs-step">
+          <div class="cs-step__dot">②</div>
+          <div class="cs-step__body">
+            <p class="cs-step__title">Low-Fidelity Wireframes</p>
+            <p class="cs-step__desc">Tested core booking flow and information architecture. Key finding: users needed clearer explanation of what the "Verified Local Badge" actually guaranteed — trust signals weren't self-explanatory.</p>
+          </div>
+        </div>
+        <div class="cs-step">
+          <div class="cs-step__dot">③</div>
+          <div class="cs-step__body">
+            <p class="cs-step__title">High-Fidelity Prototype</p>
+            <p class="cs-step__desc">Refined communication features between travellers and hosts. Improved trust signal hierarchy, booking confirmation flow, and the host profile layout. Severity of identified issues dropped from Major to Minor across all categories.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-participants">
+        <div class="cs-participant-group">
+          <div class="cs-participant-group__num">4</div>
+          <div class="cs-participant-group__label">Team members across 4 cultural backgrounds</div>
+        </div>
+        <div class="cs-participant-group">
+          <div class="cs-participant-group__num">3</div>
+          <div class="cs-participant-group__label">Testing rounds from concept to hi-fi</div>
+        </div>
+        <div class="cs-participant-group">
+          <div class="cs-participant-group__num">12+</div>
+          <div class="cs-participant-group__label">Participants tested across all rounds</div>
+        </div>
+      </div>
+
+      <!-- Testing session photo -->
+      <div class="cs-img-row reveal">
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>Pantomime scenario — setup</strong>
+            <span>Photo from the café testing session / cultural exchange simulation</span>
+            <span style="opacity:0.5;">assets/images/roamy-testing-1.jpg</span>
+          </div>
+          <figcaption>Pantomime scenario validation — pre-prototype concept testing</figcaption>
+        </div>
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>Prototype testing session</strong>
+            <span>Think-aloud session with hi-fi prototype on device</span>
+            <span style="opacity:0.5;">assets/images/roamy-testing-2.jpg</span>
+          </div>
+          <figcaption>High fidelity usability test — participant walkthrough</figcaption>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 OUTCOMES -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">07 — Outcomes</span>
+      <h2>The numbers from our pantomime validation</h2>
+      <p>
+        After the pantomime scenario, participants completed pre/post surveys measuring cultural understanding,
+        language confidence, and intent. The results were stronger than we expected:
+      </p>
+
+      <div class="cs-outcomes">
+        <div class="cs-outcome">
+          <span class="cs-outcome__num">+31%</span>
+          <span class="cs-outcome__label">Rise in cultural understanding scores post-experience</span>
+        </div>
+        <div class="cs-outcome">
+          <span class="cs-outcome__num">+166%</span>
+          <span class="cs-outcome__label">Increase in language confidence</span>
+        </div>
+        <div class="cs-outcome">
+          <span class="cs-outcome__num">94%</span>
+          <span class="cs-outcome__label">Would recommend Roamy to a friend</span>
+        </div>
+        <div class="cs-outcome">
+          <span class="cs-outcome__num">88%</span>
+          <span class="cs-outcome__label">Would pay for a real Roamy experience</span>
+        </div>
+      </div>
+
+      <div class="cs-quote">
+        <p class="cs-quote__text">I've been to Japan twice but never felt like I actually connected with anyone local. This is exactly what I wish existed.</p>
+        <p class="cs-quote__source">— Participant, post-pantomime scenario</p>
+      </div>
+    </section>
+
+    <!-- 08 REFLECTION -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">08 — Reflection</span>
+      <h2>What I actually learned</h2>
+
+      <div class="cs-reflection">
+        <h3>You can't bolt trust onto a product</h3>
+        <p>
+          The biggest thing this project taught me: you can't add trust as a feature at the end. If the
+          platform doesn't structurally make locals trustworthy and travellers feel safe, no amount of nice
+          UI fixes that. It had to be designed in — through verified host badges, reviewed profiles, QR
+          tickets that confirm identity on arrival. The decisions that felt like boring implementation details
+          turned out to be the most important design decisions we made.
+        </p>
+        <p>
+          Our team had four different cultural backgrounds between us — Japanese, Thai, Filipino, Indonesian.
+          I assumed that would make it easier to agree on what "authentic experience" meant. It made it
+          harder, in a good way. Every time we thought we'd landed on something, someone would push back from
+          a completely different angle. The design ended up being more honest because of it.
+        </p>
+        <p>
+          The pantomime scenario was the best research call we made. Testing whether the concept resonates
+          before you've built a single screen feels backwards — until you get the results. Getting emotional
+          signal before interface feedback is a different kind of data, and I'll use that method again.
+        </p>
+      </div>
+
+      <span class="cs-annotation">trust is a design problem →</span>
+    </section>
+
+    <!-- 09 RECOGNITION -->
+    <section class="cs-recognition reveal">
+      <span class="cs-recognition__eyebrow">09 — Recognition</span>
+      <span class="cs-trophy" aria-hidden="true">🏆</span>
+      <h2>Roamy went beyond the classroom</h2>
+      <p>
+        Out of every project in our cohort, Roamy was selected to be showcased at the
+        <strong style="color: var(--text);">University of Sydney graduation show</strong> — an evening where
+        members of the public, industry guests, and academics came to see the year's best student work.
+        Seeing strangers engage with something we'd built from a whiteboard sketch was genuinely surreal.
+        The project was also included in the <strong style="color: var(--text);">USYD yearly design catalogue</strong>,
+        and our team finished with a <strong style="color: var(--text);">High Distinction.</strong>
+      </p>
+
+      <div class="cs-badges">
+        <div class="cs-badge">
+          <span class="cs-badge__icon">🎓</span>
+          <span class="cs-badge__title">USYD Graduation Show</span>
+          <span class="cs-badge__sub">Selected for public showcase</span>
+        </div>
+        <div class="cs-badge">
+          <span class="cs-badge__icon">📖</span>
+          <span class="cs-badge__title">Design Catalogue</span>
+          <span class="cs-badge__sub">USYD annual publication</span>
+        </div>
+        <div class="cs-badge">
+          <span class="cs-badge__icon">🏅</span>
+          <span class="cs-badge__title">High Distinction</span>
+          <span class="cs-badge__sub">DECO3200 final grade</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- NEXT PROJECT -->
+  <div class="cs-next">
+    <span class="cs-next__label">Keep exploring</span>
+    <h2 class="cs-next__title">See more work</h2>
+    <div class="cs-next__links">
+      <a href="casestudyathlyst.html" class="btn">Athlyst — Olympic Card Trading App</a>
+      <a href="casestudybreathoffreshair.html" class="btn btn--ghost">Breath of Fresh Air — IEQ Dashboard</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>© 2026 Amorino Toongart</span>
+    <span>Built by hand in VS Code.</span>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle');
+    toggle.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Athlyst — Amorino Toongart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersLight = !window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'light' || (!saved && prefersLight)) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg:           #0e0e0e;
+      --bg-2:         #161616;
+      --bg-3:         #1e1e1e;
+      --text:         #f0ede8;
+      --text-muted:   #8a8680;
+      --accent:       #5b9bd5;
+      --accent-dim:   rgba(91,155,213,0.12);
+      --accent-mid:   rgba(91,155,213,0.35);
+      --border:       rgba(255,255,255,0.07);
+      --radius:       12px;
+      --transition:   0.3s ease;
+
+      /* Athlyst project palette — actual brand colors */
+      --athlyst-lime:   #B5E04B;   /* Electric Lime — primary accent */
+      --athlyst-dark:   #2C3333;   /* Gunmetal Grey */
+      --athlyst-white:  #F0F0F0;   /* Antiflash White */
+      --athlyst-coral:  #D4876A;   /* Warm accent */
+      --athlyst-blue:   #5B8DB8;   /* Cool accent */
+    }
+    [data-theme="light"] {
+      --bg:           #f5f2ed;
+      --bg-2:         #ede9e2;
+      --bg-3:         #e4dfd7;
+      --text:         #1a1816;
+      --text-muted:   #6b6560;
+      --border:       rgba(0,0,0,0.08);
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: rgba(14,14,14,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    [data-theme="light"] .nav { background: rgba(245,242,237,0.85); }
+    .nav__logo {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      opacity: 0.9;
+      color: var(--text);
+    }
+    .nav__logo:hover { opacity: 1; }
+    .nav__right { display: flex; align-items: center; gap: 2rem; }
+    .nav__back {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+    .nav__back:hover { color: var(--athlyst-lime); }
+    .theme-toggle {
+      width: 36px; height: 20px;
+      border-radius: 10px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: background var(--transition);
+    }
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: transform var(--transition), background var(--transition);
+    }
+    [data-theme="light"] .theme-toggle::after { transform: translateX(16px); background: var(--accent); }
+
+    /* ── HERO ── */
+    .cs-hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 2.5rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cs-hero__bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #0a0e1a 0%, #0e0e0e 55%, #1a1508 100%);
+      z-index: 0;
+    }
+    .cs-hero__grid {
+      position: absolute; inset: 0; z-index: 1; opacity: 0.04;
+      background-image:
+        linear-gradient(var(--athlyst-lime) 1px, transparent 1px),
+        linear-gradient(90deg, var(--athlyst-lime) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .cs-hero__blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); z-index: 1; pointer-events: none;
+    }
+    .cs-hero__blob--1 { width: 440px; height: 440px; top: 6%; right: 3%; background: rgba(181,224,75,0.18); }
+    .cs-hero__blob--2 { width: 280px; height: 280px; top: 40%; right: 25%; background: rgba(91,141,184,0.12); }
+    .cs-hero__blob--3 { width: 300px; height: 300px; bottom: 15%; left: 6%; background: rgba(44,51,51,0.5); }
+
+    .cs-hero__content { position: relative; z-index: 2; max-width: 900px; }
+    .cs-hero__eyebrow {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--athlyst-lime);
+      margin-bottom: 1.25rem;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid rgba(181,224,75,0.4);
+      border-radius: 20px;
+    }
+    .cs-hero__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .cs-hero__title em { font-style: italic; color: var(--athlyst-lime); }
+    .cs-hero__meta {
+      display: flex; gap: 2.5rem; flex-wrap: wrap;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .cs-hero__meta-item { display: flex; flex-direction: column; gap: 0.3rem; }
+    .cs-hero__meta-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted);
+    }
+    .cs-hero__meta-value { font-size: 0.95rem; font-weight: 500; }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-indicator {
+      position: absolute; bottom: 2rem; right: 2.5rem; z-index: 2;
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
+    }
+    .scroll-indicator__line {
+      width: 40px; height: 1px; background: var(--text-muted);
+      transform-origin: left; animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine { 0%,100%{transform:scaleX(1)} 50%{transform:scaleX(0.4)} }
+
+    /* ── CASE STUDY BODY ── */
+    .cs-body { max-width: 780px; margin: 0 auto; padding: 6rem 2.5rem; }
+
+    .cs-section { margin-bottom: 5rem; }
+    .cs-section-label {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--athlyst-lime); margin-bottom: 1rem; display: block;
+    }
+    .cs-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700; line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+    .cs-section p { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 1.0rem; line-height: 1.8; }
+    .cs-section p strong { color: var(--text); font-weight: 500; }
+
+    /* ── PROBLEM CALLOUT ── */
+    .cs-problem {
+      background: var(--bg-2);
+      border-left: 3px solid var(--athlyst-lime);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+    }
+    .cs-problem__quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    /* ── DECISION MATRIX CALLOUT ── */
+    .cs-matrix {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 2.5rem 0;
+    }
+    .cs-matrix__cell {
+      background: var(--bg-2);
+      padding: 1.5rem 1.25rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      text-align: center;
+    }
+    .cs-matrix__cell--winner { background: rgba(181,224,75,0.08); border-top: 2px solid var(--athlyst-lime); }
+    .cs-matrix__score {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 700;
+      color: var(--text-muted); line-height: 1;
+    }
+    .cs-matrix__cell--winner .cs-matrix__score { color: var(--athlyst-lime); }
+    .cs-matrix__name { font-size: 0.78rem; font-weight: 500; color: var(--text); }
+    .cs-matrix__desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+    .cs-matrix__badge {
+      display: inline-block;
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      background: var(--athlyst-lime); color: #000; font-weight: 600;
+      align-self: center;
+    }
+
+    /* ── STAT GRID ── */
+    .cs-stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 2.5rem 0;
+    }
+    .cs-stat {
+      background: var(--bg-2);
+      padding: 1.75rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .cs-stat__num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--athlyst-lime); line-height: 1;
+    }
+    .cs-stat__label { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── COLOUR PALETTE ── */
+    .cs-palette {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    .cs-swatch {
+      display: flex; flex-direction: column; gap: 0.5rem; min-width: 100px;
+    }
+    .cs-swatch__block {
+      height: 60px; border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .cs-swatch__label { font-size: 0.72rem; color: var(--text-muted); }
+    .cs-swatch__hex { font-size: 0.78rem; font-weight: 500; }
+
+    /* ── SUS BARS ── */
+    .sus-block { margin: 2rem 0; display: flex; flex-direction: column; gap: 1rem; }
+    .sus-row { display: flex; align-items: center; gap: 1rem; }
+    .sus-row__label { font-size: 0.8rem; color: var(--text-muted); min-width: 60px; }
+    .sus-row__track {
+      flex: 1; height: 8px; background: var(--bg-3); border-radius: 4px; overflow: hidden;
+    }
+    .sus-row__fill { height: 100%; border-radius: 4px; background: var(--athlyst-lime); transition: width 0.8s ease; }
+    .sus-row__value { font-size: 0.85rem; font-weight: 500; color: var(--text); min-width: 40px; text-align: right; }
+
+    /* ── TIMELINE ── */
+    .cs-timeline { margin: 2.5rem 0; display: flex; flex-direction: column; gap: 0; }
+    .cs-step {
+      display: grid; grid-template-columns: 2rem 1fr;
+      gap: 0 1.5rem; position: relative;
+    }
+    .cs-step::before {
+      content: ''; position: absolute;
+      left: 0.9rem; top: 2.5rem; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .cs-step:last-child::before { display: none; }
+    .cs-step__dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(181,224,75,0.1); border: 1px solid var(--athlyst-lime);
+      margin-top: 1.8rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: var(--athlyst-lime);
+    }
+    .cs-step__body { padding: 1.5rem 0 2rem; }
+    .cs-step__title { font-weight: 500; margin-bottom: 0.4rem; font-size: 0.95rem; color: var(--text); }
+    .cs-step__desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── FINDING CARDS ── */
+    .cs-findings { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 600px) { .cs-findings { grid-template-columns: 1fr; } }
+    .cs-finding {
+      background: var(--bg-2); border-radius: var(--radius);
+      padding: 1.5rem; border: 1px solid var(--border);
+    }
+    .cs-finding__icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .cs-finding__title { font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text); }
+    .cs-finding__body { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── PARTICIPANT BREAKDOWN ── */
+    .cs-participants {
+      display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;
+    }
+    .cs-participant-group {
+      flex: 1; min-width: 140px;
+      background: var(--bg-2); border-radius: var(--radius);
+      padding: 1.25rem; text-align: center;
+      border: 1px solid var(--border);
+    }
+    .cs-participant-group__num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 700; color: var(--athlyst-lime);
+    }
+    .cs-participant-group__label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* ── QUOTE BLOCK ── */
+    .cs-quote {
+      padding: 2rem 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      margin: 2.5rem 0;
+      position: relative;
+    }
+    .cs-quote::before {
+      content: '"';
+      position: absolute; top: -0.5rem; left: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem; color: var(--athlyst-lime); line-height: 1; opacity: 0.4;
+    }
+    .cs-quote__text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-size: 1.05rem;
+      color: var(--text); line-height: 1.65;
+    }
+    .cs-quote__source { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; }
+
+    /* ── CHANGES LIST ── */
+    .cs-changes { margin: 1.5rem 0; display: flex; flex-direction: column; gap: 0.75rem; }
+    .cs-change {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-2); border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;
+    }
+    .cs-change__icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; color: var(--athlyst-lime); }
+
+    /* ── IMAGE PLACEHOLDER ── */
+    .cs-img-block { margin: 2.5rem 0; }
+    .cs-img-block img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); display: block; }
+    .cs-img-block figcaption { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem; font-style: italic; }
+    .cs-placeholder {
+      width: 100%;
+      background: var(--bg-2);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .cs-placeholder strong { color: var(--text); font-size: 0.9rem; }
+    .cs-placeholder--tall { min-height: 360px; }
+    .cs-placeholder--short { min-height: 240px; }
+    .cs-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.5rem 0; }
+
+    /* ── REFLECTION ── */
+    .cs-reflection {
+      background: var(--bg-2);
+      border-radius: var(--radius);
+      padding: 3rem;
+      margin: 3rem 0;
+      border: 1px solid var(--border);
+    }
+    .cs-reflection h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; margin-bottom: 1rem; color: var(--text);
+    }
+    .cs-reflection p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; }
+    .cs-reflection p + p { margin-top: 1rem; }
+
+    /* ── HANDWRITTEN ANNOTATION ── */
+    .cs-annotation {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: var(--athlyst-lime);
+      transform: rotate(-1.5deg);
+      display: inline-block;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    /* ── NEXT PROJECT ── */
+    .cs-next {
+      padding: 5rem 2.5rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .cs-next__label {
+      font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 1rem; display: block;
+    }
+    .cs-next__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 2rem;
+    }
+    .cs-next__links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      position: relative; overflow: hidden;
+      background: var(--athlyst-lime);
+      color: #000;
+      border-radius: 6px;
+      font-size: 0.85rem; font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
+                  transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    .btn:not(.btn--ghost)::after {
+      content: ''; position: absolute; top: -50%; left: -60%;
+      width: 28%; height: 200%;
+      background: rgba(255,255,255,0.25);
+      transform: skewX(-20deg); transition: left 0.5s ease; pointer-events: none;
+    }
+    .btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 28px rgba(181,224,75,0.3); }
+    .btn:not(.btn--ghost):hover::after { left: 130%; }
+    .btn:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.08s; }
+    .btn--ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-muted);
+    }
+    .btn--ghost:hover { border-color: var(--athlyst-lime); color: var(--athlyst-lime); }
+
+    /* ── FOOTER ── */
+    .footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 768px) {
+      .cs-hero { padding: 0 1.5rem 4rem; }
+      .cs-body { padding: 4rem 1.5rem; }
+      .cs-matrix { grid-template-columns: 1fr; }
+      .cs-img-row { grid-template-columns: 1fr; }
+      .nav { padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav__logo">amorino</a>
+    <div class="nav__right">
+      <a href="index.html#work" class="nav__back">← All Work</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="cs-hero">
+    <div class="cs-hero__bg"></div>
+    <div class="cs-hero__grid"></div>
+    <div class="cs-hero__blob cs-hero__blob--1"></div>
+    <div class="cs-hero__blob cs-hero__blob--2"></div>
+    <div class="cs-hero__blob cs-hero__blob--3"></div>
+
+    <div class="cs-hero__content">
+      <span class="cs-hero__eyebrow">DECO2200 · Mobile App · UX/UI Design</span>
+      <h1 class="cs-hero__title">
+        Athlyst —<br />
+        <em>Olympic Card Trading</em>
+      </h1>
+      <p style="color: var(--text-muted); max-width: 580px; font-size: 1.05rem; line-height: 1.75;">
+        A gamified card-collection platform that deepens Olympic viewer engagement by
+        connecting audiences with the personal stories of lesser-known athletes.
+      </p>
+      <div class="cs-hero__meta">
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Role</span>
+          <span class="cs-hero__meta-value">UX Designer & Aesthetics Lead</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Team</span>
+          <span class="cs-hero__meta-value">Amorino, Lachlan, Tyler</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Tools</span>
+          <span class="cs-hero__meta-value">Figma · FigJam</span>
+        </div>
+        <div class="cs-hero__meta-item">
+          <span class="cs-hero__meta-label">Context</span>
+          <span class="cs-hero__meta-value">DECO2200 · University of Sydney</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-indicator__line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- CASE STUDY BODY -->
+  <div class="cs-body">
+
+    <!-- 01 OVERVIEW -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">01 — Overview</span>
+      <h2>The Olympics broadcasts everything. Most viewers see almost nothing.</h2>
+      <p>
+        The Olympic Games spans thousands of athletes across dozens of sports — yet streaming
+        algorithms surface the same familiar names and headline events again and again. Lesser-known
+        athletes and sports don't lack compelling stories; they lack a platform designed to make
+        those stories discoverable.
+      </p>
+      <p>
+        Athlyst flips the model: instead of passively watching who the algorithm picks, users
+        <strong>collect athlete trading cards by watching events</strong> — turning breadth of coverage
+        into a mechanic that rewards engagement with the full Games, not just the highlights reel.
+      </p>
+    </section>
+
+    <!-- HERO IMAGE PLACEHOLDER -->
+    <div class="cs-img-block reveal">
+      <div class="cs-placeholder cs-placeholder--tall">
+        <strong>Athlyst — Hero Mockup</strong>
+        <span>Add your best app mockup or prototype screenshot here</span>
+        <span style="opacity:0.5;">assets/Athlyst COVER.jpg</span>
+      </div>
+      <figcaption>Athlyst high fidelity prototype — Home, Athletes, Packs, and Profile</figcaption>
+    </div>
+
+    <!-- 02 PROBLEM -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">02 — Problem Statement</span>
+      <h2>Algorithms narrow. Athlyst broadens.</h2>
+      <p>
+        Olympic coverage has always been filtered — by broadcast deals, by popularity, and now by
+        recommendation engines that prioritise engagement over breadth. The result: viewers who
+        tuned in for gymnastics leave knowing nothing about weightlifting, shooting, or modern pentathlon.
+      </p>
+
+      <div class="cs-problem">
+        <p class="cs-problem__quote">
+          "To explore how context and storytelling can be seamlessly integrated to enhance
+          the viewing experience of the Olympics — for athletes and sports that rarely get
+          more than ninety seconds of airtime."
+        </p>
+      </div>
+
+      <p>
+        Our research confirmed the gap isn't one of interest — it's one of <strong>discovery architecture.</strong>
+        When people encounter an unfamiliar sport or athlete with context, they engage. Without it,
+        they scroll past. Athlyst's job was to make context the default.
+      </p>
+    </section>
+
+    <!-- 03 RESEARCH -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">03 — Research</span>
+      <h2>Who actually watches the Olympics — and how</h2>
+      <p>
+        We ran surveys, interviews, and focus groups to understand the range of Olympic viewer archetypes.
+        From this, three personas emerged — from the die-hard fan who wants deeper coverage of athletes
+        they already follow, to the casual viewer who only tunes in when the Games appear on social media.
+      </p>
+
+      <!-- Persona image placeholders -->
+      <div class="cs-img-row">
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>Persona cards</strong>
+            <span>assets/images/athlyst-personas.jpg</span>
+          </div>
+          <figcaption>3 viewer archetypes mapped from research</figcaption>
+        </div>
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>User journey — Hassan</strong>
+            <span>assets/images/athlyst-journey.jpg</span>
+          </div>
+          <figcaption>Hassan's journey: from social mention to watching</figcaption>
+        </div>
+      </div>
+
+      <p>
+        We built a detailed journey for "Hassan" — a casual viewer who only tunes in when something
+        goes viral. His pain point was specific: he'd hear about an athlete, go looking for more,
+        and hit a wall. Wikipedia. A dead NBC link. The athlete's Instagram with three posts from
+        2021. <strong>The moment of curiosity existed, but there was nowhere real to take it.</strong>
+        No story, no schedule, no reason to stay engaged beyond the original clip.
+      </p>
+    </section>
+
+    <!-- 04 IDEATION -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">04 — Ideation</span>
+      <h2>Three concepts, one clear winner</h2>
+      <p>
+        We used Mashups and Crazy 8s to generate concepts, then evaluated three finalists against a
+        decision matrix scoring for engagement potential, educational value, technical feasibility,
+        and novelty. The scores were decisive:
+      </p>
+
+      <div class="cs-matrix">
+        <div class="cs-matrix__cell">
+          <span class="cs-matrix__score">13</span>
+          <span class="cs-matrix__name">Letterboxd for Athletes</span>
+          <span class="cs-matrix__desc">Review and rate Olympic performances</span>
+        </div>
+        <div class="cs-matrix__cell">
+          <span class="cs-matrix__score">18</span>
+          <span class="cs-matrix__name">Duolingo-style Sports Ed</span>
+          <span class="cs-matrix__desc">Learn sport rules through gamified lessons</span>
+        </div>
+        <div class="cs-matrix__cell cs-matrix__cell--winner">
+          <span class="cs-matrix__score">19</span>
+          <span class="cs-matrix__badge">Winner</span>
+          <span class="cs-matrix__name">Pokémon GO–style Card Game</span>
+          <span class="cs-matrix__desc">Collect athlete cards by watching events</span>
+        </div>
+      </div>
+
+      <p>
+        The card collection concept scored highest because it forced breadth by design —
+        <strong>every athlete has an equal chance of appearing in a pack.</strong>
+        The problem with algorithmic feeds isn't that they curate badly; it's that they curate at all.
+        Randomised packs take that control away. The game mechanic makes it fun. The randomisation
+        makes it equitable.
+      </p>
+    </section>
+
+    <!-- IDEATION PROCESS PLACEHOLDER -->
+    <div class="cs-img-row reveal">
+      <div class="cs-img-block" style="margin:0;">
+        <div class="cs-placeholder cs-placeholder--short">
+          <strong>Crazy 8s / ideation session</strong>
+          <span>Photo or scan of your sketching session, Mashups board, or FigJam ideation</span>
+          <span style="opacity:0.5;">assets/images/athlyst-ideation.jpg</span>
+        </div>
+        <figcaption>Crazy 8s ideation — generating the three finalist concepts</figcaption>
+      </div>
+      <div class="cs-img-block" style="margin:0;">
+        <div class="cs-placeholder cs-placeholder--short">
+          <strong>Decision matrix — annotated</strong>
+          <span>Screenshot or photo of the scoring matrix from FigJam or whiteboard</span>
+          <span style="opacity:0.5;">assets/images/athlyst-matrix.jpg</span>
+        </div>
+        <figcaption>Concept scoring — engagement, education, feasibility, novelty</figcaption>
+      </div>
+    </div>
+
+    <!-- 05 SOLUTION -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">05 — Solution</span>
+      <h2>Athlyst — collect the Games</h2>
+      <p>
+        Users earn athlete trading cards by watching Olympic events live and entering codes shown
+        on screen. Each card carries the athlete's personal story, sport, nationality, and career
+        stats — prioritising narrative over metrics. Cards can be traded with friends via a
+        near-field tap on iPhone or Apple Watch, creating real-world social moments.
+      </p>
+
+      <div class="cs-findings">
+        <div class="cs-finding">
+          <div class="cs-finding__icon">🏠</div>
+          <p class="cs-finding__title">Home — Live & Upcoming</p>
+          <p class="cs-finding__body">Surfaces live events with accessible sport explainers so new viewers can engage even without prior knowledge of the discipline.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">🃏</div>
+          <p class="cs-finding__title">Pack Opening</p>
+          <p class="cs-finding__body">Slide-to-unlock mechanic with confetti feedback on rare cards. The moment of revealing an athlete you've never heard of is the core loop.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">🌍</div>
+          <p class="cs-finding__title">Athletes Collection</p>
+          <p class="cs-finding__body">Browse your collection organised by country and sport. The breadth of the Games becomes visible as your collection grows.</p>
+        </div>
+        <div class="cs-finding">
+          <div class="cs-finding__icon">⌚</div>
+          <p class="cs-finding__title">Apple Watch Trade Flow</p>
+          <p class="cs-finding__body">Tap phones or watches together to trade cards in person — turning Olympic viewership into a social, physical experience.</p>
+        </div>
+      </div>
+
+      <!-- Solution screen placeholders -->
+      <div class="cs-img-row">
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>Pack opening flow</strong>
+            <span>Slide-to-unlock screen and confetti moment — the core reward loop</span>
+            <span style="opacity:0.5;">assets/images/athlyst-packs.jpg</span>
+          </div>
+          <figcaption>Pack opening — the moment you reveal an athlete card</figcaption>
+        </div>
+        <div class="cs-img-block" style="margin:0;">
+          <div class="cs-placeholder cs-placeholder--short">
+            <strong>Athlete card + Apple Watch trade</strong>
+            <span>Card detail view and the Watch trade flow — tap to swap cards in person</span>
+            <span style="opacity:0.5;">assets/images/athlyst-card.jpg</span>
+          </div>
+          <figcaption>Card detail + Apple Watch trade interaction</figcaption>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 VISUAL IDENTITY -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">06 — Visual Design</span>
+      <h2>A palette built for athletic energy</h2>
+      <p>
+        Athlyst's visual identity uses a triadic colour theme — gunmetal grey as the dominant base,
+        antiflash white for contrast, and electric lime as the primary accent. The vibrant palette
+        adds to the gamified experience while Work Sans keeps typography clean and readable across
+        small card formats.
+      </p>
+
+      <div class="cs-palette">
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#2C3333;"></div>
+          <span class="cs-swatch__label">Gunmetal Grey</span>
+          <span class="cs-swatch__hex">#2C3333</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#F0F0F0; border: 1px solid #ddd;"></div>
+          <span class="cs-swatch__label">Antiflash White</span>
+          <span class="cs-swatch__hex">#F0F0F0</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#B5E04B;"></div>
+          <span class="cs-swatch__label">Electric Lime</span>
+          <span class="cs-swatch__hex">#B5E04B</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#D4876A;"></div>
+          <span class="cs-swatch__label">Coral Accent</span>
+          <span class="cs-swatch__hex">#D4876A</span>
+        </div>
+        <div class="cs-swatch">
+          <div class="cs-swatch__block" style="background:#5B8DB8;"></div>
+          <span class="cs-swatch__label">Steel Blue</span>
+          <span class="cs-swatch__hex">#5B8DB8</span>
+        </div>
+      </div>
+
+      <!-- Hi-fi full view placeholder -->
+      <div class="cs-img-block">
+        <div class="cs-placeholder cs-placeholder--tall">
+          <strong>Full prototype screens</strong>
+          <span>Home, Athletes, Pack Opening, Trade Flow, and Profile</span>
+          <span style="opacity:0.5;">assets/images/athlyst-hifi.jpg</span>
+        </div>
+        <figcaption>Athlyst final high fidelity — all key screens across the core flow</figcaption>
+      </div>
+    </section>
+
+    <!-- 07 TESTING -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">07 — Testing</span>
+      <h2>Experts before users — always</h2>
+      <p>
+        We tested across three fidelity levels with a consistent protocol: think-aloud tasks, post-interview,
+        SUS survey, and wrap-up interview. But the strategy that paid off most was running <strong>heuristic
+        evaluation with expert designers before exposing the prototype to real users.</strong>
+      </p>
+
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">SUS scores across testing iterations</p>
+      <div class="sus-block">
+        <div class="sus-row">
+          <span class="sus-row__label">Low-fi</span>
+          <div class="sus-row__track"><div class="sus-row__fill" style="width: 66.5%"></div></div>
+          <span class="sus-row__value">66.5</span>
+        </div>
+        <div class="sus-row">
+          <span class="sus-row__label">Mid-fi</span>
+          <div class="sus-row__track"><div class="sus-row__fill" style="width: 70.8%"></div></div>
+          <span class="sus-row__value">70.8</span>
+        </div>
+      </div>
+
+      <p>
+        Low-fi testing revealed the biggest structural issue: the athletes section was hidden behind
+        a globe icon that users consistently mistook for a browser or network button. Average task completion
+        time for that screen was <strong>39 seconds vs 12 seconds</strong> for every other task. The fix:
+        make Athletes a primary nav item with an unambiguous card icon.
+      </p>
+
+      <p>The expert heuristic evaluation before high-fi testing flagged four major issues we resolved first:</p>
+      <div class="cs-changes">
+        <div class="cs-change">
+          <span class="cs-change__icon">⚠</span>
+          Missing tutorial for the card trade feature — users didn't know it existed
+        </div>
+        <div class="cs-change">
+          <span class="cs-change__icon">⚠</span>
+          Card flip interaction was not discoverable without a visual affordance
+        </div>
+        <div class="cs-change">
+          <span class="cs-change__icon">⚠</span>
+          Inconsistent nav bar icons across screens broke navigation mental models
+        </div>
+        <div class="cs-change">
+          <span class="cs-change__icon">⚠</span>
+          Profile page didn't differentiate between your profile and a friend's
+        </div>
+      </div>
+
+      <div class="cs-participants">
+        <div class="cs-participant-group">
+          <div class="cs-participant-group__num">3</div>
+          <div class="cs-participant-group__label">Testing fidelity rounds (lo → mid → hi)</div>
+        </div>
+        <div class="cs-participant-group">
+          <div class="cs-participant-group__num">↓3→1</div>
+          <div class="cs-participant-group__label">Severity ratings dropped from Major to Minor/Cosmetic</div>
+        </div>
+      </div>
+
+      <div class="cs-quote">
+        <p class="cs-quote__text">I've never watched synchronised swimming in my life, but I'd watch it to try and get the card.</p>
+        <p class="cs-quote__source">— User testing participant</p>
+      </div>
+
+      <!-- Testing session photo -->
+      <div class="cs-img-block reveal">
+        <div class="cs-placeholder cs-placeholder--short">
+          <strong>Usability testing session</strong>
+          <span>Think-aloud photo, screen recording still, or test notes — low-fi or hi-fi round</span>
+          <span style="opacity:0.5;">assets/images/athlyst-testing.jpg</span>
+        </div>
+        <figcaption>Usability testing — identifying the globe-icon navigation issue</figcaption>
+      </div>
+    </section>
+
+    <!-- 08 REFLECTION -->
+    <section class="cs-section reveal">
+      <span class="cs-section-label">08 — Reflection</span>
+      <h2>What I actually learned</h2>
+
+      <div class="cs-reflection">
+        <h3>Good gamification is structural problem-solving</h3>
+        <p>
+          The trading card format wasn't chosen because it's fun — it was chosen because it physically
+          equalises representation. Every athlete has the same card format regardless of global profile.
+          The most obscure weightlifter and the most famous gymnast are structurally equal in a pack. That's
+          not a game mechanic; it's a design argument.
+        </p>
+        <p>
+          My role focused on overseeing the visual identity and aesthetic direction across all prototype
+          iterations. The biggest design challenge was maintaining visual cohesion as the interface grew —
+          Figma's component system was essential for keeping 70+ screens consistent across three fidelity rounds.
+        </p>
+        <p>
+          Testing experts before users is something I'll carry into every future project. It's far more
+          efficient to fix structural heuristic violations before real users encounter them — and it means
+          user testing yields higher-quality qualitative data, because participants aren't stuck on basic
+          usability friction that could have been fixed in advance.
+        </p>
+      </div>
+
+      <span class="cs-annotation">gamification as equity argument →</span>
+    </section>
+
+  </div>
+
+  <!-- NEXT PROJECT -->
+  <div class="cs-next">
+    <span class="cs-next__label">Keep exploring</span>
+    <h2 class="cs-next__title">See more work</h2>
+    <div class="cs-next__links">
+      <a href="casestudybreathoffreshair.html" class="btn">Breath of Fresh Air — IEQ Dashboard</a>
+      <a href="casestudyroamy.html" class="btn btn--ghost">Roamy — Cultural Discovery App</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>© 2026 Amorino Toongart</span>
+    <span>Built by hand in VS Code.</span>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle');
+    toggle.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amorino Toongart — UX/UI Designer</title>
+
+  <!-- Google Fonts: Playfair Display (display) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Runs synchronously before first paint to avoid a flash when user has saved light mode -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersLight = !window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'light' || (!saved && prefersLight)) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav__logo">amorino</a>
+    <div class="nav__right">
+      <ul class="nav__links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero__content">
+      <span class="hero__eyebrow">UX/UI Designer & Developer</span>
+      <h1 class="hero__title">
+        Designing things<br />
+        <em>people actually use.</em>
+      </h1>
+      <p class="hero__sub">
+        I bridge the gap between user needs and technical reality —
+        crafting interfaces that feel inevitable.
+      </p>
+      <a href="#work" class="btn">See my work ↓</a>
+    </div>
+
+    <!-- Lanyard ID card — click to flip -->
+    <div class="hero__lanyard" aria-label="ID card for Amorino Toongart">
+      <div class="lanyard__cord"></div>
+      <div class="lanyard__flip" id="lanyard-flip" role="button" tabindex="0" aria-label="Flip ID card">
+        <div class="lanyard__flip-inner">
+
+          <!-- Front face: ID card -->
+          <div class="lanyard__face lanyard__face--front">
+            <div class="lanyard__card">
+              <div class="lanyard__card-top">
+                <span class="lanyard__eyelet"></span>
+              </div>
+              <div class="lanyard__card-body">
+                <div class="lanyard__avatar">
+                  <img src="assets/IMG_2735.jpg" alt="Amorino Toongart" />
+                </div>
+                <strong class="lanyard__name">Amorino<br>Toongart</strong>
+                <span class="lanyard__badge">UX / UI Designer</span>
+                <hr class="lanyard__rule" />
+                <dl class="lanyard__meta">
+                  <div class="lanyard__meta-row">
+                    <dt>Degree</dt>
+                    <dd>Interaction Design @ USYD</dd>
+                  </div>
+                  <div class="lanyard__meta-row">
+                    <dt>Fav Tool</dt>
+                    <dd>Undo Button</dd>
+                  </div>
+                </dl>
+                <div class="lanyard__barcode" aria-hidden="true"></div>
+                <p class="lanyard__flip-hint">click to flip ↻</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Back face: NZ map -->
+          <div class="lanyard__face lanyard__face--back">
+            <div class="lanyard__card">
+              <div class="lanyard__card-top">
+                <span class="lanyard__eyelet"></span>
+              </div>
+              <div class="lanyard__card-body lanyard__card-body--map">
+                <img src="assets/nz.svg" alt="Map of New Zealand" class="lanyard__nz-map" />
+                <p class="lanyard__nz-label">I was born here in NZ! <span class="lanyard__nz-auckland">↑ Auckland</span></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative background grid — purely CSS, no images needed -->
+    <div class="hero__bg" aria-hidden="true"></div>
+  </section>
+
+  <!-- ===== WORK ===== -->
+  <section class="section work" id="work">
+    <div class="container">
+      <h2 class="section__title">Selected Work</h2>
+
+      <div class="work__grid">
+
+        <!-- CARD 1 — Featured (Roamy) -->
+        <article class="card" data-index="01">
+          <div class="card__img-wrap">
+            <img src="assets/Roamy Final Dash picture.jpg" alt="Roamy app mockup" class="card__img" />
+            <div class="card__overlay">
+              <a href="casestudyroamy.html" class="btn btn--outline">View Case Study</a>
+            </div>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Mobile App · UX/UI Design · DECO3200</span>
+            <h3 class="card__title">Roamy — Cultural Discovery App</h3>
+            <p class="card__desc">
+              Connecting young Australian travellers with authentic, locally-hosted experiences
+              across Asia. Designed to bridge the gap between tourist traps and genuine cultural exchange.
+            </p>
+          </div>
+        </article>
+
+        <!-- CARD 2 — Athlyst -->
+        <article class="card" data-index="02">
+          <div class="card__img-wrap">
+            <img src="assets/Athlyst COVER.jpg" alt="Athlyst app mockup" class="card__img" />
+            <div class="card__overlay">
+              <a href="casestudyathlyst.html" class="btn btn--outline">View Case Study</a>
+            </div>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Mobile App · UX/UI Design · DECO2200</span>
+            <h3 class="card__title">Athlyst — Olympic Card Trading App</h3>
+            <p class="card__desc">
+              A gamified card-collection platform designed to deepen viewer engagement with
+              lesser-known Olympic athletes and sports through storytelling and social trading.
+            </p>
+          </div>
+        </article>
+
+       <!-- CARD 3 — Breath of Fresh Air -->
+<article class="card" data-index="03">
+  <div class="card__img-wrap">
+    <img src="assets/breath-of-fresh-air-cover.jpg" alt="Breath of Fresh Air dashboard mockup" class="card__img" />
+    <div class="card__overlay">
+      <a href="casestudybreathoffreshair.html" class="btn btn--outline">View Case Study</a>
+    </div>
+  </div>
+  <div class="card__body">
+    <span class="card__tag">Data Visualisation · Dashboard Design · DECO3100</span>
+    <h3 class="card__title">Breath of Fresh Air — IEQ Dashboard</h3>
+    <p class="card__desc">
+      An interactive data dashboard helping office managers detect ventilation issues
+      before staff complaints — turning raw sensor data into clear, actionable insights.
+    </p>
+  </div>
+</article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="section about" id="about">
+    <div class="container">
+
+      <div class="about__grid">
+        <div class="about__text">
+          <h2 class="section__title">About Me</h2>
+          <p>
+            I'm a UX/UI designer studying at the University of Sydney, drawn to the intersection
+            of user psychology and considered craft. I believe the best interfaces feel less like
+            software and more like a conversation — intuitive, purposeful, and occasionally a
+            little delightful.
+          </p>
+          <p>
+            Outside the screen, I'm the President of the USYD Chocolate Society, which has
+            taught me more about community building, event logistics, and keeping 200 genuinely
+            excited people happy than any lecture ever could. I'm also Vice President of
+            <strong>SUEDE</strong> (University Experience Designers), where I help shape how our
+            faculty approaches design education and student experience — work that constantly
+            reminds me why getting design right actually matters.
+          </p>
+          <p>
+            I'm looking for a team where I can bring both rigour and personality to real
+            problems — somewhere that cares as much about th details as I do.
+          </p>
+          <div class="about__links">
+            <a href="assets/resume.pdf" class="btn" target="_blank">Download Resume</a>
+            <a href="https://www.linkedin.com/in/amorino-toongart-9a6186265/" class="btn btn--ghost" target="_blank">LinkedIn ↗</a>
+          </div>
+        </div>
+
+        <div class="about__portrait">
+
+          <!-- Photo 1 -->
+          <div class="portrait__item portrait__item--1">
+            <div class="portrait__photo portrait__photo--1">
+              <img src="assets/IMG_2733.jpg" alt="Amorino at Sendai winter exchange in Japan" />
+              <span class="portrait__caption">Tohuku Univeristy 25'</span>
+            </div>
+            <div class="portrait__note portrait__note--1">
+              <svg class="portrait__arrow" viewBox="0 0 38 28" fill="none" aria-hidden="true">
+                <path d="M36,22 Q22,12 5,14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M7,10 L3,14 L8,18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p>me with Kenichi 研究第 the school mascot at my sendai winter exchange in japan!</p>
+            </div>
+          </div>
+
+          <!-- Photo 2 -->
+          <div class="portrait__item portrait__item--2">
+            <div class="portrait__photo portrait__photo--2">
+              <img src="assets/DSC00049.JPG" alt="SUEDE Prez, VP external and VP Internal" />
+              <span class="portrait__caption">SUEDE</span>
+            </div>
+            <div class="portrait__note portrait__note--2">
+              <svg class="portrait__arrow" viewBox="0 0 38 28" fill="none" aria-hidden="true">
+                <path d="M36,22 Q22,12 5,14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M7,10 L3,14 L8,18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p>SUEDE Prez, VP external and VP Internal (Alyssa, Mihika and Me)</p>
+            </div>
+          </div>
+
+          <!-- Photo 3 -->
+          <div class="portrait__item portrait__item--3">
+            <div class="portrait__photo portrait__photo--3">
+              <img src="assets/IMG_0831.JPG" alt="Me and Abbie, CHOCSOC events director" />
+              <span class="portrait__caption">CHOCSOC</span>
+            </div>
+            <div class="portrait__note portrait__note--3">
+              <svg class="portrait__arrow" viewBox="0 0 38 28" fill="none" aria-hidden="true">
+                <path d="M36,22 Q22,12 5,14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M7,10 L3,14 L8,18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p>Me and my CHOCSOC events director Abbie!</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Languages — spoken + tools, separated from main bio -->
+      <div class="about__langs reveal">
+        <h3 class="langs__heading">Languages I speak</h3>
+        <div class="langs__spoken">
+          <span class="lang-tag">🇹🇭 Thai</span>
+          <span class="lang-tag">🇬🇧 English</span>
+        </div>
+
+        <p class="langs__bridge">and these too&hellip;</p>
+
+        <div class="langs__tools">
+          <figure class="tool-icon">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript" width="40" height="40" loading="lazy" />
+            <figcaption>JavaScript</figcaption>
+          </figure>
+          <figure class="tool-icon">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML" width="40" height="40" loading="lazy" />
+            <figcaption>HTML</figcaption>
+          </figure>
+          <figure class="tool-icon">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="CSS" width="40" height="40" loading="lazy" />
+            <figcaption>CSS</figcaption>
+          </figure>
+          <figure class="tool-icon">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" alt="Blender" width="40" height="40" loading="lazy" />
+            <figcaption>Blender</figcaption>
+          </figure>
+          <figure class="tool-icon">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" alt="Photoshop" width="40" height="40" loading="lazy" />
+            <figcaption>Photoshop</figcaption>
+          </figure>
+          <figure class="tool-icon">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="Figma" width="40" height="40" loading="lazy" />
+            <figcaption>Figma</figcaption>
+          </figure>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="section contact" id="contact">
+    <div class="container contact__inner">
+      <h2 class="contact__title">Let's work<br><em>together.</em></h2>
+      <p class="contact__sub">Open to full-time roles and select freelance projects.</p>
+      <a href="mailto:you@email.com" class="btn btn--large contact__cta">Say hello ↗</a>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <span>© 2026 Amorino Toongart</span>
+    <span>Built by hand in VS Code.</span>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
