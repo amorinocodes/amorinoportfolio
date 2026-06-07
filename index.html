@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Amorino Toongart — UX/UI Designer</title>
 
-  <!-- Google Fonts: Playfair Display (display) + DM Sans (body) -->
+  <!-- Google Fonts: Playfair Display (display) + Inter (body/UI) + Caveat (handwritten) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Runs synchronously before first paint to avoid a flash when user has saved light mode -->
+  <!-- Light mode is default; only respect an explicit saved 'dark' preference -->
   <script>
     (function () {
-      var saved = localStorage.getItem('theme');
-      var prefersLight = !window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'light' || (!saved && prefersLight)) {
+      if (localStorage.getItem('theme') !== 'dark') {
         document.documentElement.setAttribute('data-theme', 'light');
       }
     })();

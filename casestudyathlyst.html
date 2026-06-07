@@ -1,963 +1,1212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Athlyst — Amorino Toongart</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roamy — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+  :root {
+    --roamy-purple: #8452A5;
+    --roamy-purple-light: #C9AADF;
+    --roamy-purple-faint: #F3EDF8;
+    --cream: #F7F4EE;
+    --ink: #1A1614;
+    --muted: #6B6560;
+    --border: #E4DFDA;
+    --sans: 'Inter', sans-serif;
+  }
 
-  <script>
-    (function () {
-      var saved = localStorage.getItem('theme');
-      var prefersLight = !window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'light' || (!saved && prefersLight)) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
+  html { scroll-behavior: smooth; }
 
-  <style>
-    /* ── DESIGN TOKENS ── */
-    :root {
-      --bg:           #0e0e0e;
-      --bg-2:         #161616;
-      --bg-3:         #1e1e1e;
-      --text:         #f0ede8;
-      --text-muted:   #8a8680;
-      --accent:       #5b9bd5;
-      --accent-dim:   rgba(91,155,213,0.12);
-      --accent-mid:   rgba(91,155,213,0.35);
-      --border:       rgba(255,255,255,0.07);
-      --radius:       12px;
-      --transition:   0.3s ease;
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    hyphens: none;
+    -webkit-hyphens: none;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
 
-      /* Athlyst project palette — actual brand colors */
-      --athlyst-lime:   #B5E04B;   /* Electric Lime — primary accent */
-      --athlyst-dark:   #2C3333;   /* Gunmetal Grey */
-      --athlyst-white:  #F0F0F0;   /* Antiflash White */
-      --athlyst-coral:  #D4876A;   /* Warm accent */
-      --athlyst-blue:   #5B8DB8;   /* Cool accent */
-    }
-    [data-theme="light"] {
-      --bg:           #f5f2ed;
-      --bg-2:         #ede9e2;
-      --bg-3:         #e4dfd7;
-      --text:         #1a1816;
-      --text-muted:   #6b6560;
-      --border:       rgba(0,0,0,0.08);
-    }
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(247, 244, 238, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
 
-    /* ── RESET ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-    img { display: block; max-width: 100%; }
-    a { color: inherit; text-decoration: none; }
+  .nav-back {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--roamy-purple); }
 
-    /* ── NAV ── */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.25rem 2.5rem;
-      background: rgba(14,14,14,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    [data-theme="light"] .nav { background: rgba(245,242,237,0.85); }
-    .nav__logo {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      opacity: 0.9;
-      color: var(--text);
-    }
-    .nav__logo:hover { opacity: 1; }
-    .nav__right { display: flex; align-items: center; gap: 2rem; }
-    .nav__back {
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      transition: color var(--transition);
-    }
-    .nav__back:hover { color: var(--athlyst-lime); }
-    .theme-toggle {
-      width: 36px; height: 20px;
-      border-radius: 10px;
-      background: var(--bg-3);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      position: relative;
-      transition: background var(--transition);
-    }
-    .theme-toggle::after {
-      content: '';
-      position: absolute;
-      top: 3px; left: 3px;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: var(--text-muted);
-      transition: transform var(--transition), background var(--transition);
-    }
-    [data-theme="light"] .theme-toggle::after { transform: translateX(16px); background: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--roamy-purple); }
 
-    /* ── HERO ── */
-    .cs-hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 0 2.5rem 5rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .cs-hero__bg {
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, #0a0e1a 0%, #0e0e0e 55%, #1a1508 100%);
-      z-index: 0;
-    }
-    .cs-hero__grid {
-      position: absolute; inset: 0; z-index: 1; opacity: 0.04;
-      background-image:
-        linear-gradient(var(--athlyst-lime) 1px, transparent 1px),
-        linear-gradient(90deg, var(--athlyst-lime) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
-    .cs-hero__blob {
-      position: absolute; border-radius: 50%; filter: blur(80px); z-index: 1; pointer-events: none;
-    }
-    .cs-hero__blob--1 { width: 440px; height: 440px; top: 6%; right: 3%; background: rgba(181,224,75,0.18); }
-    .cs-hero__blob--2 { width: 280px; height: 280px; top: 40%; right: 25%; background: rgba(91,141,184,0.12); }
-    .cs-hero__blob--3 { width: 300px; height: 300px; bottom: 15%; left: 6%; background: rgba(44,51,51,0.5); }
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 4rem;
+    overflow: hidden;
+  }
 
-    .cs-hero__content { position: relative; z-index: 2; max-width: 900px; }
-    .cs-hero__eyebrow {
-      display: inline-block;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--athlyst-lime);
-      margin-bottom: 1.25rem;
-      padding: 0.35rem 0.9rem;
-      border: 1px solid rgba(181,224,75,0.4);
-      border-radius: 20px;
-    }
-    .cs-hero__title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 7vw, 6rem);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
-    }
-    .cs-hero__title em { font-style: italic; color: var(--athlyst-lime); }
-    .cs-hero__meta {
-      display: flex; gap: 2.5rem; flex-wrap: wrap;
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border);
-    }
-    .cs-hero__meta-item { display: flex; flex-direction: column; gap: 0.3rem; }
-    .cs-hero__meta-label {
-      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted);
-    }
-    .cs-hero__meta-value { font-size: 0.95rem; font-weight: 500; }
+  .hero-left {
+    padding: 6rem 4rem 4rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-    /* ── SCROLL INDICATOR ── */
-    .scroll-indicator {
-      position: absolute; bottom: 2rem; right: 2.5rem; z-index: 2;
-      display: flex; align-items: center; gap: 0.6rem;
-      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
-    }
-    .scroll-indicator__line {
-      width: 40px; height: 1px; background: var(--text-muted);
-      transform-origin: left; animation: scrollLine 2s ease-in-out infinite;
-    }
-    @keyframes scrollLine { 0%,100%{transform:scaleX(1)} 50%{transform:scaleX(0.4)} }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--roamy-purple);
+    background: var(--roamy-purple-faint);
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
 
-    /* ── CASE STUDY BODY ── */
-    .cs-body { max-width: 780px; margin: 0 auto; padding: 6rem 2.5rem; }
+  .hero-title {
+    font-size: clamp(3rem, 5.5vw, 5rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
 
-    .cs-section { margin-bottom: 5rem; }
-    .cs-section-label {
-      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--athlyst-lime); margin-bottom: 1rem; display: block;
-    }
-    .cs-section h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 700; line-height: 1.2;
-      margin-bottom: 1.5rem;
-    }
-    .cs-section p { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 1.0rem; line-height: 1.8; }
-    .cs-section p strong { color: var(--text); font-weight: 500; }
+  .hero-title em {
+    font-style: italic;
+    color: var(--roamy-purple);
+    font-weight: 300;
+  }
 
-    /* ── PROBLEM CALLOUT ── */
-    .cs-problem {
-      background: var(--bg-2);
-      border-left: 3px solid var(--athlyst-lime);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 2rem 2.5rem;
-      margin: 2.5rem 0;
-    }
-    .cs-problem__quote {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 1.15rem;
-      line-height: 1.65;
-      color: var(--text);
-    }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 440px;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
 
-    /* ── DECISION MATRIX CALLOUT ── */
-    .cs-matrix {
-      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin: 2.5rem 0;
-    }
-    .cs-matrix__cell {
-      background: var(--bg-2);
-      padding: 1.5rem 1.25rem;
-      display: flex; flex-direction: column; gap: 0.5rem;
-      text-align: center;
-    }
-    .cs-matrix__cell--winner { background: rgba(181,224,75,0.08); border-top: 2px solid var(--athlyst-lime); }
-    .cs-matrix__score {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem; font-weight: 700;
-      color: var(--text-muted); line-height: 1;
-    }
-    .cs-matrix__cell--winner .cs-matrix__score { color: var(--athlyst-lime); }
-    .cs-matrix__name { font-size: 0.78rem; font-weight: 500; color: var(--text); }
-    .cs-matrix__desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
-    .cs-matrix__badge {
-      display: inline-block;
-      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      background: var(--athlyst-lime); color: #000; font-weight: 600;
-      align-self: center;
-    }
+  .hero-meta {
+    display: flex;
+    gap: 3rem;
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
 
-    /* ── STAT GRID ── */
-    .cs-stats {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1px; background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin: 2.5rem 0;
-    }
-    .cs-stat {
-      background: var(--bg-2);
-      padding: 1.75rem 1.5rem;
-      display: flex; flex-direction: column; gap: 0.4rem;
-    }
-    .cs-stat__num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.4rem; font-weight: 700;
-      color: var(--athlyst-lime); line-height: 1;
-    }
-    .cs-stat__label { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+  .meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .meta-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .meta-value { font-size: 14px; font-weight: 500; color: var(--ink); }
 
-    /* ── COLOUR PALETTE ── */
-    .cs-palette {
-      display: flex; gap: 1rem; flex-wrap: wrap;
-      margin: 2rem 0;
-    }
-    .cs-swatch {
-      display: flex; flex-direction: column; gap: 0.5rem; min-width: 100px;
-    }
-    .cs-swatch__block {
-      height: 60px; border-radius: 8px;
-      border: 1px solid var(--border);
-    }
-    .cs-swatch__label { font-size: 0.72rem; color: var(--text-muted); }
-    .cs-swatch__hex { font-size: 0.78rem; font-weight: 500; }
+  .hero-right {
+    background: var(--roamy-purple);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
 
-    /* ── SUS BARS ── */
-    .sus-block { margin: 2rem 0; display: flex; flex-direction: column; gap: 1rem; }
-    .sus-row { display: flex; align-items: center; gap: 1rem; }
-    .sus-row__label { font-size: 0.8rem; color: var(--text-muted); min-width: 60px; }
-    .sus-row__track {
-      flex: 1; height: 8px; background: var(--bg-3); border-radius: 4px; overflow: hidden;
-    }
-    .sus-row__fill { height: 100%; border-radius: 4px; background: var(--athlyst-lime); transition: width 0.8s ease; }
-    .sus-row__value { font-size: 0.85rem; font-weight: 500; color: var(--text); min-width: 40px; text-align: right; }
+  .hero-bg-text {
+    position: absolute;
+    font-size: 22vw;
+    font-weight: 700;
+    color: rgba(255,255,255,0.05);
+    letter-spacing: -0.05em;
+    user-select: none;
+    white-space: nowrap;
+    transform: rotate(-15deg);
+  }
 
-    /* ── TIMELINE ── */
-    .cs-timeline { margin: 2.5rem 0; display: flex; flex-direction: column; gap: 0; }
-    .cs-step {
-      display: grid; grid-template-columns: 2rem 1fr;
-      gap: 0 1.5rem; position: relative;
-    }
-    .cs-step::before {
-      content: ''; position: absolute;
-      left: 0.9rem; top: 2.5rem; bottom: 0;
-      width: 1px; background: var(--border);
-    }
-    .cs-step:last-child::before { display: none; }
-    .cs-step__dot {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: rgba(181,224,75,0.1); border: 1px solid var(--athlyst-lime);
-      margin-top: 1.8rem; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.6rem; color: var(--athlyst-lime);
-    }
-    .cs-step__body { padding: 1.5rem 0 2rem; }
-    .cs-step__title { font-weight: 500; margin-bottom: 0.4rem; font-size: 0.95rem; color: var(--text); }
-    .cs-step__desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+  .hero-globe {
+    font-size: 9rem;
+    position: relative;
+    z-index: 1;
+    animation: float 4s ease-in-out infinite;
+  }
 
-    /* ── FINDING CARDS ── */
-    .cs-findings { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
-    @media (max-width: 600px) { .cs-findings { grid-template-columns: 1fr; } }
-    .cs-finding {
-      background: var(--bg-2); border-radius: var(--radius);
-      padding: 1.5rem; border: 1px solid var(--border);
-    }
-    .cs-finding__icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
-    .cs-finding__title { font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text); }
-    .cs-finding__body { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
+  }
 
-    /* ── PARTICIPANT BREAKDOWN ── */
-    .cs-participants {
-      display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;
-    }
-    .cs-participant-group {
-      flex: 1; min-width: 140px;
-      background: var(--bg-2); border-radius: var(--radius);
-      padding: 1.25rem; text-align: center;
-      border: 1px solid var(--border);
-    }
-    .cs-participant-group__num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem; font-weight: 700; color: var(--athlyst-lime);
-    }
-    .cs-participant-group__label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .hero-app-preview {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    width: 190px;
+    background: white;
+    border-radius: 20px;
+    padding: 14px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+    z-index: 2;
+  }
 
-    /* ── QUOTE BLOCK ── */
-    .cs-quote {
-      padding: 2rem 2.5rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--bg-2);
-      margin: 2.5rem 0;
-      position: relative;
-    }
-    .cs-quote::before {
-      content: '"';
-      position: absolute; top: -0.5rem; left: 1.5rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 4rem; color: var(--athlyst-lime); line-height: 1; opacity: 0.4;
-    }
-    .cs-quote__text {
-      font-family: 'Playfair Display', serif;
-      font-style: italic; font-size: 1.05rem;
-      color: var(--text); line-height: 1.65;
-    }
-    .cs-quote__source { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; }
+  .app-bar { height: 6px; background: #f0f0f0; border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
+  .app-bar-fill { height: 100%; background: var(--roamy-purple); border-radius: 3px; width: 60%; }
 
-    /* ── CHANGES LIST ── */
-    .cs-changes { margin: 1.5rem 0; display: flex; flex-direction: column; gap: 0.75rem; }
-    .cs-change {
-      display: flex; align-items: flex-start; gap: 1rem;
-      padding: 1rem 1.25rem;
-      background: var(--bg-2); border-radius: 8px;
-      border: 1px solid var(--border);
-      font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;
-    }
-    .cs-change__icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; color: var(--athlyst-lime); }
+  .app-card-mini {
+    background: var(--roamy-purple-faint);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 7px;
+  }
+  .app-card-mini-title { font-size: 10px; font-weight: 600; color: var(--roamy-purple); margin-bottom: 2px; }
+  .app-card-mini-sub { font-size: 9px; color: var(--muted); }
 
-    /* ── IMAGE PLACEHOLDER ── */
-    .cs-img-block { margin: 2.5rem 0; }
-    .cs-img-block img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); display: block; }
-    .cs-img-block figcaption { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem; font-style: italic; }
-    .cs-placeholder {
-      width: 100%;
-      background: var(--bg-2);
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 0.5rem;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-align: center;
-      padding: 3rem 2rem;
-    }
-    .cs-placeholder strong { color: var(--text); font-size: 0.9rem; }
-    .cs-placeholder--tall { min-height: 360px; }
-    .cs-placeholder--short { min-height: 240px; }
-    .cs-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.5rem 0; }
+  /* SHARED LAYOUT */
+  .section-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 7rem 5rem;
+  }
 
-    /* ── REFLECTION ── */
-    .cs-reflection {
-      background: var(--bg-2);
-      border-radius: var(--radius);
-      padding: 3rem;
-      margin: 3rem 0;
-      border: 1px solid var(--border);
-    }
-    .cs-reflection h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem; margin-bottom: 1rem; color: var(--text);
-    }
-    .cs-reflection p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; }
-    .cs-reflection p + p { margin-top: 1rem; }
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--roamy-purple);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
 
-    /* ── HANDWRITTEN ANNOTATION ── */
-    .cs-annotation {
-      font-family: 'Caveat', cursive;
-      font-size: 1.2rem;
-      color: var(--athlyst-lime);
-      transform: rotate(-1.5deg);
-      display: inline-block;
-      margin: 0.5rem 0 1.5rem;
-    }
+  .section-heading {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.5rem;
+  }
 
-    /* ── NEXT PROJECT ── */
-    .cs-next {
-      padding: 5rem 2.5rem;
-      text-align: center;
-      border-top: 1px solid var(--border);
-    }
-    .cs-next__label {
-      font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--text-muted); margin-bottom: 1rem; display: block;
-    }
-    .cs-next__title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      margin-bottom: 2rem;
-    }
-    .cs-next__links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .section-heading em { font-style: italic; color: var(--roamy-purple); font-weight: 300; }
 
-    /* ── BUTTONS ── */
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1.75rem;
-      position: relative; overflow: hidden;
-      background: var(--athlyst-lime);
-      color: #000;
-      border-radius: 6px;
-      font-size: 0.85rem; font-weight: 600;
-      letter-spacing: 0.04em;
-      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
-                  transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
-      border: 1px solid transparent;
-      cursor: pointer;
-    }
-    .btn:not(.btn--ghost)::after {
-      content: ''; position: absolute; top: -50%; left: -60%;
-      width: 28%; height: 200%;
-      background: rgba(255,255,255,0.25);
-      transform: skewX(-20deg); transition: left 0.5s ease; pointer-events: none;
-    }
-    .btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 28px rgba(181,224,75,0.3); }
-    .btn:not(.btn--ghost):hover::after { left: 130%; }
-    .btn:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.08s; }
-    .btn--ghost {
-      background: transparent;
-      border-color: var(--border);
-      color: var(--text-muted);
-    }
-    .btn--ghost:hover { border-color: var(--athlyst-lime); color: var(--athlyst-lime); }
+  .body-text {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 640px;
+    line-height: 1.85;
+    font-weight: 300;
+  }
 
-    /* ── FOOTER ── */
-    .footer {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.5rem 2.5rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.78rem; color: var(--text-muted);
-    }
+  /* PROBLEM */
+  .problem-section {
+    background: var(--ink);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
 
-    /* ── REVEAL ── */
-    .reveal {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .reveal.visible { opacity: 1; transform: none; }
+  .problem-section::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(132, 82, 165, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
 
-    @media (max-width: 768px) {
-      .cs-hero { padding: 0 1.5rem 4rem; }
-      .cs-body { padding: 4rem 1.5rem; }
-      .cs-matrix { grid-template-columns: 1fr; }
-      .cs-img-row { grid-template-columns: 1fr; }
-      .nav { padding: 1rem 1.5rem; }
-    }
-  </style>
+  .problem-section .section-heading { color: white; }
+  .problem-section .body-text { color: rgba(255,255,255,0.6); }
+  .problem-section .section-eyebrow { color: var(--roamy-purple-light); }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    padding: 2rem;
+    transition: transform 0.3s, background 0.3s;
+  }
+  .stat-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.1); }
+
+  .stat-number {
+    font-size: 3.5rem;
+    font-weight: 300;
+    line-height: 1;
+    color: white;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+  }
+  .stat-number span { color: var(--roamy-purple-light); font-weight: 600; }
+
+  .stat-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; font-weight: 300; }
+
+  .problem-statement {
+    margin-top: 4rem;
+    padding: 2.5rem 3rem;
+    background: rgba(132, 82, 165, 0.15);
+    border: 1px solid rgba(132, 82, 165, 0.35);
+    border-left: 4px solid var(--roamy-purple-light);
+    border-radius: 16px;
+    max-width: 800px;
+  }
+
+  .problem-statement p {
+    font-size: 1.15rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  /* SOLUTION */
+  .solution-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+
+  .solution-values { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+
+  .value-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .value-item:hover { border-color: var(--roamy-purple-light); transform: translateX(4px); }
+
+  .value-icon {
+    width: 36px; height: 36px;
+    background: var(--roamy-purple-faint);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .value-title { font-weight: 500; font-size: 14px; margin-bottom: 2px; color: var(--ink); }
+  .value-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* PHONE MOCKUP */
+  .phone-frame {
+    background: var(--ink);
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.18);
+    max-width: 270px;
+    margin: 0 auto;
+  }
+
+  .phone-screen {
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    aspect-ratio: 9/19.5;
+    position: relative;
+  }
+
+  .phone-status {
+    background: var(--roamy-purple);
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .phone-status-text { font-size: 9px; color: rgba(255,255,255,0.7); font-weight: 500; }
+  .phone-body { padding: 12px; }
+  .phone-search { background: #f5f5f5; border-radius: 20px; padding: 7px 12px; font-size: 10px; color: #aaa; margin-bottom: 12px; }
+  .phone-section-label { font-size: 9px; font-weight: 600; color: #333; margin-bottom: 8px; }
+  .phone-card-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .phone-card { flex: 1; border-radius: 12px; overflow: hidden; }
+  .phone-card-img { height: 54px; border-radius: 10px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+  .phone-card-title { font-size: 8px; font-weight: 600; color: #333; }
+  .phone-card-sub { font-size: 7px; color: #888; }
+  .badge-roamy { display: inline-flex; align-items: center; gap: 3px; background: rgba(132,82,165,0.1); color: var(--roamy-purple); font-size: 7px; padding: 2px 6px; border-radius: 10px; font-weight: 600; }
+
+  /* VIDEO SECTION */
+  .video-section {
+    background: white;
+    padding: 7rem 5rem;
+  }
+
+  .video-inner { max-width: 1200px; margin: 0 auto; }
+
+  .video-wrap {
+    margin-top: 3rem;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    background: var(--ink);
+    /* REPLACE the src below with your Vimeo embed URL */
+    /* Get it from: Vimeo video > Share > Embed > copy the src from the iframe code */
+  }
+
+  .video-wrap iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+
+  .video-placeholder {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: rgba(255,255,255,0.4);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .play-icon {
+    width: 70px; height: 70px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+  }
+
+  /* FIGMA SECTION */
+  .figma-section {
+    background: var(--cream);
+    padding: 7rem 5rem;
+  }
+
+  .figma-inner { max-width: 1200px; margin: 0 auto; }
+
+  .figma-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--roamy-purple-faint);
+    border: 1px solid var(--roamy-purple-light);
+    border-radius: 12px;
+    padding: 0.85rem 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 13px;
+    color: var(--roamy-purple);
+    max-width: 560px;
+    font-weight: 400;
+  }
+
+  .figma-wrap {
+    margin-top: 2rem;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    position: relative;
+    /* 
+      REPLACE the src with your Figma embed URL
+      In Figma: Share > Get embed link > copy the URL
+      Paste it as the src on the iframe below
+    */
+  }
+
+  .figma-wrap iframe {
+    width: 100%;
+    height: 700px;
+    border: none;
+    display: block;
+  }
+
+  /* PROCESS */
+  .process-section {
+    background: white;
+    padding: 7rem 5rem;
+  }
+
+  .process-inner { max-width: 1200px; margin: 0 auto; }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+
+  .process-step {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--cream);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .process-step:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.07); }
+
+  .step-number { font-size: 3.5rem; font-weight: 200; color: var(--border); line-height: 1; margin-bottom: 1rem; letter-spacing: -0.04em; }
+  .step-phase { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--roamy-purple); margin-bottom: 0.5rem; }
+  .step-title { font-size: 17px; font-weight: 600; margin-bottom: 0.75rem; color: var(--ink); }
+  .step-desc { font-size: 14px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+  .step-findings { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 6px; }
+  .finding-tag { font-size: 11px; color: var(--roamy-purple); background: var(--roamy-purple-faint); padding: 4px 10px; border-radius: 20px; font-weight: 500; }
+
+  /* INSIGHTS */
+  .insights-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .insight-card {
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .insight-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--roamy-purple);
+  }
+
+  .insight-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; font-weight: 600; }
+  .insight-text { font-size: 15px; color: var(--ink); line-height: 1.7; font-weight: 300; }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 4rem;
+  }
+
+  .feature-card {
+    padding: 1.75rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .feature-card:hover { background: white; border-color: var(--roamy-purple-light); transform: translateY(-3px); }
+
+  .feature-num { font-size: 1.8rem; font-weight: 200; color: var(--roamy-purple-light); line-height: 1; margin-bottom: 0.75rem; letter-spacing: -0.03em; }
+  .feature-name { font-weight: 600; font-size: 15px; color: var(--ink); margin-bottom: 0.5rem; }
+  .feature-desc { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+  /* RESULTS */
+  .results-section {
+    background: var(--roamy-purple);
+    padding: 7rem 5rem;
+    color: white;
+  }
+
+  .results-inner { max-width: 1200px; margin: 0 auto; }
+  .results-section .section-heading { color: white; }
+  .results-section .section-eyebrow { color: var(--roamy-purple-light); }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .result-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .result-card:hover { background: rgba(255,255,255,0.18); transform: scale(1.02); }
+
+  .result-number { font-size: 3.8rem; font-weight: 200; line-height: 1; color: white; margin-bottom: 0.5rem; letter-spacing: -0.04em; }
+  .result-desc { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.65; font-weight: 300; }
+
+  /* RECOGNITION */
+  .recognition-section {
+    background: var(--ink);
+    padding: 7rem 5rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .recognition-section::before {
+    content: '';
+    position: absolute;
+    bottom: -150px; left: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(132,82,165,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .recognition-inner { max-width: 1200px; margin: 0 auto; }
+  .recognition-section .section-heading { color: white; }
+  .recognition-section .section-eyebrow { color: var(--roamy-purple-light); }
+
+  .recognition-intro {
+    font-size: 17px;
+    color: rgba(255,255,255,0.6);
+    max-width: 680px;
+    line-height: 1.85;
+    font-weight: 300;
+    margin-bottom: 4rem;
+  }
+
+  .recognition-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .recognition-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: background 0.3s, transform 0.3s, border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .recognition-card:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--roamy-purple-light);
+    transform: translateY(-6px);
+  }
+
+  .recognition-icon {
+    font-size: 3rem;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+
+  .recognition-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .recognition-body {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .recognition-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .recognition-quote {
+    padding: 3rem;
+    background: rgba(132,82,165,0.15);
+    border: 1px solid rgba(132,82,165,0.3);
+    border-left: 4px solid var(--roamy-purple-light);
+    border-radius: 16px;
+    max-width: 800px;
+  }
+
+  .recognition-quote p {
+    font-size: 1.15rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  /* MY ROLE */
+  .role-section { background: var(--cream); padding: 7rem 5rem; }
+  .role-inner { max-width: 1200px; margin: 0 auto; }
+
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+    margin-top: 4rem;
+  }
+
+  .role-contributions { display: flex; flex-direction: column; gap: 1rem; }
+
+  .contribution { display: flex; align-items: flex-start; gap: 1rem; }
+  .contribution-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--roamy-purple); flex-shrink: 0; margin-top: 9px; }
+  .contribution p { font-size: 15px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+  .contribution strong { color: var(--ink); font-weight: 500; }
+
+  .reflection-cards { display: flex; flex-direction: column; gap: 1rem; }
+
+  .reflection-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: white;
+  }
+
+  .reflection-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
+  .reflection-label.worked { color: #2D7D46; }
+  .reflection-label.improve { color: #B45A10; }
+  .reflection-label.learned { color: var(--roamy-purple); }
+  .reflection-text { font-size: 14px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+  /* FOOTER */
+  footer {
+    background: #111;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+    padding: 3rem;
+    font-size: 13px;
+    font-weight: 300;
+  }
+  footer a { color: var(--roamy-purple-light); text-decoration: none; }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav class="nav" id="nav">
-    <a href="index.html" class="nav__logo">amorino</a>
-    <div class="nav__right">
-      <a href="index.html#work" class="nav__back">← All Work</a>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
-    </div>
-  </nav>
+<!-- NAV -->
+<nav>
+  <a class="nav-back" href="index.html">← Back to Portfolio</a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#recognition">Recognition</a></li>
+  </ul>
+</nav>
 
-  <!-- HERO -->
-  <section class="cs-hero">
-    <div class="cs-hero__bg"></div>
-    <div class="cs-hero__grid"></div>
-    <div class="cs-hero__blob cs-hero__blob--1"></div>
-    <div class="cs-hero__blob cs-hero__blob--2"></div>
-    <div class="cs-hero__blob cs-hero__blob--3"></div>
-
-    <div class="cs-hero__content">
-      <span class="cs-hero__eyebrow">DECO2200 · Mobile App · UX/UI Design</span>
-      <h1 class="cs-hero__title">
-        Athlyst —<br />
-        <em>Olympic Card Trading</em>
-      </h1>
-      <p style="color: var(--text-muted); max-width: 580px; font-size: 1.05rem; line-height: 1.75;">
-        A gamified card-collection platform that deepens Olympic viewer engagement by
-        connecting audiences with the personal stories of lesser-known athletes.
-      </p>
-      <div class="cs-hero__meta">
-        <div class="cs-hero__meta-item">
-          <span class="cs-hero__meta-label">Role</span>
-          <span class="cs-hero__meta-value">UX Designer & Aesthetics Lead</span>
-        </div>
-        <div class="cs-hero__meta-item">
-          <span class="cs-hero__meta-label">Team</span>
-          <span class="cs-hero__meta-value">Amorino, Lachlan, Tyler</span>
-        </div>
-        <div class="cs-hero__meta-item">
-          <span class="cs-hero__meta-label">Tools</span>
-          <span class="cs-hero__meta-value">Figma · FigJam</span>
-        </div>
-        <div class="cs-hero__meta-item">
-          <span class="cs-hero__meta-label">Context</span>
-          <span class="cs-hero__meta-value">DECO2200 · University of Sydney</span>
-        </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <span class="tag">UX / Interaction Design · 2024</span>
+    <h1 class="hero-title">
+      Roamy<em>.</em><br>
+      Where are we<br>
+      <em>roaming</em> next?
+    </h1>
+    <p class="hero-sub">A cultural discovery app connecting young Australian travellers with authentic, local-hosted experiences across Asia — beyond the tourist traps.</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">My Role</span>
+        <span class="meta-value">UX Design & Ideation</span>
       </div>
-    </div>
-    <div class="scroll-indicator">
-      <div class="scroll-indicator__line"></div>
-      Scroll
-    </div>
-  </section>
-
-  <!-- CASE STUDY BODY -->
-  <div class="cs-body">
-
-    <!-- 01 OVERVIEW -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">01 — Overview</span>
-      <h2>The Olympics broadcasts everything. Most viewers see almost nothing.</h2>
-      <p>
-        The Olympic Games spans thousands of athletes across dozens of sports — yet streaming
-        algorithms surface the same familiar names and headline events again and again. Lesser-known
-        athletes and sports don't lack compelling stories; they lack a platform designed to make
-        those stories discoverable.
-      </p>
-      <p>
-        Athlyst flips the model: instead of passively watching who the algorithm picks, users
-        <strong>collect athlete trading cards by watching events</strong> — turning breadth of coverage
-        into a mechanic that rewards engagement with the full Games, not just the highlights reel.
-      </p>
-    </section>
-
-    <!-- HERO IMAGE PLACEHOLDER -->
-    <div class="cs-img-block reveal">
-      <div class="cs-placeholder cs-placeholder--tall">
-        <strong>Athlyst — Hero Mockup</strong>
-        <span>Add your best app mockup or prototype screenshot here</span>
-        <span style="opacity:0.5;">assets/Athlyst COVER.jpg</span>
+      <div class="meta-item">
+        <span class="meta-label">Team</span>
+        <span class="meta-value">4 people</span>
       </div>
-      <figcaption>Athlyst high fidelity prototype — Home, Athletes, Packs, and Profile</figcaption>
-    </div>
-
-    <!-- 02 PROBLEM -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">02 — Problem Statement</span>
-      <h2>Algorithms narrow. Athlyst broadens.</h2>
-      <p>
-        Olympic coverage has always been filtered — by broadcast deals, by popularity, and now by
-        recommendation engines that prioritise engagement over breadth. The result: viewers who
-        tuned in for gymnastics leave knowing nothing about weightlifting, shooting, or modern pentathlon.
-      </p>
-
-      <div class="cs-problem">
-        <p class="cs-problem__quote">
-          "To explore how context and storytelling can be seamlessly integrated to enhance
-          the viewing experience of the Olympics — for athletes and sports that rarely get
-          more than ninety seconds of airtime."
-        </p>
+      <div class="meta-item">
+        <span class="meta-label">Outcome</span>
+        <span class="meta-value">High Distinction</span>
       </div>
-
-      <p>
-        Our research confirmed the gap isn't one of interest — it's one of <strong>discovery architecture.</strong>
-        When people encounter an unfamiliar sport or athlete with context, they engage. Without it,
-        they scroll past. Athlyst's job was to make context the default.
-      </p>
-    </section>
-
-    <!-- 03 RESEARCH -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">03 — Research</span>
-      <h2>Who actually watches the Olympics — and how</h2>
-      <p>
-        We ran surveys, interviews, and focus groups to understand the range of Olympic viewer archetypes.
-        From this, three personas emerged — from the die-hard fan who wants deeper coverage of athletes
-        they already follow, to the casual viewer who only tunes in when the Games appear on social media.
-      </p>
-
-      <!-- Persona image placeholders -->
-      <div class="cs-img-row">
-        <div class="cs-img-block" style="margin:0;">
-          <div class="cs-placeholder cs-placeholder--short">
-            <strong>Persona cards</strong>
-            <span>assets/images/athlyst-personas.jpg</span>
-          </div>
-          <figcaption>3 viewer archetypes mapped from research</figcaption>
-        </div>
-        <div class="cs-img-block" style="margin:0;">
-          <div class="cs-placeholder cs-placeholder--short">
-            <strong>User journey — Hassan</strong>
-            <span>assets/images/athlyst-journey.jpg</span>
-          </div>
-          <figcaption>Hassan's journey: from social mention to watching</figcaption>
-        </div>
-      </div>
-
-      <p>
-        We built a detailed journey for "Hassan" — a casual viewer who only tunes in when something
-        goes viral. His pain point was specific: he'd hear about an athlete, go looking for more,
-        and hit a wall. Wikipedia. A dead NBC link. The athlete's Instagram with three posts from
-        2021. <strong>The moment of curiosity existed, but there was nowhere real to take it.</strong>
-        No story, no schedule, no reason to stay engaged beyond the original clip.
-      </p>
-    </section>
-
-    <!-- 04 IDEATION -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">04 — Ideation</span>
-      <h2>Three concepts, one clear winner</h2>
-      <p>
-        We used Mashups and Crazy 8s to generate concepts, then evaluated three finalists against a
-        decision matrix scoring for engagement potential, educational value, technical feasibility,
-        and novelty. The scores were decisive:
-      </p>
-
-      <div class="cs-matrix">
-        <div class="cs-matrix__cell">
-          <span class="cs-matrix__score">13</span>
-          <span class="cs-matrix__name">Letterboxd for Athletes</span>
-          <span class="cs-matrix__desc">Review and rate Olympic performances</span>
-        </div>
-        <div class="cs-matrix__cell">
-          <span class="cs-matrix__score">18</span>
-          <span class="cs-matrix__name">Duolingo-style Sports Ed</span>
-          <span class="cs-matrix__desc">Learn sport rules through gamified lessons</span>
-        </div>
-        <div class="cs-matrix__cell cs-matrix__cell--winner">
-          <span class="cs-matrix__score">19</span>
-          <span class="cs-matrix__badge">Winner</span>
-          <span class="cs-matrix__name">Pokémon GO–style Card Game</span>
-          <span class="cs-matrix__desc">Collect athlete cards by watching events</span>
-        </div>
-      </div>
-
-      <p>
-        The card collection concept scored highest because it forced breadth by design —
-        <strong>every athlete has an equal chance of appearing in a pack.</strong>
-        The problem with algorithmic feeds isn't that they curate badly; it's that they curate at all.
-        Randomised packs take that control away. The game mechanic makes it fun. The randomisation
-        makes it equitable.
-      </p>
-    </section>
-
-    <!-- IDEATION PROCESS PLACEHOLDER -->
-    <div class="cs-img-row reveal">
-      <div class="cs-img-block" style="margin:0;">
-        <div class="cs-placeholder cs-placeholder--short">
-          <strong>Crazy 8s / ideation session</strong>
-          <span>Photo or scan of your sketching session, Mashups board, or FigJam ideation</span>
-          <span style="opacity:0.5;">assets/images/athlyst-ideation.jpg</span>
-        </div>
-        <figcaption>Crazy 8s ideation — generating the three finalist concepts</figcaption>
-      </div>
-      <div class="cs-img-block" style="margin:0;">
-        <div class="cs-placeholder cs-placeholder--short">
-          <strong>Decision matrix — annotated</strong>
-          <span>Screenshot or photo of the scoring matrix from FigJam or whiteboard</span>
-          <span style="opacity:0.5;">assets/images/athlyst-matrix.jpg</span>
-        </div>
-        <figcaption>Concept scoring — engagement, education, feasibility, novelty</figcaption>
-      </div>
-    </div>
-
-    <!-- 05 SOLUTION -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">05 — Solution</span>
-      <h2>Athlyst — collect the Games</h2>
-      <p>
-        Users earn athlete trading cards by watching Olympic events live and entering codes shown
-        on screen. Each card carries the athlete's personal story, sport, nationality, and career
-        stats — prioritising narrative over metrics. Cards can be traded with friends via a
-        near-field tap on iPhone or Apple Watch, creating real-world social moments.
-      </p>
-
-      <div class="cs-findings">
-        <div class="cs-finding">
-          <div class="cs-finding__icon">🏠</div>
-          <p class="cs-finding__title">Home — Live & Upcoming</p>
-          <p class="cs-finding__body">Surfaces live events with accessible sport explainers so new viewers can engage even without prior knowledge of the discipline.</p>
-        </div>
-        <div class="cs-finding">
-          <div class="cs-finding__icon">🃏</div>
-          <p class="cs-finding__title">Pack Opening</p>
-          <p class="cs-finding__body">Slide-to-unlock mechanic with confetti feedback on rare cards. The moment of revealing an athlete you've never heard of is the core loop.</p>
-        </div>
-        <div class="cs-finding">
-          <div class="cs-finding__icon">🌍</div>
-          <p class="cs-finding__title">Athletes Collection</p>
-          <p class="cs-finding__body">Browse your collection organised by country and sport. The breadth of the Games becomes visible as your collection grows.</p>
-        </div>
-        <div class="cs-finding">
-          <div class="cs-finding__icon">⌚</div>
-          <p class="cs-finding__title">Apple Watch Trade Flow</p>
-          <p class="cs-finding__body">Tap phones or watches together to trade cards in person — turning Olympic viewership into a social, physical experience.</p>
-        </div>
-      </div>
-
-      <!-- Solution screen placeholders -->
-      <div class="cs-img-row">
-        <div class="cs-img-block" style="margin:0;">
-          <div class="cs-placeholder cs-placeholder--short">
-            <strong>Pack opening flow</strong>
-            <span>Slide-to-unlock screen and confetti moment — the core reward loop</span>
-            <span style="opacity:0.5;">assets/images/athlyst-packs.jpg</span>
-          </div>
-          <figcaption>Pack opening — the moment you reveal an athlete card</figcaption>
-        </div>
-        <div class="cs-img-block" style="margin:0;">
-          <div class="cs-placeholder cs-placeholder--short">
-            <strong>Athlete card + Apple Watch trade</strong>
-            <span>Card detail view and the Watch trade flow — tap to swap cards in person</span>
-            <span style="opacity:0.5;">assets/images/athlyst-card.jpg</span>
-          </div>
-          <figcaption>Card detail + Apple Watch trade interaction</figcaption>
-        </div>
-      </div>
-    </section>
-
-    <!-- 06 VISUAL IDENTITY -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">06 — Visual Design</span>
-      <h2>A palette built for athletic energy</h2>
-      <p>
-        Athlyst's visual identity uses a triadic colour theme — gunmetal grey as the dominant base,
-        antiflash white for contrast, and electric lime as the primary accent. The vibrant palette
-        adds to the gamified experience while Work Sans keeps typography clean and readable across
-        small card formats.
-      </p>
-
-      <div class="cs-palette">
-        <div class="cs-swatch">
-          <div class="cs-swatch__block" style="background:#2C3333;"></div>
-          <span class="cs-swatch__label">Gunmetal Grey</span>
-          <span class="cs-swatch__hex">#2C3333</span>
-        </div>
-        <div class="cs-swatch">
-          <div class="cs-swatch__block" style="background:#F0F0F0; border: 1px solid #ddd;"></div>
-          <span class="cs-swatch__label">Antiflash White</span>
-          <span class="cs-swatch__hex">#F0F0F0</span>
-        </div>
-        <div class="cs-swatch">
-          <div class="cs-swatch__block" style="background:#B5E04B;"></div>
-          <span class="cs-swatch__label">Electric Lime</span>
-          <span class="cs-swatch__hex">#B5E04B</span>
-        </div>
-        <div class="cs-swatch">
-          <div class="cs-swatch__block" style="background:#D4876A;"></div>
-          <span class="cs-swatch__label">Coral Accent</span>
-          <span class="cs-swatch__hex">#D4876A</span>
-        </div>
-        <div class="cs-swatch">
-          <div class="cs-swatch__block" style="background:#5B8DB8;"></div>
-          <span class="cs-swatch__label">Steel Blue</span>
-          <span class="cs-swatch__hex">#5B8DB8</span>
-        </div>
-      </div>
-
-      <!-- Hi-fi full view placeholder -->
-      <div class="cs-img-block">
-        <div class="cs-placeholder cs-placeholder--tall">
-          <strong>Full prototype screens</strong>
-          <span>Home, Athletes, Pack Opening, Trade Flow, and Profile</span>
-          <span style="opacity:0.5;">assets/images/athlyst-hifi.jpg</span>
-        </div>
-        <figcaption>Athlyst final high fidelity — all key screens across the core flow</figcaption>
-      </div>
-    </section>
-
-    <!-- 07 TESTING -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">07 — Testing</span>
-      <h2>Experts before users — always</h2>
-      <p>
-        We tested across three fidelity levels with a consistent protocol: think-aloud tasks, post-interview,
-        SUS survey, and wrap-up interview. But the strategy that paid off most was running <strong>heuristic
-        evaluation with expert designers before exposing the prototype to real users.</strong>
-      </p>
-
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">SUS scores across testing iterations</p>
-      <div class="sus-block">
-        <div class="sus-row">
-          <span class="sus-row__label">Low-fi</span>
-          <div class="sus-row__track"><div class="sus-row__fill" style="width: 66.5%"></div></div>
-          <span class="sus-row__value">66.5</span>
-        </div>
-        <div class="sus-row">
-          <span class="sus-row__label">Mid-fi</span>
-          <div class="sus-row__track"><div class="sus-row__fill" style="width: 70.8%"></div></div>
-          <span class="sus-row__value">70.8</span>
-        </div>
-      </div>
-
-      <p>
-        Low-fi testing revealed the biggest structural issue: the athletes section was hidden behind
-        a globe icon that users consistently mistook for a browser or network button. Average task completion
-        time for that screen was <strong>39 seconds vs 12 seconds</strong> for every other task. The fix:
-        make Athletes a primary nav item with an unambiguous card icon.
-      </p>
-
-      <p>The expert heuristic evaluation before high-fi testing flagged four major issues we resolved first:</p>
-      <div class="cs-changes">
-        <div class="cs-change">
-          <span class="cs-change__icon">⚠</span>
-          Missing tutorial for the card trade feature — users didn't know it existed
-        </div>
-        <div class="cs-change">
-          <span class="cs-change__icon">⚠</span>
-          Card flip interaction was not discoverable without a visual affordance
-        </div>
-        <div class="cs-change">
-          <span class="cs-change__icon">⚠</span>
-          Inconsistent nav bar icons across screens broke navigation mental models
-        </div>
-        <div class="cs-change">
-          <span class="cs-change__icon">⚠</span>
-          Profile page didn't differentiate between your profile and a friend's
-        </div>
-      </div>
-
-      <div class="cs-participants">
-        <div class="cs-participant-group">
-          <div class="cs-participant-group__num">3</div>
-          <div class="cs-participant-group__label">Testing fidelity rounds (lo → mid → hi)</div>
-        </div>
-        <div class="cs-participant-group">
-          <div class="cs-participant-group__num">↓3→1</div>
-          <div class="cs-participant-group__label">Severity ratings dropped from Major to Minor/Cosmetic</div>
-        </div>
-      </div>
-
-      <div class="cs-quote">
-        <p class="cs-quote__text">I've never watched synchronised swimming in my life, but I'd watch it to try and get the card.</p>
-        <p class="cs-quote__source">— User testing participant</p>
-      </div>
-
-      <!-- Testing session photo -->
-      <div class="cs-img-block reveal">
-        <div class="cs-placeholder cs-placeholder--short">
-          <strong>Usability testing session</strong>
-          <span>Think-aloud photo, screen recording still, or test notes — low-fi or hi-fi round</span>
-          <span style="opacity:0.5;">assets/images/athlyst-testing.jpg</span>
-        </div>
-        <figcaption>Usability testing — identifying the globe-icon navigation issue</figcaption>
-      </div>
-    </section>
-
-    <!-- 08 REFLECTION -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">08 — Reflection</span>
-      <h2>What I actually learned</h2>
-
-      <div class="cs-reflection">
-        <h3>Good gamification is structural problem-solving</h3>
-        <p>
-          The trading card format wasn't chosen because it's fun — it was chosen because it physically
-          equalises representation. Every athlete has the same card format regardless of global profile.
-          The most obscure weightlifter and the most famous gymnast are structurally equal in a pack. That's
-          not a game mechanic; it's a design argument.
-        </p>
-        <p>
-          My role focused on overseeing the visual identity and aesthetic direction across all prototype
-          iterations. The biggest design challenge was maintaining visual cohesion as the interface grew —
-          Figma's component system was essential for keeping 70+ screens consistent across three fidelity rounds.
-        </p>
-        <p>
-          Testing experts before users is something I'll carry into every future project. It's far more
-          efficient to fix structural heuristic violations before real users encounter them — and it means
-          user testing yields higher-quality qualitative data, because participants aren't stuck on basic
-          usability friction that could have been fixed in advance.
-        </p>
-      </div>
-
-      <span class="cs-annotation">gamification as equity argument →</span>
-    </section>
-
-  </div>
-
-  <!-- NEXT PROJECT -->
-  <div class="cs-next">
-    <span class="cs-next__label">Keep exploring</span>
-    <h2 class="cs-next__title">See more work</h2>
-    <div class="cs-next__links">
-      <a href="casestudybreathoffreshair.html" class="btn">Breath of Fresh Air — IEQ Dashboard</a>
-      <a href="casestudyroamy.html" class="btn btn--ghost">Roamy — Cultural Discovery App</a>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <span>© 2026 Amorino Toongart</span>
-    <span>Built by hand in VS Code.</span>
-  </footer>
+  <div class="hero-right">
+    <div class="hero-bg-text">ROAM</div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem; position: relative; z-index: 1;">
+      <div class="hero-globe">🌏</div>
+      <div class="hero-app-preview">
+        <div class="app-bar"><div class="app-bar-fill"></div></div>
+        <div class="app-card-mini">
+          <div class="app-card-mini-title">☕ Coffee & Culture</div>
+          <div class="app-card-mini-sub">Bangkok · with Amo · ★ 4.97</div>
+        </div>
+        <div class="app-card-mini" style="background:#EDF7F1;">
+          <div class="app-card-mini-title" style="color:#2D7D46;">🍜 Local Language & Bites</div>
+          <div class="app-card-mini-sub">Today's Top Pick</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <script>
-    // Theme toggle
-    const toggle = document.getElementById('theme-toggle');
-    toggle.addEventListener('click', () => {
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      if (isLight) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
+
+<!-- PROBLEM -->
+<div id="problem" class="problem-section">
+  <div class="section-wrap" style="padding-top: 7rem; padding-bottom: 7rem;">
+    <p class="section-eyebrow reveal">The Problem</p>
+    <h2 class="section-heading reveal">Young travellers want real culture.<br>They keep finding tourist traps.</h2>
+    <p class="body-text reveal">58% of Australians aged 18 to 25 were planning overseas trips in 2024, with Asia-Pacific as their top destination. They want something genuine — local food stalls, language lessons, real conversations. But without the right tools, they end up on the same guided bus tours as everyone else.</p>
+
+    <div class="stats-row reveal">
+      <div class="stat-card">
+        <div class="stat-number"><span>64</span>%</div>
+        <div class="stat-desc">of young travellers knew about Smartraveller — but only 37% actually reviewed destination-specific advice before travelling</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">+<span>38</span>%</div>
+        <div class="stat-desc">increase in Australian visits to Japan, alongside surges to China (+35%) and Vietnam (+26%). Asia travel is booming.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><span>40</span>%</div>
+        <div class="stat-desc">of tourism earnings leak out of small local economies — meaning locals miss out even when travellers show up in large numbers</div>
+      </div>
+    </div>
+
+    <div class="problem-statement reveal">
+      <p>"Young Australians seek authentic, culturally rich experiences, yet face barriers in awareness, planning, and cultural understanding. Without effective models, many are funnelled into tourist traps — leading to diluted experiences for them and missed economic opportunities for local communities."</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- SOLUTION -->
+<div id="solution" style="background: white;">
+  <div class="section-wrap">
+    <p class="section-eyebrow reveal">The Solution</p>
+    <h2 class="section-heading reveal">Roamy — like having a <em>friend in town</em> who knows where to go</h2>
+
+    <div class="solution-grid reveal">
+      <div>
+        <p class="body-text">Roamy connects travellers directly with verified locals who host experiences — a Thai tea ceremony, a cooking class from someone's grandmother's kitchen, a street food walk through neighbourhoods no tourist map shows you.</p>
+        <p class="body-text" style="margin-top: 1rem;">It creates mutual value: travellers get genuine cultural access, locals earn income and get recognised for sharing what they know best.</p>
+
+        <div class="solution-values">
+          <div class="value-item">
+            <div class="value-icon">🔍</div>
+            <div>
+              <div class="value-title">Discover hidden gems</div>
+              <div class="value-desc">Personalised local experiences — not the ones on every travel blog</div>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">🛡️</div>
+            <div>
+              <div class="value-title">Trust built in</div>
+              <div class="value-desc">Verified Roamy Local Badges and QR check-in for safety and accountability</div>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">🤝</div>
+            <div>
+              <div class="value-title">Two-sided platform</div>
+              <div class="value-desc">Locals list, earn, and manage bookings. Travellers browse, book, connect.</div>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">🌱</div>
+            <div>
+              <div class="value-title">Community feel</div>
+              <div class="value-desc">Badges, achievements, and a Roamer network that grows as you travel</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-status">
+            <span class="phone-status-text">9:41</span>
+            <span class="phone-status-text">●●●</span>
+          </div>
+          <div class="phone-body">
+            <div class="phone-search">🔍 Start your search...</div>
+            <div style="background: var(--roamy-purple); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: white;">
+              <div style="font-size: 9px; opacity: 0.7; margin-bottom: 2px;">Currently Roaming</div>
+              <div style="font-size: 12px; font-weight: 600;">Bangkok, Thailand 🇹🇭</div>
+            </div>
+            <div class="phone-section-label">Recommended ✨</div>
+            <div class="phone-card-row">
+              <div class="phone-card">
+                <div class="phone-card-img" style="background: #FFF3E0;">☕</div>
+                <div class="phone-card-title">Coffee & Culture</div>
+                <div class="phone-card-sub">200B · 1hr · Bangkok</div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-img" style="background: #E8F5E9;">🍃</div>
+                <div class="phone-card-title">Tea Traditions</div>
+                <div class="phone-card-sub">200B · 1hr · Minburi</div>
+              </div>
+            </div>
+            <div class="phone-section-label">Today's Top Picks 🔥</div>
+            <div style="background: var(--roamy-purple-faint); border-radius: 10px; padding: 8px; display: flex; gap: 8px; align-items: center;">
+              <div style="font-size: 1.5rem;">🥘</div>
+              <div>
+                <div style="font-size: 9px; font-weight: 600; color: #333;">Local Language and Bites</div>
+                <div style="font-size: 8px; color: #888;">with Amorino Toongart</div>
+                <div class="badge-roamy" style="margin-top: 3px;">✓ Roamy Verified</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- VIDEO -->
+<div class="video-section">
+  <div class="video-inner">
+    <p class="section-eyebrow reveal">The Ad</p>
+    <h2 class="section-heading reveal">We made an ad for it too</h2>
+    <p class="body-text reveal">Part of the brief was bringing Roamy to life beyond the prototype — so we made a short video ad that captured the feel of the experience. The goal was to make someone want to download an app that didn't exist yet.</p>
+
+    <div class="video-wrap reveal" style="margin-top: 3rem;">
+      <!--
+        PASTE YOUR VIMEO EMBED URL BELOW.
+        In Vimeo: open your video > Share > Embed > copy the URL from inside src="..."
+        It looks like: https://player.vimeo.com/video/XXXXXXXXX
+        Replace the src value on the line below.
+      -->
+      <iframe
+        src="https://player.vimeo.com/video/YOUR_VIDEO_ID_HERE?badge=0&autopause=0&player_id=0&app_id=58479"
+        allow="autoplay; fullscreen; picture-in-picture"
+        title="Roamy — Product Ad">
+      </iframe>
+
+      <!-- This placeholder shows until you add your Vimeo URL — delete it once the embed is in -->
+      <div class="video-placeholder">
+        <div class="play-icon">▶</div>
+        <span>Paste your Vimeo embed URL into the iframe src above</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- FIGMA PROTOTYPE -->
+<div class="figma-section">
+  <div class="figma-inner">
+    <p class="section-eyebrow reveal">Try It</p>
+    <h2 class="section-heading reveal">Interact with the <em>live prototype</em></h2>
+    <p class="body-text reveal">This is the actual Figma prototype — not a screenshot. Click through the screens, explore the booking flow, and see the interactions we built across three rounds of testing.</p>
+
+    <div class="figma-note reveal">
+      <span>💡</span>
+      <span>Click anywhere on the prototype to start — navigate just like you would on a real phone</span>
+    </div>
+
+    <div class="figma-wrap reveal">
+      <!--
+        PASTE YOUR FIGMA EMBED URL BELOW.
+        In Figma: open prototype > Share > Copy link > change the URL format to embed:
+        https://www.figma.com/embed?embed_host=share&url=YOUR_SHARE_LINK
+        Or use the direct embed link from Share > Get embed link.
+        Replace the src value below.
+      -->
+      <iframe
+        src="https://www.figma.com/embed?embed_host=share&url=YOUR_FIGMA_SHARE_LINK_HERE"
+        allowfullscreen
+        title="Roamy Figma Prototype">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+
+<!-- PROCESS -->
+<div id="process" class="process-section">
+  <div class="process-inner">
+    <p class="section-eyebrow reveal">How We Got There</p>
+    <h2 class="section-heading reveal">Three rounds of testing,<br>each one <em>sharper</em> than the last</h2>
+    <p class="body-text reveal">We didn't design in a vacuum. Every decision came from something we heard, observed, or tested — starting from a pantomime in a classroom and ending at a polished, animated prototype.</p>
+
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-number">01</div>
+        <div class="step-phase">Concept Testing</div>
+        <div class="step-title">Pantomime and Low-Fidelity</div>
+        <div class="step-desc">We simulated a Thai café cultural exchange with 7 participants. Before touching a screen, we put people inside the experience itself — measuring whether the concept resonated emotionally before committing to any interface decisions.</div>
+        <div class="step-findings">
+          <span class="finding-tag">Think-aloud method</span>
+          <span class="finding-tag">Likert-scale pre/post survey</span>
+          <span class="finding-tag">Sketched booking wireframe</span>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-number">02</div>
+        <div class="step-phase">Structural Design</div>
+        <div class="step-title">Mid-Fidelity Prototype</div>
+        <div class="step-desc">Moved into Figma with consistent components, real imagery, and colour. Drew from Airbnb's booking flow, Headspace's emotional tone, and Booking.com's navigation clarity to shape familiar but fresh patterns.</div>
+        <div class="step-findings">
+          <span class="finding-tag">Simplified ticket screen</span>
+          <span class="finding-tag">Trust indicators added</span>
+          <span class="finding-tag">Navigation overhauled</span>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-number">03</div>
+        <div class="step-phase">Final Polish</div>
+        <div class="step-title">High-Fidelity and Brand</div>
+        <div class="step-desc">Finalised the logo — globe embedded in the O — the colour system, onboarding animation, and resolved all UI inconsistencies. The brand had to feel playful and modern, youthful without being childish.</div>
+        <div class="step-findings">
+          <span class="finding-tag">Onboarding animation</span>
+          <span class="finding-tag">Brand identity locked</span>
+          <span class="finding-tag">Figma prototype final</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 5rem;">
+      <p class="section-eyebrow reveal">Key Insights from Testing</p>
+      <div class="insights-row">
+        <div class="insight-card reveal">
+          <div class="insight-label">On Trust</div>
+          <div class="insight-text">Verified badges increased user confidence — but without explanation, people didn't know what they meant. We added context to every trust signal.</div>
+        </div>
+        <div class="insight-card reveal">
+          <div class="insight-label">On Navigation</div>
+          <div class="insight-text">Users wanted clearer transitions between browsing, booking, and managing. We rebuilt the flow so each state felt distinct and purposeful.</div>
+        </div>
+        <div class="insight-card reveal">
+          <div class="insight-label">On Cultural Framing</div>
+          <div class="insight-text">People engaged more with activities described as cultural exchange rather than tours. The language we used mattered as much as the features themselves.</div>
+        </div>
+        <div class="insight-card reveal">
+          <div class="insight-label">On the Ticket Screen</div>
+          <div class="insight-text">The original check-in flow was too cluttered. Stripping it to a QR code and essential info dramatically improved confidence and reduced confusion during testing.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- FEATURES -->
+<div style="background: var(--cream); padding: 7rem 5rem;">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <p class="section-eyebrow reveal">Key Features</p>
+    <h2 class="section-heading reveal">What Roamy <em>actually does</em></h2>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-num">01</div>
+        <div class="feature-name">Explore</div>
+        <div class="feature-desc">Browse local experiences organised by duration and category. Personalised recommendations surface activities that match your interests and travel style.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-num">02</div>
+        <div class="feature-name">Manage</div>
+        <div class="feature-desc">Track bookings and itineraries. Coordinate solo or group plans, adjust on the go, and never lose track of what is coming up next.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-num">03</div>
+        <div class="feature-name">Experience Detail</div>
+        <div class="feature-desc">Each listing has full host profiles, Roamy Local Badges, and honest reviews. Enough to build genuine trust before you even show up.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-num">04</div>
+        <div class="feature-name">QR Ticket</div>
+        <div class="feature-desc">A digital ticket for every booking. Scan to check in, verify the host, and get a layer of safety built directly into the flow.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-num">05</div>
+        <div class="feature-name">Host Side</div>
+        <div class="feature-desc">Locals create profiles, design experiences, and get notified when someone books. Running a cultural experience should be simple, not a second job.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-num">06</div>
+        <div class="feature-name">Profile and Badges</div>
+        <div class="feature-desc">Achievements, cultural milestones, and a network of fellow Roamers. Travel becomes something you build on, not just consume.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- RESULTS -->
+<div id="results" class="results-section">
+  <div class="results-inner">
+    <p class="section-eyebrow reveal">The Results</p>
+    <h2 class="section-heading reveal">The numbers that made us feel like<br>we were onto <em>something real</em></h2>
+    <div class="results-grid">
+      <div class="result-card reveal">
+        <div class="result-number">+31%</div>
+        <div class="result-desc">increase in self-reported cultural understanding after participants engaged with the pantomime experience</div>
+      </div>
+      <div class="result-card reveal">
+        <div class="result-number">+166%</div>
+        <div class="result-desc">jump in language confidence — proving the concept went beyond an app. It was a full cultural system.</div>
+      </div>
+      <div class="result-card reveal">
+        <div class="result-number">94%</div>
+        <div class="result-desc">of participants said they would recommend Roamy, with 88% willing to actually pay for an experience</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- RECOGNITION -->
+<div id="recognition" class="recognition-section">
+  <div class="recognition-inner">
+    <p class="section-eyebrow reveal">Recognition</p>
+    <h2 class="section-heading reveal">It went further than<br>we <em>expected</em> it to</h2>
+    <p class="recognition-intro reveal">Out of all the projects in our cohort, Roamy was selected to be showcased at the University of Sydney graduation show — an evening where members of the public, industry guests, and academics came to see the year's best student work. Seeing strangers engage with something we had built from a whiteboard sketch was genuinely surreal.</p>
+
+    <div class="recognition-cards">
+      <div class="recognition-card reveal">
+        <div class="recognition-accent" style="background: linear-gradient(90deg, #FFD700, #FFA500);"></div>
+        <span class="recognition-icon">🏆</span>
+        <div class="recognition-title">High Distinction</div>
+        <div class="recognition-body">The highest grade awarded in the DECO3200 studio — reflecting the quality of our research, design process, and final prototype.</div>
+      </div>
+      <div class="recognition-card reveal">
+        <div class="recognition-accent" style="background: linear-gradient(90deg, #8452A5, #C9AADF);"></div>
+        <span class="recognition-icon">🎓</span>
+        <div class="recognition-title">USYD Grad Show</div>
+        <div class="recognition-body">One of a small number of projects selected from across the cohort to be exhibited at the University of Sydney graduation show, open to the public and industry.</div>
+      </div>
+      <div class="recognition-card reveal">
+        <div class="recognition-accent" style="background: linear-gradient(90deg, #4DC1FF, #46BB69);"></div>
+        <span class="recognition-icon">📖</span>
+        <div class="recognition-title">Design Catalogue</div>
+        <div class="recognition-body">Roamy was selected for inclusion in the USYD yearly design catalogue — a permanent record of the standout student work from the academic year.</div>
+      </div>
+    </div>
+
+    <div class="recognition-quote reveal">
+      <p>"Seeing strangers engage with something we had built from a whiteboard sketch — watching them actually understand it, respond to it, want to use it — that was the moment it stopped feeling like a student project and started feeling like something real."</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- MY ROLE -->
+<div id="my-role" class="role-section">
+  <div class="role-inner">
+    <p class="section-eyebrow reveal">My Role</p>
+    <h2 class="section-heading reveal">UX Designer and <em>Ideation Lead</em></h2>
+
+    <div class="role-grid">
+      <div>
+        <div class="role-contributions reveal">
+          <div class="contribution">
+            <div class="contribution-dot"></div>
+            <p><strong>Led ideation and concept generation</strong> — shaping the research direction and making sure the human stayed at the centre of every decision we made</p>
+          </div>
+          <div class="contribution">
+            <div class="contribution-dot"></div>
+            <p><strong>Built the wireframes and UI</strong> — from low-fidelity sketches through to high-fidelity Figma screens, leading on the technical and visual build of the product</p>
+          </div>
+          <div class="contribution">
+            <div class="contribution-dot"></div>
+            <p><strong>Ran user testing sessions</strong> — facilitated the pantomime, led survey analysis, and documented feedback across all three rounds of testing</p>
+          </div>
+          <div class="contribution">
+            <div class="contribution-dot"></div>
+            <p><strong>Guided participants personally</strong> — because this topic was personal to me, I wasn't just a designer running a test. I had a stake in what we were creating.</p>
+          </div>
+          <div class="contribution">
+            <div class="contribution-dot"></div>
+            <p><strong>Balanced creativity with structure</strong> — learned through this project how design gets stronger when you build collaboratively, not in isolation</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reflection-cards reveal">
+        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; font-weight: 600;">Honest Reflection</div>
+        <div class="reflection-card">
+          <div class="reflection-label worked">What Worked</div>
+          <div class="reflection-text">Strong team collaboration with clear roles kept momentum steady throughout. The user testing fair was one of the most energising parts — watching real people engage with something we made from scratch confirmed we were solving the right problem.</div>
+        </div>
+        <div class="reflection-card">
+          <div class="reflection-label improve">What I Would Do Differently</div>
+          <div class="reflection-text">I would push harder on the local perspective — our design skewed traveller-first. I would also test more scenarios earlier and think more seriously about business viability from week one, not just as an afterthought.</div>
+        </div>
+        <div class="reflection-card" style="border-color: var(--roamy-purple-light); border-top: 3px solid var(--roamy-purple);">
+          <div class="reflection-label learned">What It Taught Me</div>
+          <div class="reflection-text">That design can shape feelings as much as functionality. Iteration is not failure — it is the process. And the work gets better when you genuinely care about the problem you are solving, not just the solution you are presenting.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer>
+  <p>Roamy — DECO3200 Final Project · Amorino Toongart, Kittu Hoyne, Tyler Abrahams, Ruben Suwargo</p>
+  <p style="margin-top: 8px; font-size: 12px;">Part of <a href="index.html">Amorino's Portfolio</a></p>
+</footer>
+
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
       }
     });
+  }, { threshold: 0.08 });
 
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 80);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    reveals.forEach(el => observer.observe(el));
-  </script>
+  reveals.forEach(el => observer.observe(el));
 
+  // Stagger children inside grid parents
+  document.querySelectorAll('.stats-row, .process-steps, .results-grid, .features-grid, .insights-row, .recognition-cards').forEach(parent => {
+    parent.querySelectorAll('.reveal').forEach((child, i) => {
+      child.style.transitionDelay = `${i * 90}ms`;
+    });
+  });
+</script>
 </body>
 </html>

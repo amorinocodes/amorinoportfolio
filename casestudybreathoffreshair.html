@@ -7,13 +7,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet" />
 
   <script>
     (function () {
-      var saved = localStorage.getItem('theme');
-      var prefersLight = !window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'light' || (!saved && prefersLight)) {
+      if (localStorage.getItem('theme') !== 'dark') {
         document.documentElement.setAttribute('data-theme', 'light');
       }
     })();
@@ -40,12 +38,12 @@
       --bofa-green:   #00b38a;
     }
     [data-theme="light"] {
-      --bg:           #f5f2ed;
-      --bg-2:         #ede9e2;
-      --bg-3:         #e4dfd7;
-      --text:         #1a1816;
-      --text-muted:   #6b6560;
-      --border:       rgba(0,0,0,0.08);
+      --bg:           #ffffff;
+      --bg-2:         #f8f9fa;
+      --bg-3:         #f1f3f4;
+      --text:         #202124;
+      --text-muted:   #5f6368;
+      --border:       #dadce0;
     }
 
     /* ── RESET ── */
@@ -54,7 +52,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 300;
       line-height: 1.7;
       overflow-x: hidden;
@@ -72,9 +70,9 @@
       border-bottom: 1px solid var(--border);
       transition: background var(--transition);
     }
-    [data-theme="light"] .nav { background: rgba(245,242,237,0.85); }
+    [data-theme="light"] .nav { background: rgba(255,255,255,0.92); }
     .nav__logo {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 1.1rem;
       font-weight: 700;
       letter-spacing: 0.04em;
