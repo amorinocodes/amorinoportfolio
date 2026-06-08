@@ -214,3 +214,128 @@ if (lanyardFlip) {
     }
   });
 }
+
+
+// =============================================
+// CURSOR — dot → pill
+// Simple blue dot that expands into a labelled
+// rounded pill on case study cards and portrait
+// photos, mouse-capable devices only.
+// =============================================
+if (window.matchMedia('(pointer: fine)').matches) {
+  const cursorEl = document.createElement('div');
+  cursorEl.className = 'cursor';
+  const textEl = document.createElement('span');
+  textEl.className = 'cursor__text';
+  cursorEl.append(textEl);
+  document.body.append(cursorEl);
+
+  document.addEventListener('mousemove', e => {
+    cursorEl.style.left = `${e.clientX}px`;
+    cursorEl.style.top  = `${e.clientY}px`;
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => cursorEl.style.opacity = '0');
+  document.addEventListener('mouseenter', () => cursorEl.style.opacity = '');
+
+  function openPill(text, w, h) {
+    textEl.textContent = text;
+    cursorEl.style.width  = `${w}px`;
+    cursorEl.style.height = `${h}px`;
+    cursorEl.classList.add('is-pill');
+  }
+
+  function closePill() {
+    cursorEl.classList.remove('is-pill');
+    cursorEl.style.width  = '';
+    cursorEl.style.height = '';
+  }
+
+  // Case study cards → "View Project"
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mouseenter', () => openPill('View Project', 130, 40));
+    card.addEventListener('mouseleave', closePill);
+  });
+
+  // Portrait photos → fun personal facts
+  [
+    ['.portrait__photo--1', 'My favourite Japanese dish is raw salmon nigiri!',      210, 68],
+    ['.portrait__photo--2', 'Unpopular opinion but I love group projects LOL',        210, 62],
+    ['.portrait__photo--3', 'My favourite Chocolate is Whittakers White Chocolate',  210, 68],
+  ].forEach(([sel, text, w, h]) => {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    el.addEventListener('mouseenter', () => openPill(text, w, h));
+    el.addEventListener('mouseleave', closePill);
+  });
+
+  // Language tags → fun origin facts
+  const langTags = document.querySelectorAll('.lang-tag');
+  langTags.forEach(tag => {
+    const text = tag.textContent;
+    let msg, w, h;
+    if (text.includes('Thai')) {
+      msg = 'My family is from Chiang Rai and Sukohthai!'; w = 230; h = 62;
+    } else if (text.includes('English')) {
+      msg = 'I was born and raised in New Zealand!'; w = 210; h = 52;
+    }
+    if (!msg) return;
+    tag.addEventListener('mouseenter', () => openPill(msg, w, h));
+    tag.addEventListener('mouseleave', closePill);
+  });
+}
+
+// =============================================
+// SEGMENTED NAV — sliding pill indicator
+// =============================================
+(function () {
+  const listEl = document.querySelector('.nav__links');
+  if (!listEl) return;
+
+  const ind = document.createElement('span');
+  ind.className = 'nav-pill-indicator';
+  listEl.prepend(ind);
+
+  const links = [...listEl.querySelectorAll('a')];
+  let active = links[0];
+
+  function move(el, instant) {
+    if (instant) ind.style.transition = 'none';
+    const wr = listEl.getBoundingClientRect();
+    const br = el.getBoundingClientRect();
+    ind.style.width = br.width + 'px';
+    ind.style.left  = (br.left - wr.left) + 'px';
+    if (instant) requestAnimationFrame(() => { ind.style.transition = ''; });
+  }
+
+  function activate(el) {
+    links.forEach(l => l.classList.remove('nav-active'));
+    el.classList.add('nav-active');
+    active = el;
+    move(el);
+  }
+
+  links.forEach(link => {
+    link.addEventListener('mouseenter', () => move(link));
+    link.addEventListener('mouseleave',  () => move(active));
+  });
+
+  // Set initial position without animation
+  requestAnimationFrame(() => move(active, true));
+  activate(links[0]);
+
+  // Update active link based on which section is on screen
+  const sectionObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const link = listEl.querySelector(`a[href="#${entry.target.id}"]`);
+        if (link) activate(link);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  ['work', 'about', 'contact'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) sectionObs.observe(el);
+  });
+})();

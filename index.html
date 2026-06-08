@@ -26,12 +26,12 @@
   <!-- ===== NAV ===== -->
   <nav class="nav" id="nav">
     <a href="#hero" class="nav__logo">amorino</a>
+    <ul class="nav__links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
     <div class="nav__right">
-      <ul class="nav__links">
-        <li><a href="#work">Work</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
     </div>
   </nav>
@@ -110,17 +110,14 @@
   <!-- ===== WORK ===== -->
   <section class="section work" id="work">
     <div class="container">
-      <h2 class="section__title">Selected Work</h2>
+      <h2 class="section__title">Selected Work <span class="section-icon section-icon--work" aria-hidden="true">✦</span></h2>
 
       <div class="work__grid">
 
         <!-- CARD 1 — Featured (Roamy) -->
-        <article class="card" data-index="01">
+        <a href="casestudyroamy.html" class="card" data-index="01">
           <div class="card__img-wrap">
-            <img src="assets/Roamy Final Dash picture.jpg" alt="Roamy app mockup" class="card__img" />
-            <div class="card__overlay">
-              <a href="casestudyroamy.html" class="btn btn--outline">View Case Study</a>
-            </div>
+            <img src="assets/RoamyNewMockup.png" alt="Roamy app mockup" class="card__img" />
           </div>
           <div class="card__body">
             <span class="card__tag">Mobile App · UX/UI Design · DECO3200</span>
@@ -130,15 +127,12 @@
               across Asia. Designed to bridge the gap between tourist traps and genuine cultural exchange.
             </p>
           </div>
-        </article>
+        </a>
 
         <!-- CARD 2 — Athlyst -->
-        <article class="card" data-index="02">
+        <a href="casestudyathlyst.html" class="card" data-index="02">
           <div class="card__img-wrap">
-            <img src="assets/Athlyst COVER.jpg" alt="Athlyst app mockup" class="card__img" />
-            <div class="card__overlay">
-              <a href="casestudyathlyst.html" class="btn btn--outline">View Case Study</a>
-            </div>
+            <img src="assets/AthlystNewMockup.png" alt="Athlyst app mockup" class="card__img" />
           </div>
           <div class="card__body">
             <span class="card__tag">Mobile App · UX/UI Design · DECO2200</span>
@@ -148,15 +142,12 @@
               lesser-known Olympic athletes and sports through storytelling and social trading.
             </p>
           </div>
-        </article>
+        </a>
 
        <!-- CARD 3 — Breath of Fresh Air -->
-<article class="card" data-index="03">
+<a href="casestudybreathoffreshair.html" class="card" data-index="03">
   <div class="card__img-wrap">
-    <img src="assets/BOFA Home Image.jpg" alt="Breath of Fresh Air dashboard mockup" class="card__img" />
-    <div class="card__overlay">
-      <a href="casestudybreathoffreshair.html" class="btn btn--outline">View Case Study</a>
-    </div>
+    <img src="assets/BOFANewMockup.png" alt="Breath of Fresh Air dashboard mockup" class="card__img" />
   </div>
   <div class="card__body">
     <span class="card__tag">Data Visualisation · Dashboard Design · DECO3100</span>
@@ -166,7 +157,7 @@
       before staff complaints — turning raw sensor data into clear, actionable insights.
     </p>
   </div>
-</article>
+</a>
 
       </div>
     </div>
@@ -178,7 +169,7 @@
 
       <div class="about__grid">
         <div class="about__text">
-          <h2 class="section__title">About Me</h2>
+          <h2 class="section__title">About Me <span class="section-icon section-icon--about" aria-hidden="true">✦</span></h2>
           <p>
             I'm a UX/UI designer studying at the University of Sydney, drawn to the intersection
             of user psychology and considered craft. I believe the best interfaces feel less like
@@ -297,7 +288,7 @@
   <!-- ===== CONTACT ===== -->
   <section class="section contact" id="contact">
     <div class="container contact__inner">
-      <h2 class="contact__title">Let's work<br><em>together.</em></h2>
+      <h2 class="contact__title">Thanks for<br><em>reading!.</em></h2>
       <p class="contact__sub">Open to full-time roles and select freelance projects.</p>
       <a href="mailto:you@email.com" class="btn btn--large contact__cta">Say hello ↗</a>
     </div>

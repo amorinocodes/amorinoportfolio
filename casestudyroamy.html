@@ -48,34 +48,69 @@ nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  padding: 0.9rem 2.5rem;
-  display: flex;
+  padding: 1.75rem 3rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   background: rgba(255,255,255,0.94);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
+  transition: padding 0.3s ease;
 }
 
 .nav__logo {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--purple);
+  display: block;
+  font-size: 0;
+  width: 3rem;
+  height: 2.25rem;
+  background-color: var(--purple);
+  -webkit-mask: url('assets/amoamoamologo.svg') no-repeat center / contain;
+  mask: url('assets/amoamoamologo.svg') no-repeat center / contain;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
   text-decoration: none;
-  transition: letter-spacing 0.3s ease;
+  transition: opacity 0.3s ease;
 }
-.nav__logo:hover { letter-spacing: 0.12em; }
+.nav__logo:hover { opacity: 0.65; }
 
-.nav-links { display: flex; gap: 1.75rem; list-style: none; }
+.nav-links {
+  position: relative;
+  display: flex;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  background: rgba(120,120,128,0.14);
+  border-radius: 100px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.13), inset 0 0.5px 1px rgba(0,0,0,0.08);
+}
+.nav-pill-indicator {
+  position: absolute;
+  top: 4px; left: 4px;
+  height: calc(100% - 8px);
+  background: #fff;
+  border-radius: 100px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.15), 0 0.5px 2px rgba(0,0,0,0.09);
+  transition: left 0.28s cubic-bezier(0.34,1.56,0.64,1), width 0.28s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+  z-index: 0;
+}
 .nav-links a {
-  font-size: 13px;
+  position: relative;
+  z-index: 1;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
   color: var(--muted);
   text-decoration: none;
-  transition: color 0.2s;
-  font-weight: 400;
+  padding: 0.35rem 1rem;
+  border-radius: 100px;
+  transition: color 0.18s ease;
+  white-space: nowrap;
 }
-.nav-links a:hover { color: var(--purple); }
+.nav-links a:hover { background: none; box-shadow: none; color: var(--fg); }
+.nav-links a.nav-active { color: var(--fg); font-weight: 600; }
+.theme-toggle { justify-self: end; }
 
 .theme-toggle {
   width: 2.25rem;
@@ -873,7 +908,7 @@ hr.section-rule {
 
 .next-card:hover { background: rgba(255,255,255,0.1); border-color: var(--purple-light); transform: translateY(-4px); }
 
-.next-card-left {}
+
 .next-card-type { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 0.5rem; }
 .next-card-title { font-size: 1.6rem; font-weight: 600; color: white; letter-spacing: -0.02em; }
 .next-card-arrow { font-size: 2rem; color: rgba(255,255,255,0.3); transition: color 0.2s, transform 0.2s; }
@@ -974,6 +1009,7 @@ footer a { color: var(--purple-light); text-decoration: none; }
 <nav>
   <a class="nav__logo" href="index.html">amorino</a>
   <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
     <li><a href="#problem">Problem</a></li>
     <li><a href="#solution">Solution</a></li>
     <li><a href="#process">Process</a></li>
@@ -1021,7 +1057,7 @@ footer a { color: var(--purple-light); text-decoration: none; }
   </div>
 
   <div class="hero-right">
-    <img src="assets/Roamy Mockup.jpg" alt="Roamy app mockup">
+    <img src="assets/RoamyNewMockup.png" alt="Roamy app mockup">
   </div>
 </div>
 
@@ -1158,8 +1194,7 @@ footer a { color: var(--purple-light); text-decoration: none; }
           <div class="feature-desc">Users are able to browse unique experiences hosted by locals, organised by tier — from short one-hour activities to full-day adventures.</div>
         </div>
         <div class="feature-showcase-mockup">
-          <!-- Drop in your screenshot: <img src="assets/roamy-explore.jpg" alt="Explore screen"> -->
-          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Explore screen</span></div>
+          <img src="assets/RoamyExploreScreen.png" alt="Roamy Explore screen">
         </div>
       </div>
 
@@ -1170,8 +1205,7 @@ footer a { color: var(--purple-light); text-decoration: none; }
           <div class="feature-desc">Users can track bookings, view itineraries, and coordinate group or solo travel — giving travellers the flexibility to explore together or meet new buddies along the way.</div>
         </div>
         <div class="feature-showcase-mockup">
-          <!-- Drop in your screenshot: <img src="assets/roamy-manage.jpg" alt="Manage screen"> -->
-          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Manage screen</span></div>
+          <img src="assets/RoamyManageScreen.png" alt="Roamy Manage screen">
         </div>
       </div>
 
@@ -1182,8 +1216,7 @@ footer a { color: var(--purple-light); text-decoration: none; }
           <div class="feature-desc">Users are provided with information about their local hosts through a Roamy Verified Local Badge — building genuine trust and security before they arrive.</div>
         </div>
         <div class="feature-showcase-mockup">
-          <!-- Drop in your screenshot: <img src="assets/roamy-experience.jpg" alt="Experience screen"> -->
-          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Experience screen</span></div>
+          <img src="assets/RoamyExperienceScreen.png" alt="Roamy Experience screen">
         </div>
       </div>
 
@@ -1194,8 +1227,7 @@ footer a { color: var(--purple-light); text-decoration: none; }
           <div class="feature-desc">Empowering locals to share their culture and earn income by hosting verified experiences, with real-time notifications when travellers book with them.</div>
         </div>
         <div class="feature-showcase-mockup">
-          <!-- Drop in your screenshot: <img src="assets/roamy-locals.jpg" alt="Locals screen"> -->
-          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Locals screen</span></div>
+          <img src="assets/RoamyLocalScreen.png" alt="Roamy Locals screen">
         </div>
       </div>
 
@@ -1206,8 +1238,7 @@ footer a { color: var(--purple-light); text-decoration: none; }
           <div class="feature-desc">Users are provided with QR codes to ensure security and verification with locals — bringing safety and confidence to every experience.</div>
         </div>
         <div class="feature-showcase-mockup">
-          <!-- Drop in your screenshot: <img src="assets/roamy-qr.jpg" alt="QR Ticket screen"> -->
-          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>QR Ticket screen</span></div>
+          <img src="assets/RoamyQRScreen.png" alt="Roamy QR Ticket screen">
         </div>
       </div>
 
@@ -1371,18 +1402,9 @@ footer a { color: var(--purple-light); text-decoration: none; }
 
     <p style="font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-bottom:1rem;">From the Grad Show</p>
     <div class="grad-photos">
-      <div class="img-ph" style="height:180px; background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.3);">
-        <div class="img-ph-icon" style="background:rgba(255,255,255,0.1);">📸</div>
-        <span>Grad show booth</span>
-      </div>
-      <div class="img-ph" style="height:180px; background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.3);">
-        <div class="img-ph-icon" style="background:rgba(255,255,255,0.1);">📸</div>
-        <span>Team at the show</span>
-      </div>
-      <div class="img-ph" style="height:180px; background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.3);">
-        <div class="img-ph-icon" style="background:rgba(255,255,255,0.1);">📖</div>
-        <span>Design catalogue page</span>
-      </div>
+      <img src="assets/RoamyTableGrad.jpeg" alt="Roamy booth at the USYD Grad Show" style="border-radius:12px; object-fit:cover; width:100%; height:220px;">
+      <img src="assets/GradAmbianceRoamy.jpeg" alt="Roamy team at the Grad Show" style="border-radius:12px; object-fit:cover; width:100%; height:220px;">
+      <img src="assets/DesignCatolougeRoamy.jpeg" alt="Roamy in the USYD Design Catalogue" style="border-radius:12px; object-fit:cover; width:100%; height:220px;">
     </div>
 
     <div class="recognition-quote">
@@ -1423,10 +1445,7 @@ footer a { color: var(--purple-light); text-decoration: none; }
     </div>
 
     <div class="img-full reveal">
-      <div class="img-ph" style="height:220px;">
-        <div class="img-ph-icon">📸</div>
-        <span>Photo of you at user testing or working on the project</span>
-      </div>
+      <img src="assets/RoamyGroupPhotoEdit.jpg" alt="Roamy team group photo" style="width:100%; border-radius:16px; object-fit:cover; max-height:480px; display:block;">
     </div>
 
     <div class="reflection-grid reveal">
@@ -1516,6 +1535,40 @@ footer a { color: var(--purple-light); text-decoration: none; }
       child.style.transitionDelay = `${i * 80}ms`;
     });
   });
+
+  // Segmented nav indicator
+  (function () {
+    const list = document.querySelector('.nav-links');
+    if (!list) return;
+    const ind = document.createElement('span');
+    ind.className = 'nav-pill-indicator';
+    list.prepend(ind);
+    const links = [...list.querySelectorAll('a')];
+    let active = links[0];
+    function move(el, instant) {
+      if (instant) ind.style.transition = 'none';
+      const wr = list.getBoundingClientRect();
+      const br = el.getBoundingClientRect();
+      ind.style.width = br.width + 'px';
+      ind.style.left  = (br.left - wr.left) + 'px';
+      if (instant) requestAnimationFrame(() => { ind.style.transition = ''; });
+    }
+    function activate(el) {
+      links.forEach(l => l.classList.remove('nav-active'));
+      el.classList.add('nav-active'); active = el; move(el);
+    }
+    links.forEach(l => {
+      l.addEventListener('mouseenter', () => move(l));
+      l.addEventListener('mouseleave',  () => move(active));
+    });
+    requestAnimationFrame(() => move(active, true));
+    activate(links[0]);
+    const sids = links.map(l => l.getAttribute('href')).filter(h => h.startsWith('#')).map(h => h.slice(1));
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { const l = list.querySelector(`a[href="#${e.target.id}"]`); if (l) activate(l); } });
+    }, { threshold: 0.35 });
+    sids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+  })();
 </script>
 </body>
 </html>
