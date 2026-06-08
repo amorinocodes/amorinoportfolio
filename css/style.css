@@ -1120,6 +1120,125 @@
   }
   
   /* =============================================
+     GOOGLE ACCENT COLOURS & DEPTH
+     ============================================= */
+
+  /* Blue subheadings */
+  .section__title { color: var(--color-blue); }
+  .langs__heading { color: var(--color-blue); }
+
+  /* Hero eyebrow — yellow leading dot */
+  .hero__eyebrow {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+  .hero__eyebrow::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-yellow);
+  }
+
+  /* Hero — subtle yellow/green ambient glow behind lanyard */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 5%;
+    right: 8%;
+    width: 560px;
+    height: 560px;
+    background: radial-gradient(ellipse at center,
+      rgba(251, 188, 4, 0.06) 0%,
+      rgba(52, 168, 83, 0.03) 45%,
+      transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Lanyard card top — Google four-colour stripe */
+  .lanyard__card-top {
+    background: linear-gradient(to right,
+      var(--color-blue)    0%  25%,
+      var(--color-red)    25%  50%,
+      var(--color-yellow) 50%  75%,
+      var(--color-green)  75% 100%);
+  }
+
+  /* Work section — Google four-colour top accent bar */
+  .work { position: relative; }
+  .work::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right,
+      var(--color-blue)    0%  25%,
+      var(--color-red)    25%  50%,
+      var(--color-yellow) 50%  75%,
+      var(--color-green)  75% 100%);
+  }
+
+  /* Card base depth + box-shadow transition */
+  .card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  }
+
+  /* Per-card Google colour accents — badges */
+  .card[data-index="01"]::before { background: rgba(26, 115, 232, 0.85); }
+  .card[data-index="02"]::before { background: rgba(234, 67, 53, 0.85); }
+  .card[data-index="03"]::before { background: rgba(52, 168, 83, 0.85); }
+
+  /* Per-card Google colour accents — tags */
+  .card[data-index="01"] .card__tag { color: var(--color-blue); }
+  .card[data-index="02"] .card__tag { color: var(--color-yellow); }
+  .card[data-index="03"] .card__tag { color: var(--color-green); }
+
+  /* Per-card Google colour accents — hover borders + glows */
+  .card[data-index="01"]:hover {
+    border-color: var(--color-blue);
+    box-shadow: 0 12px 40px rgba(26, 115, 232, 0.28);
+  }
+  .card[data-index="02"]:hover {
+    border-color: var(--color-red);
+    box-shadow: 0 12px 40px rgba(234, 67, 53, 0.28);
+  }
+  .card[data-index="03"]:hover {
+    border-color: var(--color-green);
+    box-shadow: 0 12px 40px rgba(52, 168, 83, 0.28);
+  }
+
+  /* Portrait notes → Google palette */
+  .portrait__note--1 p,
+  .portrait__note--1 .portrait__arrow,
+  .portrait__photo--1 .portrait__caption { color: var(--color-blue); }
+
+  .portrait__note--2 p,
+  .portrait__note--2 .portrait__arrow,
+  .portrait__photo--2 .portrait__caption { color: var(--color-green); }
+
+  .portrait__note--3 p,
+  .portrait__note--3 .portrait__arrow,
+  .portrait__photo--3 .portrait__caption { color: var(--color-red); }
+
+  /* Contact CTA — yellow for maximum pop */
+  .contact__cta {
+    background: var(--color-yellow);
+    border-color: var(--color-yellow);
+    color: #202124;
+  }
+  .contact__cta:hover {
+    background: transparent;
+    color: var(--color-yellow);
+    box-shadow: 0 10px 28px rgba(251, 188, 4, 0.35);
+  }
+
+  /* =============================================
      RESPONSIVE
      ============================================= */
   @media (max-width: 768px) {
