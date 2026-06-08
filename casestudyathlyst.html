@@ -3,1208 +3,1281 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roamy — Case Study</title>
+<title>Athlyst — Case Study · Amorino Toongart</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    if (localStorage.getItem('theme') !== 'dark') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --roamy-purple: #8452A5;
-    --roamy-purple-light: #C9AADF;
-    --roamy-purple-faint: #F3EDF8;
-    --cream: #F7F4EE;
-    --ink: #1A1614;
-    --muted: #6B6560;
-    --border: #E4DFDA;
-    --sans: 'Inter', sans-serif;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: var(--sans);
-    background: var(--cream);
-    color: var(--ink);
-    font-size: 16px;
-    line-height: 1.7;
-    overflow-x: hidden;
-    hyphens: none;
-    -webkit-hyphens: none;
-    word-break: normal;
-    overflow-wrap: break-word;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 1rem 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(247, 244, 238, 0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-back {
-    font-size: 13px;
-    color: var(--muted);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    letter-spacing: 0.01em;
-    transition: color 0.2s;
-  }
-  .nav-back:hover { color: var(--roamy-purple); }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-  .nav-links a {
-    font-size: 13px;
-    color: var(--muted);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--roamy-purple); }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding-top: 4rem;
-    overflow: hidden;
-  }
-
-  .hero-left {
-    padding: 6rem 4rem 4rem 5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--roamy-purple);
-    background: var(--roamy-purple-faint);
-    padding: 5px 12px;
-    border-radius: 20px;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-title {
-    font-size: clamp(3rem, 5.5vw, 5rem);
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--roamy-purple);
-    font-weight: 300;
-  }
-
-  .hero-sub {
-    font-size: 17px;
-    color: var(--muted);
-    max-width: 440px;
-    line-height: 1.8;
-    margin-bottom: 3rem;
-    font-weight: 300;
-  }
-
-  .hero-meta {
-    display: flex;
-    gap: 3rem;
-    border-top: 1px solid var(--border);
-    padding-top: 2rem;
-  }
-
-  .meta-item { display: flex; flex-direction: column; gap: 4px; }
-  .meta-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
-  .meta-value { font-size: 14px; font-weight: 500; color: var(--ink); }
-
-  .hero-right {
-    background: var(--roamy-purple);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .hero-bg-text {
-    position: absolute;
-    font-size: 22vw;
-    font-weight: 700;
-    color: rgba(255,255,255,0.05);
-    letter-spacing: -0.05em;
-    user-select: none;
-    white-space: nowrap;
-    transform: rotate(-15deg);
-  }
-
-  .hero-globe {
-    font-size: 9rem;
-    position: relative;
-    z-index: 1;
-    animation: float 4s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-16px); }
-  }
-
-  .hero-app-preview {
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-    width: 190px;
-    background: white;
-    border-radius: 20px;
-    padding: 14px;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.3);
-    z-index: 2;
-  }
-
-  .app-bar { height: 6px; background: #f0f0f0; border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
-  .app-bar-fill { height: 100%; background: var(--roamy-purple); border-radius: 3px; width: 60%; }
-
-  .app-card-mini {
-    background: var(--roamy-purple-faint);
-    border-radius: 10px;
-    padding: 8px 10px;
-    margin-bottom: 7px;
-  }
-  .app-card-mini-title { font-size: 10px; font-weight: 600; color: var(--roamy-purple); margin-bottom: 2px; }
-  .app-card-mini-sub { font-size: 9px; color: var(--muted); }
-
-  /* SHARED LAYOUT */
-  .section-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 7rem 5rem;
-  }
-
-  .section-eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--roamy-purple);
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-  }
-
-  .section-heading {
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.025em;
-    margin-bottom: 1.5rem;
-  }
-
-  .section-heading em { font-style: italic; color: var(--roamy-purple); font-weight: 300; }
-
-  .body-text {
-    font-size: 16px;
-    color: var(--muted);
-    max-width: 640px;
-    line-height: 1.85;
-    font-weight: 300;
-  }
-
-  /* PROBLEM */
-  .problem-section {
-    background: var(--ink);
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .problem-section::before {
-    content: '';
-    position: absolute;
-    top: -100px; right: -100px;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(132, 82, 165, 0.25) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .problem-section .section-heading { color: white; }
-  .problem-section .body-text { color: rgba(255,255,255,0.6); }
-  .problem-section .section-eyebrow { color: var(--roamy-purple-light); }
-
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 4rem;
-  }
-
-  .stat-card {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 18px;
-    padding: 2rem;
-    transition: transform 0.3s, background 0.3s;
-  }
-  .stat-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.1); }
-
-  .stat-number {
-    font-size: 3.5rem;
-    font-weight: 300;
-    line-height: 1;
-    color: white;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.03em;
-  }
-  .stat-number span { color: var(--roamy-purple-light); font-weight: 600; }
-
-  .stat-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; font-weight: 300; }
-
-  .problem-statement {
-    margin-top: 4rem;
-    padding: 2.5rem 3rem;
-    background: rgba(132, 82, 165, 0.15);
-    border: 1px solid rgba(132, 82, 165, 0.35);
-    border-left: 4px solid var(--roamy-purple-light);
-    border-radius: 16px;
-    max-width: 800px;
-  }
-
-  .problem-statement p {
-    font-size: 1.15rem;
-    line-height: 1.75;
-    color: rgba(255,255,255,0.85);
-    font-weight: 300;
-    font-style: italic;
-  }
-
-  /* SOLUTION */
-  .solution-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: center;
-    margin-top: 4rem;
-  }
-
-  .solution-values { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
-
-  .value-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.2rem 1.5rem;
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .value-item:hover { border-color: var(--roamy-purple-light); transform: translateX(4px); }
-
-  .value-icon {
-    width: 36px; height: 36px;
-    background: var(--roamy-purple-faint);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .value-title { font-weight: 500; font-size: 14px; margin-bottom: 2px; color: var(--ink); }
-  .value-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-
-  /* PHONE MOCKUP */
-  .phone-frame {
-    background: var(--ink);
-    border-radius: 40px;
-    padding: 12px;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.18);
-    max-width: 270px;
-    margin: 0 auto;
-  }
-
-  .phone-screen {
-    background: white;
-    border-radius: 30px;
-    overflow: hidden;
-    aspect-ratio: 9/19.5;
-    position: relative;
-  }
-
-  .phone-status {
-    background: var(--roamy-purple);
-    padding: 10px 16px 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .phone-status-text { font-size: 9px; color: rgba(255,255,255,0.7); font-weight: 500; }
-  .phone-body { padding: 12px; }
-  .phone-search { background: #f5f5f5; border-radius: 20px; padding: 7px 12px; font-size: 10px; color: #aaa; margin-bottom: 12px; }
-  .phone-section-label { font-size: 9px; font-weight: 600; color: #333; margin-bottom: 8px; }
-  .phone-card-row { display: flex; gap: 8px; margin-bottom: 12px; }
-  .phone-card { flex: 1; border-radius: 12px; overflow: hidden; }
-  .phone-card-img { height: 54px; border-radius: 10px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
-  .phone-card-title { font-size: 8px; font-weight: 600; color: #333; }
-  .phone-card-sub { font-size: 7px; color: #888; }
-  .badge-roamy { display: inline-flex; align-items: center; gap: 3px; background: rgba(132,82,165,0.1); color: var(--roamy-purple); font-size: 7px; padding: 2px 6px; border-radius: 10px; font-weight: 600; }
-
-  /* VIDEO SECTION */
-  .video-section {
-    background: white;
-    padding: 7rem 5rem;
-  }
-
-  .video-inner { max-width: 1200px; margin: 0 auto; }
-
-  .video-wrap {
-    margin-top: 3rem;
-    border-radius: 20px;
-    overflow: hidden;
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    background: var(--ink);
-    /* REPLACE the src below with your Vimeo embed URL */
-    /* Get it from: Vimeo video > Share > Embed > copy the src from the iframe code */
-  }
-
-  .video-wrap iframe {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    border: none;
-  }
-
-  .video-placeholder {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    color: rgba(255,255,255,0.4);
-    font-size: 14px;
-    font-weight: 300;
-  }
-
-  .play-icon {
-    width: 70px; height: 70px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.8rem;
-  }
-
-  /* FIGMA SECTION */
-  .figma-section {
-    background: var(--cream);
-    padding: 7rem 5rem;
-  }
-
-  .figma-inner { max-width: 1200px; margin: 0 auto; }
-
-  .figma-note {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--roamy-purple-faint);
-    border: 1px solid var(--roamy-purple-light);
-    border-radius: 12px;
-    padding: 0.85rem 1.25rem;
-    margin-top: 1.5rem;
-    margin-bottom: 2rem;
-    font-size: 13px;
-    color: var(--roamy-purple);
-    max-width: 560px;
-    font-weight: 400;
-  }
-
-  .figma-wrap {
-    margin-top: 2rem;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    position: relative;
-    /* 
-      REPLACE the src with your Figma embed URL
-      In Figma: Share > Get embed link > copy the URL
-      Paste it as the src on the iframe below
-    */
-  }
-
-  .figma-wrap iframe {
-    width: 100%;
-    height: 700px;
-    border: none;
-    display: block;
-  }
-
-  /* PROCESS */
-  .process-section {
-    background: white;
-    padding: 7rem 5rem;
-  }
-
-  .process-inner { max-width: 1200px; margin: 0 auto; }
-
-  .process-steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-top: 4rem;
-  }
-
-  .process-step {
-    padding: 2rem;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    background: var(--cream);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  .process-step:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.07); }
-
-  .step-number { font-size: 3.5rem; font-weight: 200; color: var(--border); line-height: 1; margin-bottom: 1rem; letter-spacing: -0.04em; }
-  .step-phase { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--roamy-purple); margin-bottom: 0.5rem; }
-  .step-title { font-size: 17px; font-weight: 600; margin-bottom: 0.75rem; color: var(--ink); }
-  .step-desc { font-size: 14px; color: var(--muted); line-height: 1.7; font-weight: 300; }
-
-  .step-findings { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 6px; }
-  .finding-tag { font-size: 11px; color: var(--roamy-purple); background: var(--roamy-purple-faint); padding: 4px 10px; border-radius: 20px; font-weight: 500; }
-
-  /* INSIGHTS */
-  .insights-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-top: 4rem;
-  }
-
-  .insight-card {
-    padding: 2rem;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--cream);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .insight-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--roamy-purple);
-  }
-
-  .insight-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; font-weight: 600; }
-  .insight-text { font-size: 15px; color: var(--ink); line-height: 1.7; font-weight: 300; }
-
-  /* FEATURES */
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-top: 4rem;
-  }
-
-  .feature-card {
-    padding: 1.75rem;
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    transition: background 0.2s, border-color 0.2s, transform 0.2s;
-  }
-  .feature-card:hover { background: white; border-color: var(--roamy-purple-light); transform: translateY(-3px); }
-
-  .feature-num { font-size: 1.8rem; font-weight: 200; color: var(--roamy-purple-light); line-height: 1; margin-bottom: 0.75rem; letter-spacing: -0.03em; }
-  .feature-name { font-weight: 600; font-size: 15px; color: var(--ink); margin-bottom: 0.5rem; }
-  .feature-desc { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
-
-  /* RESULTS */
-  .results-section {
-    background: var(--roamy-purple);
-    padding: 7rem 5rem;
-    color: white;
-  }
-
-  .results-inner { max-width: 1200px; margin: 0 auto; }
-  .results-section .section-heading { color: white; }
-  .results-section .section-eyebrow { color: var(--roamy-purple-light); }
-
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 4rem;
-  }
-
-  .result-card {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 20px;
-    padding: 2.5rem 2rem;
-    text-align: center;
-    transition: background 0.3s, transform 0.3s;
-  }
-  .result-card:hover { background: rgba(255,255,255,0.18); transform: scale(1.02); }
-
-  .result-number { font-size: 3.8rem; font-weight: 200; line-height: 1; color: white; margin-bottom: 0.5rem; letter-spacing: -0.04em; }
-  .result-desc { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.65; font-weight: 300; }
-
-  /* RECOGNITION */
-  .recognition-section {
-    background: var(--ink);
-    padding: 7rem 5rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .recognition-section::before {
-    content: '';
-    position: absolute;
-    bottom: -150px; left: -150px;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(132,82,165,0.2) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .recognition-inner { max-width: 1200px; margin: 0 auto; }
-  .recognition-section .section-heading { color: white; }
-  .recognition-section .section-eyebrow { color: var(--roamy-purple-light); }
-
-  .recognition-intro {
-    font-size: 17px;
-    color: rgba(255,255,255,0.6);
-    max-width: 680px;
-    line-height: 1.85;
-    font-weight: 300;
-    margin-bottom: 4rem;
-  }
-
-  .recognition-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 4rem;
-  }
-
-  .recognition-card {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 2.5rem 2rem;
-    text-align: center;
-    transition: background 0.3s, transform 0.3s, border-color 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .recognition-card:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: var(--roamy-purple-light);
-    transform: translateY(-6px);
-  }
-
-  .recognition-icon {
-    font-size: 3rem;
-    margin-bottom: 1.25rem;
-    display: block;
-  }
-
-  .recognition-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: white;
-    margin-bottom: 0.5rem;
-  }
-
-  .recognition-body {
-    font-size: 13px;
-    color: rgba(255,255,255,0.5);
-    line-height: 1.65;
-    font-weight: 300;
-  }
-
-  .recognition-accent {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-  }
-
-  .recognition-quote {
-    padding: 3rem;
-    background: rgba(132,82,165,0.15);
-    border: 1px solid rgba(132,82,165,0.3);
-    border-left: 4px solid var(--roamy-purple-light);
-    border-radius: 16px;
-    max-width: 800px;
-  }
-
-  .recognition-quote p {
-    font-size: 1.15rem;
-    line-height: 1.75;
-    color: rgba(255,255,255,0.85);
-    font-weight: 300;
-    font-style: italic;
-  }
-
-  /* MY ROLE */
-  .role-section { background: var(--cream); padding: 7rem 5rem; }
-  .role-inner { max-width: 1200px; margin: 0 auto; }
-
-  .role-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: start;
-    margin-top: 4rem;
-  }
-
-  .role-contributions { display: flex; flex-direction: column; gap: 1rem; }
-
-  .contribution { display: flex; align-items: flex-start; gap: 1rem; }
-  .contribution-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--roamy-purple); flex-shrink: 0; margin-top: 9px; }
-  .contribution p { font-size: 15px; color: var(--muted); line-height: 1.7; font-weight: 300; }
-  .contribution strong { color: var(--ink); font-weight: 500; }
-
-  .reflection-cards { display: flex; flex-direction: column; gap: 1rem; }
-
-  .reflection-card {
-    padding: 1.5rem;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    background: white;
-  }
-
-  .reflection-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
-  .reflection-label.worked { color: #2D7D46; }
-  .reflection-label.improve { color: #B45A10; }
-  .reflection-label.learned { color: var(--roamy-purple); }
-  .reflection-text { font-size: 14px; color: var(--muted); line-height: 1.7; font-weight: 300; }
-
-  /* FOOTER */
-  footer {
-    background: #111;
-    color: rgba(255,255,255,0.35);
-    text-align: center;
-    padding: 3rem;
-    font-size: 13px;
-    font-weight: 300;
-  }
-  footer a { color: var(--roamy-purple-light); text-decoration: none; }
-
-  /* REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.65s ease, transform 0.65s ease;
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #4A7C59;
+  --green-light: #8BC49A;
+  --green-faint: #EEF5F1;
+  --lime: #A8D96B;
+  --cream: #F4F6F2;
+  --ink: #1A1C18;
+  --muted: #606660;
+  --border: #DEE3DC;
+  --white: #fff;
+  --f: 'Inter', sans-serif;
+  --col: 720px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--f);
+  background: var(--white);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-x: hidden;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0.9rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav__logo {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--green);
+  text-decoration: none;
+  transition: letter-spacing 0.3s ease;
+}
+.nav__logo:hover { letter-spacing: 0.12em; }
+
+.nav-links { display: flex; gap: 1.75rem; list-style: none; }
+.nav-links a {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 400;
+}
+.nav-links a:hover { color: var(--green); }
+
+.theme-toggle {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+  padding: 0;
+}
+.theme-toggle:hover { background: var(--green-faint); border-color: var(--green-light); }
+.theme-toggle svg { display: block; }
+
+/* HERO — reduced height */
+.hero {
+  height: 62vh;
+  min-height: 400px;
+  max-height: 580px;
+  display: grid;
+  grid-template-columns: 52% 48%;
+  margin-top: 53px;
+  overflow: hidden;
+}
+
+.hero-left {
+  padding: 2.25rem 2.5rem 2rem 5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--cream);
+  border-right: 1px solid var(--border);
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.75rem;
+}
+
+.hero-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.hero-wordmark {
+  font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.hero-wordmark em { color: var(--green); font-style: normal; }
+
+.hero-tagline {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  font-weight: 300;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 0.85rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+  font-weight: 300;
+  max-width: 480px;
+}
+
+.tool-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 1.25rem;
+}
+
+.chip {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.chip.green { background: var(--green-faint); border-color: var(--green-light); color: var(--green); }
+
+.hero-meta {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--border);
+  padding-top: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.meta-item { display: flex; flex-direction: column; gap: 2px; padding-right: 2.25rem; }
+.meta-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.meta-value { font-size: 13px; font-weight: 500; color: var(--ink); }
+
+.hero-right {
+  overflow: hidden;
+  height: 100%;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* BODY LAYOUT */
+.body-wrap {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* SECTION BLOCK */
+.section-block {
+  padding: 5rem 0 0;
+}
+
+.section-block:last-of-type { padding-bottom: 5rem; }
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 200px;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+  color: var(--ink);
+}
+
+h2 em { font-style: italic; color: var(--green); font-weight: 300; }
+
+.lead {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+
+.body-p {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.85;
+  font-weight: 300;
+  margin-bottom: 1.25rem;
+}
+
+/* PULL QUOTE */
+.pull-quote {
+  margin: 2.5rem 0;
+  padding: 2rem 2.5rem;
+  border-left: 3px solid var(--green);
+  background: var(--green-faint);
+  border-radius: 0 14px 14px 0;
+}
+
+.pull-quote p {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* STAT STRIP */
+.stat-strip {
+  background: var(--ink);
+  padding: 4rem 5vw;
+  margin: 4rem 0 0;
+}
+
+.stat-strip-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.stat-item { display: flex; flex-direction: column; gap: 6px; }
+.stat-num {
+  font-size: 3rem;
+  font-weight: 200;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.stat-num span { color: var(--lime); font-weight: 600; }
+.stat-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; font-weight: 300; }
+
+/* PROBLEM BOX */
+.problem-box {
+  margin: 2.5rem 0;
+  padding: 2rem 2.5rem;
+  background: var(--ink);
+  border-radius: 16px;
+  color: white;
+}
+
+.problem-box p {
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.82);
+  font-weight: 300;
+}
+
+/* IMAGE PLACEHOLDER */
+.img-ph {
+  background: var(--cream);
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 2rem;
+}
+
+.img-ph-icon {
+  width: 40px; height: 40px;
+  background: var(--border);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+}
+
+.img-ph span { font-size: 12px; opacity: 0.6; }
+
+.img-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.img-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.img-full { margin: 2rem 0; }
+
+/* DIVIDER */
+hr.section-rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* VIDEO */
+.video-wrap {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--ink);
+  margin: 2rem 0;
+}
+
+.video-wrap iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+}
+
+/* FIGMA */
+.figma-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green-faint);
+  border: 1px solid var(--green-light);
+  border-radius: 10px;
+  padding: 0.75rem 1.1rem;
+  margin-bottom: 1rem;
+  font-size: 13px;
+  color: var(--green);
+}
+
+.figma-wrap {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.figma-wrap iframe {
+  width: 100%;
+  height: 660px;
+  border: none;
+  display: block;
+}
+
+/* PROCESS TIMELINE */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 2.5rem 0;
+}
+
+.tl-step {
+  background: var(--white);
+  padding: 1.75rem 1.5rem;
+  transition: background 0.2s;
+}
+.tl-step:hover { background: var(--cream); }
+
+.tl-num {
+  font-size: 2.5rem;
+  font-weight: 200;
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.04em;
+}
+
+.tl-phase {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.35rem;
+}
+
+.tl-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+}
+
+.tl-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.tl-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 1rem;
+}
+
+.tl-tag {
+  font-size: 11px;
+  color: var(--green);
+  background: var(--green-faint);
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* INSIGHT CARDS */
+.insight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.insight-card {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  border-top: 3px solid var(--green);
+  background: var(--cream);
+}
+
+.insight-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.insight-text {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* FEATURES */
+.feature-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  margin: 2.5rem 0;
+}
+.feature-showcase-row {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+.feature-showcase-row:nth-child(even) .feature-showcase-text { order: 2; }
+.feature-showcase-row:nth-child(even) .feature-showcase-mockup { order: 1; }
+.feature-showcase-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.feature-showcase-mockup {
+  width: 174px;
+  height: 376px;
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.feature-showcase-mockup img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.mockup-ph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 11px;
+  opacity: 0.45;
+  text-align: center;
+  padding: 1rem;
+}
+.mockup-ph-icon { font-size: 24px; line-height: 1; }
+
+.feature-num { font-size: 2.5rem; font-weight: 200; color: var(--green-light); letter-spacing: -0.04em; line-height: 1; }
+.feature-name { font-size: 18px; font-weight: 600; color: var(--ink); }
+.feature-desc { font-size: 15px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+/* SUS SCORES */
+.sus-strip {
+  background: var(--ink);
+  padding: 4rem 5vw;
+  margin: 4rem 0 0;
+}
+
+.sus-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.sus-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: background 0.25s, transform 0.25s;
+}
+.sus-card:hover { background: rgba(255,255,255,0.12); transform: translateY(-4px); }
+
+.sus-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 0.75rem;
+}
+
+.sus-score {
+  font-size: 3.2rem;
+  font-weight: 200;
+  line-height: 1;
+  color: white;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.04em;
+}
+
+.sus-score span { color: var(--lime); font-weight: 600; }
+.sus-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; font-weight: 300; }
+
+/* MY ROLE */
+.role-block {
+  padding: 5rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.contribution-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin: 2rem 0;
+}
+
+.contribution {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--cream);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.contribution:hover { border-color: var(--green-light); transform: translateX(4px); }
+
+.contribution-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+
+.contribution p { font-size: 15px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+.contribution strong { color: var(--ink); font-weight: 500; }
+
+.reflection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.reflection-card {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--white);
+}
+
+.r-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.r-label.worked { color: #2D7D46; }
+.r-label.improve { color: #B45A10; }
+.r-label.learned { color: var(--green); }
+.r-text { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+/* TEAM */
+.team-section {
+  background: var(--cream);
+  padding: 5rem 5vw;
+  border-top: 1px solid var(--border);
+}
+
+.team-inner { max-width: var(--col); margin: 0 auto; }
+
+/* TEAM CARDS ROW */
+.team-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.tc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.75rem 1rem 1.5rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  border-top: 3px solid var(--border);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.tc:hover { border-top-color: var(--green-light); transform: translateY(-3px); }
+.tc--me { border-top-color: var(--green); background: var(--green-faint); }
+
+.tc-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.tc-avatar--me { background: var(--green); color: white; }
+.tc-avatar--lc { background: #EBF2F8; color: #2C5F8A; }
+.tc-avatar--ta { background: #FDF0F5; color: #A63B6A; }
+
+.tc-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
+.tc-role { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.4; }
+
+.tc-me-tag {
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  background: white;
+  border: 1px solid var(--green-light);
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+/* NEXT PROJECT */
+.next-project {
+  background: var(--ink);
+  padding: 5rem 5vw;
+}
+
+.next-inner { max-width: var(--col); margin: 0 auto; }
+.next-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 2rem; }
+
+.next-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.5rem 3rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.25s, border-color 0.25s;
+  cursor: pointer;
+}
+
+.next-card:hover { background: rgba(255,255,255,0.1); border-color: var(--green-light); transform: translateY(-4px); }
+
+.next-card-type { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.5rem; }
+.next-card-title { font-size: 1.6rem; font-weight: 600; color: white; letter-spacing: -0.02em; }
+.next-card-arrow { font-size: 2rem; color: rgba(255,255,255,0.3); transition: color 0.2s, transform 0.2s; }
+.next-card:hover .next-card-arrow { color: var(--lime); transform: translateX(6px); }
+
+/* FOOTER */
+footer {
+  background: #111;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  padding: 2.5rem;
+  font-size: 13px;
+  font-weight: 300;
+}
+footer a { color: var(--lime); text-decoration: none; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* DARK THEME */
+[data-theme="light"] { /* default light, no overrides needed */ }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <a class="nav-back" href="index.html">← Back to Portfolio</a>
+  <a class="nav__logo" href="index.html">amorino</a>
   <ul class="nav-links">
     <li><a href="#problem">Problem</a></li>
     <li><a href="#solution">Solution</a></li>
     <li><a href="#process">Process</a></li>
     <li><a href="#results">Results</a></li>
-    <li><a href="#recognition">Recognition</a></li>
   </ul>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
 </nav>
+
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-left">
-    <span class="tag">UX / Interaction Design · 2024</span>
-    <h1 class="hero-title">
-      Roamy<em>.</em><br>
-      Where are we<br>
-      <em>roaming</em> next?
-    </h1>
-    <p class="hero-sub">A cultural discovery app connecting young Australian travellers with authentic, local-hosted experiences across Asia — beyond the tourist traps.</p>
+    <p class="eyebrow">UX / Interaction Design · 2024</p>
+    <div class="hero-logo-row">
+      <span class="hero-wordmark">Athlyst<em>.</em></span>
+    </div>
+    <p class="hero-tagline">Collect. Trade. Connect.</p>
+    <p class="hero-sub">A gamified Olympic engagement app that connects viewers with athletes through tradeable cards, personal storytelling, and live event discovery.</p>
+
+    <div class="tool-row">
+      <span class="chip green">Figma</span>
+      <span class="chip green">User Research</span>
+      <span class="chip green">Prototyping</span>
+      <span class="chip green">Usability Testing</span>
+      <span class="chip green">Heuristic Evaluation</span>
+      <span class="chip green">UX Writing</span>
+    </div>
+
     <div class="hero-meta">
       <div class="meta-item">
         <span class="meta-label">My Role</span>
-        <span class="meta-value">UX Design & Ideation</span>
+        <span class="meta-value">UX & Aesthetics Lead</span>
       </div>
       <div class="meta-item">
-        <span class="meta-label">Team</span>
-        <span class="meta-value">4 people</span>
+        <span class="meta-label">Duration</span>
+        <span class="meta-value">12 weeks · 2024</span>
       </div>
       <div class="meta-item">
-        <span class="meta-label">Outcome</span>
-        <span class="meta-value">High Distinction</span>
+        <span class="meta-label">Context</span>
+        <span class="meta-value">DECO2200 · Sem 2</span>
       </div>
     </div>
   </div>
 
   <div class="hero-right">
-    <div class="hero-bg-text">ROAM</div>
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem; position: relative; z-index: 1;">
-      <div class="hero-globe">🌏</div>
-      <div class="hero-app-preview">
-        <div class="app-bar"><div class="app-bar-fill"></div></div>
-        <div class="app-card-mini">
-          <div class="app-card-mini-title">☕ Coffee & Culture</div>
-          <div class="app-card-mini-sub">Bangkok · with Amo · ★ 4.97</div>
-        </div>
-        <div class="app-card-mini" style="background:#EDF7F1;">
-          <div class="app-card-mini-title" style="color:#2D7D46;">🍜 Local Language & Bites</div>
-          <div class="app-card-mini-sub">Today's Top Pick</div>
-        </div>
+    <div class="img-ph" style="width:100%;height:100%;border-radius:0;border:none;background:#1A1C18;">
+      <div class="img-ph-icon" style="background:rgba(255,255,255,0.08);font-size:1.4rem;">📱</div>
+      <span style="color:rgba(255,255,255,0.25);">Athlyst app mockup</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- THE BRIEF -->
+<div class="body-wrap">
+  <div class="section-block reveal">
+    <p class="section-label">The Brief</p>
+    <h2>Designing for <em>lifestyle, leisure & entertainment</em></h2>
+    <p class="lead">Our studio brief asked us to investigate and develop a digital design solution within the lifestyle, leisure, and entertainment space of the Olympic Games.</p>
+    <p class="body-p">As a team, we noticed a consistent gap in how viewers engaged with the Olympics — people only followed the sports they already knew, and the athletes outside of those big events rarely got a look in. We wanted to fix that.</p>
+  </div>
+
+  <!-- TEAM -->
+  <div class="section-block reveal" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+    <p class="section-label">The Team</p>
+    <h2>Three people, <em>one project</em></h2>
+    <p class="body-p" style="max-width:560px;">Each of us owned a clear area while staying across everything else — research, design, and aesthetics were shared responsibilities even when primary leads differed.</p>
+
+    <div class="team-cards-row">
+      <div class="tc tc--me">
+        <div class="tc-avatar tc-avatar--me">AT</div>
+        <div class="tc-name">Amorino Toongart</div>
+        <div class="tc-role">UX & Aesthetics Lead</div>
+        <div class="tc-me-tag">That's me ✦</div>
+      </div>
+      <div class="tc">
+        <div class="tc-avatar tc-avatar--lc">LC</div>
+        <div class="tc-name">Lachlan Callender</div>
+        <div class="tc-role">Writing & Research Lead</div>
+      </div>
+      <div class="tc">
+        <div class="tc-avatar tc-avatar--ta">TA</div>
+        <div class="tc-name">Tyler Abrahams</div>
+        <div class="tc-role">Figma & UI Design Lead</div>
       </div>
     </div>
   </div>
 </div>
+
+<hr class="section-rule">
 
 
 <!-- PROBLEM -->
-<div id="problem" class="problem-section">
-  <div class="section-wrap" style="padding-top: 7rem; padding-bottom: 7rem;">
-    <p class="section-eyebrow reveal">The Problem</p>
-    <h2 class="section-heading reveal">Young travellers want real culture.<br>They keep finding tourist traps.</h2>
-    <p class="body-text reveal">58% of Australians aged 18 to 25 were planning overseas trips in 2024, with Asia-Pacific as their top destination. They want something genuine — local food stalls, language lessons, real conversations. But without the right tools, they end up on the same guided bus tours as everyone else.</p>
-
-    <div class="stats-row reveal">
-      <div class="stat-card">
-        <div class="stat-number"><span>64</span>%</div>
-        <div class="stat-desc">of young travellers knew about Smartraveller — but only 37% actually reviewed destination-specific advice before travelling</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">+<span>38</span>%</div>
-        <div class="stat-desc">increase in Australian visits to Japan, alongside surges to China (+35%) and Vietnam (+26%). Asia travel is booming.</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number"><span>40</span>%</div>
-        <div class="stat-desc">of tourism earnings leak out of small local economies — meaning locals miss out even when travellers show up in large numbers</div>
-      </div>
+<div class="stat-strip reveal" id="problem">
+  <div class="stat-strip-inner">
+    <div class="stat-item">
+      <div class="stat-num"><span>40</span>%</div>
+      <div class="stat-desc">of tourism earnings from Olympic events leak away from local economies — visibility gaps cost athletes and communities alike</div>
     </div>
-
-    <div class="problem-statement reveal">
-      <p>"Young Australians seek authentic, culturally rich experiences, yet face barriers in awareness, planning, and cultural understanding. Without effective models, many are funnelled into tourist traps — leading to diluted experiences for them and missed economic opportunities for local communities."</p>
+    <div class="stat-item">
+      <div class="stat-num"><span>3</span></div>
+      <div class="stat-desc">sports dominated media coverage for most viewers — basketball, swimming, and athletics — leaving dozens of events invisible</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span>39</span>s</div>
+      <div class="stat-desc">average time users spent just trying to find the athletes tab in our low-fidelity prototype — navigation clarity was critical</div>
     </div>
   </div>
 </div>
+
+<div class="body-wrap">
+  <div class="section-block reveal">
+    <p class="section-label">The Problem</p>
+    <h2>Viewers want connection.<br>Algorithms keep delivering <em>the same three sports.</em></h2>
+    <p class="lead">Research showed that viewers consistently reported wanting deeper engagement with Olympic athletes — yet existing platforms only surfaced high-profile events and already-famous names.</p>
+    <p class="body-p">Streaming algorithms are designed to maximise viewership, not discovery. Authentic stories from lesser-known athletes and sports rarely made it through. Even when viewers were curious, there was no intuitive, low-effort way to explore what they were missing.</p>
+
+    <div class="problem-box">
+      <p>"To explore how context and storytelling can be seamlessly integrated to enhance the viewing experience of the Olympics — making it more inclusive, accessible, and genuinely engaging for a wider audience."</p>
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
 
 
 <!-- SOLUTION -->
-<div id="solution" style="background: white;">
-  <div class="section-wrap">
-    <p class="section-eyebrow reveal">The Solution</p>
-    <h2 class="section-heading reveal">Roamy — like having a <em>friend in town</em> who knows where to go</h2>
+<div class="body-wrap" id="solution">
+  <div class="section-block reveal">
+    <p class="section-label">The Solution</p>
+    <h2>Athlyst — like Pokémon,<br>but for <em>Olympic athletes</em></h2>
+    <p class="lead">Athlyst is a gamified card collection app where viewers earn athlete cards by watching Olympic events, entering broadcast codes, and completing in-app challenges.</p>
+    <p class="body-p">Each card tells the personal story of an athlete — not just their stats, but where they come from, what drives them, and what their sport actually is. Cards can be traded with friends through a tap interaction on phone or Apple Watch, making the experience social and multimodal.</p>
 
-    <div class="solution-grid reveal">
-      <div>
-        <p class="body-text">Roamy connects travellers directly with verified locals who host experiences — a Thai tea ceremony, a cooking class from someone's grandmother's kitchen, a street food walk through neighbourhoods no tourist map shows you.</p>
-        <p class="body-text" style="margin-top: 1rem;">It creates mutual value: travellers get genuine cultural access, locals earn income and get recognised for sharing what they know best.</p>
-
-        <div class="solution-values">
-          <div class="value-item">
-            <div class="value-icon">🔍</div>
-            <div>
-              <div class="value-title">Discover hidden gems</div>
-              <div class="value-desc">Personalised local experiences — not the ones on every travel blog</div>
-            </div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">🛡️</div>
-            <div>
-              <div class="value-title">Trust built in</div>
-              <div class="value-desc">Verified Roamy Local Badges and QR check-in for safety and accountability</div>
-            </div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">🤝</div>
-            <div>
-              <div class="value-title">Two-sided platform</div>
-              <div class="value-desc">Locals list, earn, and manage bookings. Travellers browse, book, connect.</div>
-            </div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">🌱</div>
-            <div>
-              <div class="value-title">Community feel</div>
-              <div class="value-desc">Badges, achievements, and a Roamer network that grows as you travel</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="phone-status">
-            <span class="phone-status-text">9:41</span>
-            <span class="phone-status-text">●●●</span>
-          </div>
-          <div class="phone-body">
-            <div class="phone-search">🔍 Start your search...</div>
-            <div style="background: var(--roamy-purple); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: white;">
-              <div style="font-size: 9px; opacity: 0.7; margin-bottom: 2px;">Currently Roaming</div>
-              <div style="font-size: 12px; font-weight: 600;">Bangkok, Thailand 🇹🇭</div>
-            </div>
-            <div class="phone-section-label">Recommended ✨</div>
-            <div class="phone-card-row">
-              <div class="phone-card">
-                <div class="phone-card-img" style="background: #FFF3E0;">☕</div>
-                <div class="phone-card-title">Coffee & Culture</div>
-                <div class="phone-card-sub">200B · 1hr · Bangkok</div>
-              </div>
-              <div class="phone-card">
-                <div class="phone-card-img" style="background: #E8F5E9;">🍃</div>
-                <div class="phone-card-title">Tea Traditions</div>
-                <div class="phone-card-sub">200B · 1hr · Minburi</div>
-              </div>
-            </div>
-            <div class="phone-section-label">Today's Top Picks 🔥</div>
-            <div style="background: var(--roamy-purple-faint); border-radius: 10px; padding: 8px; display: flex; gap: 8px; align-items: center;">
-              <div style="font-size: 1.5rem;">🥘</div>
-              <div>
-                <div style="font-size: 9px; font-weight: 600; color: #333;">Local Language and Bites</div>
-                <div style="font-size: 8px; color: #888;">with Amorino Toongart</div>
-                <div class="badge-roamy" style="margin-top: 3px;">✓ Roamy Verified</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="pull-quote">
+      <p>"It is not a sports database. It is a system for building genuine curiosity between viewers and athletes they would never otherwise discover."</p>
     </div>
-  </div>
-</div>
 
-
-<!-- VIDEO -->
-<div class="video-section">
-  <div class="video-inner">
-    <p class="section-eyebrow reveal">The Ad</p>
-    <h2 class="section-heading reveal">We made an ad for it too</h2>
-    <p class="body-text reveal">Part of the brief was bringing Roamy to life beyond the prototype — so we made a short video ad that captured the feel of the experience. The goal was to make someone want to download an app that didn't exist yet.</p>
-
-    <div class="video-wrap reveal" style="margin-top: 3rem;">
-      <!--
-        PASTE YOUR VIMEO EMBED URL BELOW.
-        In Vimeo: open your video > Share > Embed > copy the URL from inside src="..."
-        It looks like: https://player.vimeo.com/video/XXXXXXXXX
-        Replace the src value on the line below.
-      -->
-      <iframe
-        src="https://player.vimeo.com/video/YOUR_VIDEO_ID_HERE?badge=0&autopause=0&player_id=0&app_id=58479"
-        allow="autoplay; fullscreen; picture-in-picture"
-        title="Roamy — Product Ad">
-      </iframe>
-
-      <!-- This placeholder shows until you add your Vimeo URL — delete it once the embed is in -->
-      <div class="video-placeholder">
-        <div class="play-icon">▶</div>
-        <span>Paste your Vimeo embed URL into the iframe src above</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- FIGMA PROTOTYPE -->
-<div class="figma-section">
-  <div class="figma-inner">
-    <p class="section-eyebrow reveal">Try It</p>
-    <h2 class="section-heading reveal">Interact with the <em>live prototype</em></h2>
-    <p class="body-text reveal">This is the actual Figma prototype — not a screenshot. Click through the screens, explore the booking flow, and see the interactions we built across three rounds of testing.</p>
-
-    <div class="figma-note reveal">
+    <div class="figma-note">
       <span>💡</span>
-      <span>Click anywhere on the prototype to start — navigate just like you would on a real phone</span>
+      <span>Live prototype below — click through the screens just like you would on a real phone</span>
     </div>
-
-    <div class="figma-wrap reveal">
-      <!--
-        PASTE YOUR FIGMA EMBED URL BELOW.
-        In Figma: open prototype > Share > Copy link > change the URL format to embed:
-        https://www.figma.com/embed?embed_host=share&url=YOUR_SHARE_LINK
-        Or use the direct embed link from Share > Get embed link.
-        Replace the src value below.
-      -->
+    <div class="figma-wrap">
       <iframe
-        src="https://www.figma.com/embed?embed_host=share&url=YOUR_FIGMA_SHARE_LINK_HERE"
+        src="https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/proto/LkVWP2MzBHThdyVZjETfYx/High-Fidelity-Mock-Up-Olympics?node-id=78-951&t=GhdYQpj3CamJ286n-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=25%3A1161"
         allowfullscreen
-        title="Roamy Figma Prototype">
+        title="Athlyst Figma Prototype">
       </iframe>
     </div>
   </div>
+
+
+  <!-- VIDEO -->
+  <div class="section-block reveal">
+    <p class="section-label">The Demo</p>
+    <h2>See it in motion</h2>
+    <p class="lead">A walkthrough of the final Athlyst prototype — from pack opening to trading, friend profiles, and the home page sports discovery flow.</p>
+    <div class="video-wrap">
+      <iframe
+        src="https://imgur.com/a/vpWo7Ej"
+        allow="autoplay; fullscreen"
+        title="Athlyst Prototype Demo">
+      </iframe>
+    </div>
+  </div>
+
+
+  <!-- FEATURES -->
+  <div class="section-block reveal">
+    <p class="section-label">Key Features</p>
+    <h2>What Athlyst <em>actually does</em></h2>
+    <div class="feature-showcase">
+
+      <div class="feature-showcase-row reveal">
+        <div class="feature-showcase-text">
+          <div class="feature-num">01</div>
+          <div class="feature-name">Home Page</div>
+          <div class="feature-desc">Live and upcoming Olympic events are surfaced in one place, with tappable sport breakdowns explaining rules, strategies, and schedules — giving viewers context before they watch.</div>
+        </div>
+        <div class="feature-showcase-mockup">
+          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Home screen</span></div>
+        </div>
+      </div>
+
+      <div class="feature-showcase-row reveal">
+        <div class="feature-showcase-text">
+          <div class="feature-num">02</div>
+          <div class="feature-name">Athlete Cards</div>
+          <div class="feature-desc">Each card highlights an athlete's personal journey and story rather than just their achievements — creating an equal platform for all athletes, not just the famous ones.</div>
+        </div>
+        <div class="feature-showcase-mockup">
+          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Athlete card screen</span></div>
+        </div>
+      </div>
+
+      <div class="feature-showcase-row reveal">
+        <div class="feature-showcase-text">
+          <div class="feature-num">03</div>
+          <div class="feature-name">Pack Opening</div>
+          <div class="feature-desc">Users watch a live Olympic event, enter a broadcast code, and unlock a themed athlete pack — with slide-to-unlock animations and confetti providing satisfying feedback.</div>
+        </div>
+        <div class="feature-showcase-mockup">
+          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Pack opening screen</span></div>
+        </div>
+      </div>
+
+      <div class="feature-showcase-row reveal">
+        <div class="feature-showcase-text">
+          <div class="feature-num">04</div>
+          <div class="feature-name">Trading</div>
+          <div class="feature-desc">Athletes can be traded with friends via a tap interaction on phone or Apple Watch — enabling face-to-face social exchanges and completing each other's collections collaboratively.</div>
+        </div>
+        <div class="feature-showcase-mockup">
+          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Trade screen</span></div>
+        </div>
+      </div>
+
+      <div class="feature-showcase-row reveal">
+        <div class="feature-showcase-text">
+          <div class="feature-num">05</div>
+          <div class="feature-name">Friends</div>
+          <div class="feature-desc">Users can add friends via unique codes, see which athletes they have collected and favourited, and stay connected around what the Olympics means to them socially.</div>
+        </div>
+        <div class="feature-showcase-mockup">
+          <div class="mockup-ph"><div class="mockup-ph-icon">📱</div><span>Friends screen</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
+
+<hr class="section-rule">
 
 
 <!-- PROCESS -->
-<div id="process" class="process-section">
-  <div class="process-inner">
-    <p class="section-eyebrow reveal">How We Got There</p>
-    <h2 class="section-heading reveal">Three rounds of testing,<br>each one <em>sharper</em> than the last</h2>
-    <p class="body-text reveal">We didn't design in a vacuum. Every decision came from something we heard, observed, or tested — starting from a pantomime in a classroom and ending at a polished, animated prototype.</p>
+<div class="body-wrap" id="process">
+  <div class="section-block reveal">
+    <p class="section-label">How We Got There</p>
+    <h2>Low-fi to high-fi,<br>tested at <em>every step</em></h2>
+    <p class="lead">Every design decision was grounded in research and tested with real participants — from two initial pilot tests all the way through to a final round of expert heuristic evaluations.</p>
 
-    <div class="process-steps">
-      <div class="process-step reveal">
-        <div class="step-number">01</div>
-        <div class="step-phase">Concept Testing</div>
-        <div class="step-title">Pantomime and Low-Fidelity</div>
-        <div class="step-desc">We simulated a Thai café cultural exchange with 7 participants. Before touching a screen, we put people inside the experience itself — measuring whether the concept resonated emotionally before committing to any interface decisions.</div>
-        <div class="step-findings">
-          <span class="finding-tag">Think-aloud method</span>
-          <span class="finding-tag">Likert-scale pre/post survey</span>
-          <span class="finding-tag">Sketched booking wireframe</span>
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-num">01</div>
+        <div class="tl-phase">Concept Development</div>
+        <div class="tl-title">Research & Ideation</div>
+        <div class="tl-desc">Surveys, interviews, and focus groups with 5 participants informed three user personas. Mashup and Crazy 8s ideation led to three distinct concepts evaluated against a structured decision matrix.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Interviews</span>
+          <span class="tl-tag">Personas</span>
+          <span class="tl-tag">Decision matrix</span>
         </div>
       </div>
-
-      <div class="process-step reveal">
-        <div class="step-number">02</div>
-        <div class="step-phase">Structural Design</div>
-        <div class="step-title">Mid-Fidelity Prototype</div>
-        <div class="step-desc">Moved into Figma with consistent components, real imagery, and colour. Drew from Airbnb's booking flow, Headspace's emotional tone, and Booking.com's navigation clarity to shape familiar but fresh patterns.</div>
-        <div class="step-findings">
-          <span class="finding-tag">Simplified ticket screen</span>
-          <span class="finding-tag">Trust indicators added</span>
-          <span class="finding-tag">Navigation overhauled</span>
+      <div class="tl-step">
+        <div class="tl-num">02</div>
+        <div class="tl-phase">Structural Design</div>
+        <div class="tl-title">Low & Mid Fidelity</div>
+        <div class="tl-desc">Seven participants tested the lo-fi prototype via think-aloud tasks and SUS surveys (66.5). Mid-fidelity addressed navigation, iconography, and trade flow issues, improving SUS to 70.8.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Think-aloud</span>
+          <span class="tl-tag">SUS survey</span>
+          <span class="tl-tag">Nav overhaul</span>
         </div>
       </div>
-
-      <div class="process-step reveal">
-        <div class="step-number">03</div>
-        <div class="step-phase">Final Polish</div>
-        <div class="step-title">High-Fidelity and Brand</div>
-        <div class="step-desc">Finalised the logo — globe embedded in the O — the colour system, onboarding animation, and resolved all UI inconsistencies. The brand had to feel playful and modern, youthful without being childish.</div>
-        <div class="step-findings">
-          <span class="finding-tag">Onboarding animation</span>
-          <span class="finding-tag">Brand identity locked</span>
-          <span class="finding-tag">Figma prototype final</span>
+      <div class="tl-step">
+        <div class="tl-num">03</div>
+        <div class="tl-phase">Final Polish</div>
+        <div class="tl-title">Heuristic Eval & Hi-Fi</div>
+        <div class="tl-desc">Six UX expert evaluators used Nielsen's ten heuristics to audit the high-fidelity prototype, followed by four user tests. All severity ratings dropped after refinements were implemented.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Heuristic eval</span>
+          <span class="tl-tag">Expert review</span>
+          <span class="tl-tag">Final prototype</span>
         </div>
       </div>
     </div>
 
-    <div style="margin-top: 5rem;">
-      <p class="section-eyebrow reveal">Key Insights from Testing</p>
-      <div class="insights-row">
-        <div class="insight-card reveal">
-          <div class="insight-label">On Trust</div>
-          <div class="insight-text">Verified badges increased user confidence — but without explanation, people didn't know what they meant. We added context to every trust signal.</div>
-        </div>
-        <div class="insight-card reveal">
-          <div class="insight-label">On Navigation</div>
-          <div class="insight-text">Users wanted clearer transitions between browsing, booking, and managing. We rebuilt the flow so each state felt distinct and purposeful.</div>
-        </div>
-        <div class="insight-card reveal">
-          <div class="insight-label">On Cultural Framing</div>
-          <div class="insight-text">People engaged more with activities described as cultural exchange rather than tours. The language we used mattered as much as the features themselves.</div>
-        </div>
-        <div class="insight-card reveal">
-          <div class="insight-label">On the Ticket Screen</div>
-          <div class="insight-text">The original check-in flow was too cluttered. Stripping it to a QR code and essential info dramatically improved confidence and reduced confusion during testing.</div>
-        </div>
+    <!-- Testing evidence -->
+    <p style="font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; margin-top:2.5rem;">Testing Session Evidence</p>
+    <div class="img-3col reveal">
+      <div class="img-ph" style="height:180px;">
+        <div class="img-ph-icon">📸</div>
+        <span>Think-aloud session</span>
+      </div>
+      <div class="img-ph" style="height:180px;">
+        <div class="img-ph-icon">📸</div>
+        <span>Participants using prototype</span>
+      </div>
+      <div class="img-ph" style="height:180px;">
+        <div class="img-ph-icon">📋</div>
+        <span>SUS survey / affinity notes</span>
       </div>
     </div>
-  </div>
-</div>
 
+    <!-- Wireframe evidence -->
+    <p style="font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; margin-top:2.5rem;">Lo-fi to Hi-fi</p>
+    <div class="img-2col reveal">
+      <div class="img-ph" style="height:200px;">
+        <div class="img-ph-icon">🖼️</div>
+        <span>Low-fidelity wireframes</span>
+      </div>
+      <div class="img-ph" style="height:200px;">
+        <div class="img-ph-icon">🖼️</div>
+        <span>Final high-fidelity screens</span>
+      </div>
+    </div>
 
-<!-- FEATURES -->
-<div style="background: var(--cream); padding: 7rem 5rem;">
-  <div style="max-width: 1200px; margin: 0 auto;">
-    <p class="section-eyebrow reveal">Key Features</p>
-    <h2 class="section-heading reveal">What Roamy <em>actually does</em></h2>
-    <div class="features-grid">
-      <div class="feature-card reveal">
-        <div class="feature-num">01</div>
-        <div class="feature-name">Explore</div>
-        <div class="feature-desc">Browse local experiences organised by duration and category. Personalised recommendations surface activities that match your interests and travel style.</div>
+    <!-- Key insights -->
+    <p class="section-label reveal" style="margin-top:3rem;">Key Insights from Testing</p>
+    <div class="insight-grid reveal">
+      <div class="insight-card">
+        <div class="insight-label">On Navigation</div>
+        <div class="insight-text">The globe icon for the athletes tab was consistently misread as a browser or network button — taking users an average of 39 seconds to find. We redesigned it entirely.</div>
       </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">02</div>
-        <div class="feature-name">Manage</div>
-        <div class="feature-desc">Track bookings and itineraries. Coordinate solo or group plans, adjust on the go, and never lose track of what is coming up next.</div>
+      <div class="insight-card">
+        <div class="insight-label">On Trading</div>
+        <div class="insight-text">Users wanted to know which card they were trading before confirming. Moving trade initiation to the athlete card itself solved the ambiguity completely.</div>
       </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">03</div>
-        <div class="feature-name">Experience Detail</div>
-        <div class="feature-desc">Each listing has full host profiles, Roamy Local Badges, and honest reviews. Enough to build genuine trust before you even show up.</div>
+      <div class="insight-card">
+        <div class="insight-label">On Trust Signals</div>
+        <div class="insight-text">A tutorial modal on the pack page dramatically reduced confusion — users told us it covered everything they needed without feeling patronising.</div>
       </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">04</div>
-        <div class="feature-name">QR Ticket</div>
-        <div class="feature-desc">A digital ticket for every booking. Scan to check in, verify the host, and get a layer of safety built directly into the flow.</div>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">05</div>
-        <div class="feature-name">Host Side</div>
-        <div class="feature-desc">Locals create profiles, design experiences, and get notified when someone books. Running a cultural experience should be simple, not a second job.</div>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">06</div>
-        <div class="feature-name">Profile and Badges</div>
-        <div class="feature-desc">Achievements, cultural milestones, and a network of fellow Roamers. Travel becomes something you build on, not just consume.</div>
+      <div class="insight-card">
+        <div class="insight-label">On Profile Clarity</div>
+        <div class="insight-text">Differentiating the user's own profile from a friend's profile was the biggest heuristic violation flagged by experts — fixed with distinct headings and visual separation.</div>
       </div>
     </div>
   </div>
 </div>
 
+<hr class="section-rule">
 
-<!-- RESULTS -->
-<div id="results" class="results-section">
-  <div class="results-inner">
-    <p class="section-eyebrow reveal">The Results</p>
-    <h2 class="section-heading reveal">The numbers that made us feel like<br>we were onto <em>something real</em></h2>
-    <div class="results-grid">
-      <div class="result-card reveal">
-        <div class="result-number">+31%</div>
-        <div class="result-desc">increase in self-reported cultural understanding after participants engaged with the pantomime experience</div>
-      </div>
-      <div class="result-card reveal">
-        <div class="result-number">+166%</div>
-        <div class="result-desc">jump in language confidence — proving the concept went beyond an app. It was a full cultural system.</div>
-      </div>
-      <div class="result-card reveal">
-        <div class="result-number">94%</div>
-        <div class="result-desc">of participants said they would recommend Roamy, with 88% willing to actually pay for an experience</div>
-      </div>
+
+<!-- RESULTS — SUS scores strip -->
+<div class="sus-strip reveal" id="results">
+  <div class="sus-inner">
+    <div class="sus-card">
+      <div class="sus-label">Lo-fi SUS Score</div>
+      <div class="sus-score"><span>66</span>.5</div>
+      <div class="sus-desc">Starting point — "OK" range, with clear improvement opportunities identified across navigation and trading flows</div>
     </div>
-  </div>
-</div>
-
-
-<!-- RECOGNITION -->
-<div id="recognition" class="recognition-section">
-  <div class="recognition-inner">
-    <p class="section-eyebrow reveal">Recognition</p>
-    <h2 class="section-heading reveal">It went further than<br>we <em>expected</em> it to</h2>
-    <p class="recognition-intro reveal">Out of all the projects in our cohort, Roamy was selected to be showcased at the University of Sydney graduation show — an evening where members of the public, industry guests, and academics came to see the year's best student work. Seeing strangers engage with something we had built from a whiteboard sketch was genuinely surreal.</p>
-
-    <div class="recognition-cards">
-      <div class="recognition-card reveal">
-        <div class="recognition-accent" style="background: linear-gradient(90deg, #FFD700, #FFA500);"></div>
-        <span class="recognition-icon">🏆</span>
-        <div class="recognition-title">High Distinction</div>
-        <div class="recognition-body">The highest grade awarded in the DECO3200 studio — reflecting the quality of our research, design process, and final prototype.</div>
-      </div>
-      <div class="recognition-card reveal">
-        <div class="recognition-accent" style="background: linear-gradient(90deg, #8452A5, #C9AADF);"></div>
-        <span class="recognition-icon">🎓</span>
-        <div class="recognition-title">USYD Grad Show</div>
-        <div class="recognition-body">One of a small number of projects selected from across the cohort to be exhibited at the University of Sydney graduation show, open to the public and industry.</div>
-      </div>
-      <div class="recognition-card reveal">
-        <div class="recognition-accent" style="background: linear-gradient(90deg, #4DC1FF, #46BB69);"></div>
-        <span class="recognition-icon">📖</span>
-        <div class="recognition-title">Design Catalogue</div>
-        <div class="recognition-body">Roamy was selected for inclusion in the USYD yearly design catalogue — a permanent record of the standout student work from the academic year.</div>
-      </div>
+    <div class="sus-card">
+      <div class="sus-label">Mid-fi SUS Score</div>
+      <div class="sus-score"><span>70</span>.8</div>
+      <div class="sus-desc">Moved into the "good" range after restructuring the athletes page, trade feature, and navbar icons</div>
     </div>
-
-    <div class="recognition-quote reveal">
-      <p>"Seeing strangers engage with something we had built from a whiteboard sketch — watching them actually understand it, respond to it, want to use it — that was the moment it stopped feeling like a student project and started feeling like something real."</p>
+    <div class="sus-card">
+      <div class="sus-label">Severity Drop</div>
+      <div class="sus-score"><span>4</span>→<span>0</span></div>
+      <div class="sus-desc">Every critical usability issue identified in expert evaluation was resolved before the final prototype — all severity ratings dropped</div>
     </div>
   </div>
 </div>
 
 
 <!-- MY ROLE -->
-<div id="my-role" class="role-section">
-  <div class="role-inner">
-    <p class="section-eyebrow reveal">My Role</p>
-    <h2 class="section-heading reveal">UX Designer and <em>Ideation Lead</em></h2>
+<div class="body-wrap">
+  <div class="role-block reveal">
+    <p class="section-label">My Role</p>
+    <h2>UX & <em>Aesthetics Lead</em></h2>
+    <p class="lead">My focus spanned the full design process — from shaping how we framed the research problem through to overseeing the visual coherence of the final prototype.</p>
 
-    <div class="role-grid">
-      <div>
-        <div class="role-contributions reveal">
-          <div class="contribution">
-            <div class="contribution-dot"></div>
-            <p><strong>Led ideation and concept generation</strong> — shaping the research direction and making sure the human stayed at the centre of every decision we made</p>
-          </div>
-          <div class="contribution">
-            <div class="contribution-dot"></div>
-            <p><strong>Built the wireframes and UI</strong> — from low-fidelity sketches through to high-fidelity Figma screens, leading on the technical and visual build of the product</p>
-          </div>
-          <div class="contribution">
-            <div class="contribution-dot"></div>
-            <p><strong>Ran user testing sessions</strong> — facilitated the pantomime, led survey analysis, and documented feedback across all three rounds of testing</p>
-          </div>
-          <div class="contribution">
-            <div class="contribution-dot"></div>
-            <p><strong>Guided participants personally</strong> — because this topic was personal to me, I wasn't just a designer running a test. I had a stake in what we were creating.</p>
-          </div>
-          <div class="contribution">
-            <div class="contribution-dot"></div>
-            <p><strong>Balanced creativity with structure</strong> — learned through this project how design gets stronger when you build collaboratively, not in isolation</p>
-          </div>
-        </div>
+    <div class="contribution-list">
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Led UX research direction</strong> — helped shape interview questions, conduct participant sessions, and synthesise findings from surveys and think-aloud tests into actionable design decisions</p>
       </div>
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Owned aesthetic oversight</strong> — maintained visual consistency across all prototype iterations, establishing the colour system, component language, and overall design feel</p>
+      </div>
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Contributed to ideation and concept development</strong> — participated in Mashup and Crazy 8s sessions, co-developed the three final concepts, and helped evaluate them against the decision matrix</p>
+      </div>
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Ran and analysed usability testing</strong> — facilitated think-aloud sessions, collected and transcribed data, and used Usability Insights Tables to map findings into design iterations</p>
+      </div>
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Contributed to Figma prototyping</strong> — worked alongside Tyler on screen design, component variants, and the interactive wireflows across phone and Apple Watch modalities</p>
+      </div>
+    </div>
 
-      <div class="reflection-cards reveal">
-        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; font-weight: 600;">Honest Reflection</div>
-        <div class="reflection-card">
-          <div class="reflection-label worked">What Worked</div>
-          <div class="reflection-text">Strong team collaboration with clear roles kept momentum steady throughout. The user testing fair was one of the most energising parts — watching real people engage with something we made from scratch confirmed we were solving the right problem.</div>
-        </div>
-        <div class="reflection-card">
-          <div class="reflection-label improve">What I Would Do Differently</div>
-          <div class="reflection-text">I would push harder on the local perspective — our design skewed traveller-first. I would also test more scenarios earlier and think more seriously about business viability from week one, not just as an afterthought.</div>
-        </div>
-        <div class="reflection-card" style="border-color: var(--roamy-purple-light); border-top: 3px solid var(--roamy-purple);">
-          <div class="reflection-label learned">What It Taught Me</div>
-          <div class="reflection-text">That design can shape feelings as much as functionality. Iteration is not failure — it is the process. And the work gets better when you genuinely care about the problem you are solving, not just the solution you are presenting.</div>
-        </div>
+    <div class="img-full reveal">
+      <div class="img-ph" style="height:220px;">
+        <div class="img-ph-icon">📸</div>
+        <span>Photo at user testing or working on the project</span>
+      </div>
+    </div>
+
+    <div class="reflection-grid reveal">
+      <div class="reflection-card">
+        <div class="r-label worked">What Worked</div>
+        <div class="r-text">The sequential testing strategy — experts first, then users — meant we caught fundamental issues early and arrived at final testing with only cosmetic problems left. The improvement in SUS scores validated every iteration.</div>
+      </div>
+      <div class="reflection-card">
+        <div class="r-label improve">What I Would Change</div>
+        <div class="r-text">I would have pushed for more participants in the mid-fidelity stage. Four testers gave us good signal but a broader sample would have surfaced the profile differentiation issue sooner, before the heuristic evaluation stage.</div>
+      </div>
+      <div class="reflection-card" style="border-top-color: var(--green);">
+        <div class="r-label learned">What It Taught Me</div>
+        <div class="r-text">The concept that scores highest on a decision matrix is not always the easiest to build well. Gamification raises the bar for clarity and feedback — every interaction has to feel earned, not arbitrary.</div>
       </div>
     </div>
   </div>
 </div>
 
 
-<!-- FOOTER -->
+<!-- NEXT PROJECT -->
+<div class="next-project">
+  <div class="next-inner">
+    <p class="next-label">More Case Studies</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <a class="next-card" href="casestudyroamy.html">
+        <div class="next-card-left">
+          <div class="next-card-type">Mobile App · DECO3200</div>
+          <div class="next-card-title">Roamy</div>
+        </div>
+        <div class="next-card-arrow">→</div>
+      </a>
+      <a class="next-card" href="casestudybreathoffreshair.html">
+        <div class="next-card-left">
+          <div class="next-card-type">Data Visualisation · DECO3100</div>
+          <div class="next-card-title">Breath of Fresh Air</div>
+        </div>
+        <div class="next-card-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+
 <footer>
-  <p>Roamy — DECO3200 Final Project · Amorino Toongart, Kittu Hoyne, Tyler Abrahams, Ruben Suwargo</p>
-  <p style="margin-top: 8px; font-size: 12px;">Part of <a href="index.html">Amorino's Portfolio</a></p>
+  <p>Athlyst — DECO2200 Final Project · Amorino Toongart, Lachlan Callender, Tyler Abrahams</p>
+  <p style="margin-top:6px; font-size:12px;">Part of <a href="index.html">Amorino's Portfolio</a></p>
 </footer>
 
 
 <script>
+  (function () {
+    const ICONS = {
+      light: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`,
+      dark:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+    };
+    const toggle = document.getElementById('theme-toggle');
+    const htmlEl = document.documentElement;
+    function syncToggle() {
+      const isLight = htmlEl.getAttribute('data-theme') === 'light';
+      toggle.innerHTML = isLight ? ICONS.light : ICONS.dark;
+    }
+    syncToggle();
+    toggle.addEventListener('click', () => {
+      const goingDark = htmlEl.getAttribute('data-theme') === 'light';
+      if (goingDark) { htmlEl.removeAttribute('data-theme'); localStorage.setItem('theme', 'dark'); }
+      else { htmlEl.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); }
+      syncToggle();
+    });
+  })();
+</script>
+
+<script>
   const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
+  const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+        io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.08 });
+  }, { threshold: 0.07 });
+  reveals.forEach(el => io.observe(el));
 
-  reveals.forEach(el => observer.observe(el));
-
-  // Stagger children inside grid parents
-  document.querySelectorAll('.stats-row, .process-steps, .results-grid, .features-grid, .insights-row, .recognition-cards').forEach(parent => {
-    parent.querySelectorAll('.reveal').forEach((child, i) => {
-      child.style.transitionDelay = `${i * 90}ms`;
+  document.querySelectorAll('.stat-strip-inner, .sus-inner, .insight-grid, .team-cards-row, .img-3col, .img-2col').forEach(parent => {
+    parent.querySelectorAll('.stat-item, .sus-card, .insight-card, .tc, .img-ph').forEach((child, i) => {
+      child.style.transitionDelay = `${i * 80}ms`;
     });
   });
 </script>

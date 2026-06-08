@@ -1,942 +1,1063 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Breath of Fresh Air — Amorino Toongart</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breath of Fresh Air — Case Study · Amorino Toongart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    if (localStorage.getItem('theme') !== 'dark') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+/* ── TOKENS ── same as Roamy but blue accent for this project */
+:root {
+  --blue: #1A56DB;
+  --blue-light: #93C5FD;
+  --blue-faint: #EFF6FF;
+  --cream: #F7F4EE;
+  --ink: #1A1614;
+  --muted: #6B6560;
+  --border: #E4DFDA;
+  --white: #fff;
+  --f: 'Inter', sans-serif;
+  --col: 720px;
+  /* alias so shared components can reference --accent */
+  --accent: var(--blue);
+  --accent-light: var(--blue-light);
+  --accent-faint: var(--blue-faint);
+}
 
-  <script>
-    (function () {
-      if (localStorage.getItem('theme') !== 'dark') {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
+html { scroll-behavior: smooth; }
 
-  <style>
-    /* ── DESIGN TOKENS ── */
-    :root {
-      --bg:           #0e0e0e;
-      --bg-2:         #161616;
-      --bg-3:         #1e1e1e;
-      --text:         #f0ede8;
-      --text-muted:   #8a8680;
-      --accent:       #5b9bd5;
-      --accent-dim:   rgba(91,155,213,0.12);
-      --accent-mid:   rgba(91,155,213,0.35);
-      --border:       rgba(255,255,255,0.07);
-      --radius:       12px;
-      --transition:   0.3s ease;
+body {
+  font-family: var(--f);
+  background: var(--white);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
 
-      /* BOFA palette pulled from the project's own colour system */
-      --bofa-red:     #ea324c;
-      --bofa-amber:   #f2ac42;
-      --bofa-green:   #00b38a;
-    }
-    [data-theme="light"] {
-      --bg:           #ffffff;
-      --bg-2:         #f8f9fa;
-      --bg-3:         #f1f3f4;
-      --text:         #202124;
-      --text-muted:   #5f6368;
-      --border:       #dadce0;
-    }
+/* ── NAV ── identical structure to Roamy */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0.9rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
 
-    /* ── RESET ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-    img { display: block; max-width: 100%; }
-    a { color: inherit; text-decoration: none; }
+.nav__logo {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  /* keep portfolio brand color as purple even on blue-accent pages */
+  color: #8452A5;
+  text-decoration: none;
+  transition: letter-spacing 0.3s ease;
+}
+.nav__logo:hover { letter-spacing: 0.12em; }
 
-    /* ── NAV ── */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.25rem 2.5rem;
-      background: rgba(14,14,14,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      transition: background var(--transition);
-    }
-    [data-theme="light"] .nav { background: rgba(255,255,255,0.92); }
-    .nav__logo {
-      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      opacity: 0.9;
-    }
-    .nav__logo:hover { opacity: 1; }
-    .nav__right { display: flex; align-items: center; gap: 2rem; }
-    .nav__back {
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      transition: color var(--transition);
-    }
-    .nav__back:hover { color: var(--accent); }
-    .theme-toggle {
-      width: 36px; height: 20px;
-      border-radius: 10px;
-      background: var(--bg-3);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      position: relative;
-      transition: background var(--transition);
-    }
-    .theme-toggle::after {
-      content: '';
-      position: absolute;
-      top: 3px; left: 3px;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: var(--text-muted);
-      transition: transform var(--transition), background var(--transition);
-    }
-    [data-theme="light"] .theme-toggle::after { transform: translateX(16px); background: var(--accent); }
+.nav-links { display: flex; gap: 1.75rem; list-style: none; }
+.nav-links a {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 400;
+}
+.nav-links a:hover { color: var(--blue); }
 
-    /* ── HERO ── */
-    .cs-hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 0 2.5rem 5rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .cs-hero__bg {
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, #eef6ff 0%, #ffffff 55%, #f0fff8 100%);
-      z-index: 0;
-    }
-    /* Data grid decoration mimicking IEQ heatmap aesthetic */
-    .cs-hero__grid {
-      position: absolute; inset: 0; z-index: 1; opacity: 0.08;
-      background-image:
-        linear-gradient(var(--accent) 1px, transparent 1px),
-        linear-gradient(90deg, var(--accent) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
-    /* Colour blobs echoing the red/amber/green palette */
-    .cs-hero__blob {
-      position: absolute; border-radius: 50%; filter: blur(80px); z-index: 1; pointer-events: none;
-    }
-    .cs-hero__blob--1 { width: 400px; height: 400px; top: 10%; right: 5%; background: rgba(91,155,213,0.3); }
-    .cs-hero__blob--2 { width: 300px; height: 300px; top: 30%; right: 20%; background: rgba(0,179,138,0.2); }
-    .cs-hero__blob--3 { width: 250px; height: 250px; bottom: 20%; left: 10%; background: rgba(234,50,76,0.15); }
+.theme-toggle {
+  width: 2.25rem; height: 2.25rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+  padding: 0;
+}
+.theme-toggle:hover { background: var(--blue-faint); border-color: var(--blue-light); }
+.theme-toggle svg { display: block; }
 
-    .cs-hero__content { position: relative; z-index: 2; max-width: 900px; color: #1a1816; }
-    .cs-hero__title { color: #1a1816 !important; }
-    .cs-hero__meta { border-top-color: rgba(0,0,0,0.12) !important; }
-    .cs-hero__meta-value { color: #1a1816 !important; }
-    .cs-hero__meta-label { color: #6b6560 !important; }
-    .scroll-indicator { color: #6b6560 !important; }
-    .scroll-indicator__line { background: #6b6560 !important; }
-    .cs-hero__eyebrow {
-      display: inline-block;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.25rem;
-      padding: 0.35rem 0.9rem;
-      border: 1px solid var(--accent-mid);
-      border-radius: 20px;
-    }
-    .cs-hero__title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 7vw, 6rem);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
-    }
-    .cs-hero__title em { font-style: italic; color: var(--accent); }
-    .cs-hero__meta {
-      display: flex; gap: 2.5rem; flex-wrap: wrap;
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border);
-    }
-    .cs-hero__meta-item { display: flex; flex-direction: column; gap: 0.3rem; }
-    .cs-hero__meta-label {
-      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted);
-    }
-    .cs-hero__meta-value { font-size: 0.95rem; font-weight: 500; }
+/* ── HERO ── same 52/48 split as Roamy */
+.hero {
+  height: 62vh;
+  min-height: 400px;
+  max-height: 580px;
+  display: grid;
+  grid-template-columns: 52% 48%;
+  margin-top: 53px;
+  overflow: hidden;
+}
 
-    /* ── SCROLL INDICATOR ── */
-    .scroll-indicator {
-      position: absolute; bottom: 2rem; right: 2.5rem; z-index: 2;
-      display: flex; align-items: center; gap: 0.6rem;
-      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
-    }
-    .scroll-indicator__line {
-      width: 40px; height: 1px; background: var(--text-muted);
-      transform-origin: left; animation: scrollLine 2s ease-in-out infinite;
-    }
-    @keyframes scrollLine { 0%,100%{transform:scaleX(1)} 50%{transform:scaleX(0.4)} }
+.hero-left {
+  padding: 2.25rem 2.5rem 2rem 5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--cream);
+  border-right: 1px solid var(--border);
+}
 
-    /* ── CASE STUDY BODY ── */
-    .cs-body { max-width: 780px; margin: 0 auto; padding: 6rem 2.5rem; }
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 1.25rem;
+}
 
-    /* Section labels */
-    .cs-section { margin-bottom: 5rem; }
-    .cs-section-label {
-      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 1rem; display: block;
-    }
-    .cs-section h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 700; line-height: 1.2;
-      margin-bottom: 1.5rem;
-    }
-    .cs-section p { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 1.0rem; line-height: 1.8; }
-    .cs-section p strong { color: var(--text); font-weight: 500; }
+.hero-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.5rem;
+}
 
-    /* ── PROBLEM STATEMENT CALLOUT ── */
-    .cs-problem {
-      background: var(--bg-2);
-      border-left: 3px solid var(--bofa-red);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 2rem 2.5rem;
-      margin: 2.5rem 0;
-    }
-    .cs-problem__quote {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 1.15rem;
-      line-height: 1.65;
-      color: var(--text);
-    }
+/* Icon placeholder — replace with actual asset if you have one */
+.hero-icon-box {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
 
-    /* ── EQUATION CALLOUT ── */
-    .cs-equation {
-      display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-mid);
-      border-radius: var(--radius);
-      padding: 2rem 2.5rem;
-      margin: 2.5rem 0;
-    }
-    .cs-equation__term {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 1.4rem;
-      color: var(--text);
-    }
-    .cs-equation__op { font-size: 1.6rem; color: var(--text-muted); }
-    .cs-equation__result {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
+.hero-wordmark {
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.hero-wordmark em { color: var(--blue); font-style: normal; }
 
-    /* ── STAT GRID ── */
-    .cs-stats {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1px; background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin: 2.5rem 0;
-    }
-    .cs-stat {
-      background: var(--bg-2);
-      padding: 1.75rem 1.5rem;
-      display: flex; flex-direction: column; gap: 0.4rem;
-    }
-    .cs-stat__num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.4rem; font-weight: 700;
-      color: var(--accent); line-height: 1;
-    }
-    .cs-stat__label { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+.hero-tagline {
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 300;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
 
-    /* ── COLOUR PALETTE SWATCHES ── */
-    .cs-palette {
-      display: flex; gap: 1rem; flex-wrap: wrap;
-      margin: 2rem 0;
-    }
-    .cs-swatch {
-      display: flex; flex-direction: column; gap: 0.5rem; min-width: 100px;
-    }
-    .cs-swatch__block {
-      height: 60px; border-radius: 8px;
-      border: 1px solid var(--border);
-    }
-    .cs-swatch__label { font-size: 0.72rem; color: var(--text-muted); }
-    .cs-swatch__hex { font-size: 0.78rem; font-weight: 500; }
+.hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  max-width: 480px;
+}
 
-    /* ── VARIABLE PILLS ── */
-    .cs-pills { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.5rem 0; }
-    .cs-pill {
-      padding: 0.4rem 1rem;
-      border-radius: 20px;
-      font-size: 0.8rem; font-weight: 500;
-      border: 1px solid;
-    }
-    .cs-pill--red    { background: rgba(234,50,76,0.1);  border-color: rgba(234,50,76,0.4);  color: #ea324c; }
-    .cs-pill--green  { background: rgba(0,179,138,0.1); border-color: rgba(0,179,138,0.4); color: #00b38a; }
-    .cs-pill--amber  { background: rgba(242,172,66,0.1); border-color: rgba(242,172,66,0.4); color: #f2ac42; }
-    .cs-pill--blue   { background: var(--accent-dim);   border-color: var(--accent-mid);    color: var(--accent); }
-    .cs-pill--dark   { background: var(--bg-3);          border-color: var(--border);        color: var(--text); }
+.tool-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 2rem; }
 
-    /* ── TIMELINE / ITERATION STEPS ── */
-    .cs-timeline { margin: 2.5rem 0; display: flex; flex-direction: column; gap: 0; }
-    .cs-step {
-      display: grid; grid-template-columns: 2rem 1fr;
-      gap: 0 1.5rem; position: relative;
-    }
-    .cs-step::before {
-      content: ''; position: absolute;
-      left: 0.9rem; top: 2.5rem; bottom: 0;
-      width: 1px; background: var(--border);
-    }
-    .cs-step:last-child::before { display: none; }
-    .cs-step__dot {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: var(--accent-dim); border: 1px solid var(--accent);
-      margin-top: 1.8rem; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.6rem; color: var(--accent);
-    }
-    .cs-step__body { padding: 1.5rem 0 2rem; }
-    .cs-step__title { font-weight: 500; margin-bottom: 0.4rem; font-size: 0.95rem; }
-    .cs-step__desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+.chip {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 4px 11px;
+  border-radius: 20px;
+}
+.chip.blue { background: var(--blue-faint); border-color: var(--blue-light); color: var(--blue); }
 
-    /* ── FINDING CARDS ── */
-    .cs-findings { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
-    @media (max-width: 600px) { .cs-findings { grid-template-columns: 1fr; } }
-    .cs-finding {
-      background: var(--bg-2); border-radius: var(--radius);
-      padding: 1.5rem; border: 1px solid var(--border);
-    }
-    .cs-finding__icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
-    .cs-finding__title { font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; }
-    .cs-finding__body { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+.hero-meta {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.meta-item { display: flex; flex-direction: column; gap: 3px; padding-right: 2.5rem; }
+.meta-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.meta-value { font-size: 13px; font-weight: 500; color: var(--ink); }
 
-    /* ── PARTICIPANT BREAKDOWN ── */
-    .cs-participants {
-      display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;
-    }
-    .cs-participant-group {
-      flex: 1; min-width: 140px;
-      background: var(--bg-2); border-radius: var(--radius);
-      padding: 1.25rem; text-align: center;
-      border: 1px solid var(--border);
-    }
-    .cs-participant-group__num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem; font-weight: 700; color: var(--accent);
-    }
-    .cs-participant-group__label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+/* Hero right — dashboard screenshot placeholder */
+.hero-right {
+  background: #0F172A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+}
 
-    /* ── QUOTE BLOCK ── */
-    .cs-quote {
-      padding: 2rem 2.5rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--bg-2);
-      margin: 2.5rem 0;
-      position: relative;
-    }
-    .cs-quote::before {
-      content: '"';
-      position: absolute; top: -0.5rem; left: 1.5rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 4rem; color: var(--accent); line-height: 1; opacity: 0.4;
-    }
-    .cs-quote__text {
-      font-family: 'Playfair Display', serif;
-      font-style: italic; font-size: 1.05rem;
-      color: var(--text); line-height: 1.65;
-    }
-    .cs-quote__source { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; }
+.hero-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
 
-    /* ── CHANGES LIST ── */
-    .cs-changes { margin: 1.5rem 0; display: flex; flex-direction: column; gap: 0.75rem; }
-    .cs-change {
-      display: flex; align-items: flex-start; gap: 1rem;
-      padding: 1rem 1.25rem;
-      background: var(--bg-2); border-radius: 8px;
-      border: 1px solid var(--border);
-      font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;
-    }
-    .cs-change__icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+/* Dashboard preview placeholder — shown when no image */
+.dashboard-preview-ph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2.5rem;
+  text-align: center;
+  color: rgba(255,255,255,0.5);
+}
 
-    /* ── REFLECTION ── */
-    .cs-reflection {
-      background: var(--bg-2);
-      border-radius: var(--radius);
-      padding: 3rem;
-      margin: 3rem 0;
-      border: 1px solid var(--border);
-    }
-    .cs-reflection h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem; margin-bottom: 1rem;
-    }
-    .cs-reflection p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; }
-    .cs-reflection p + p { margin-top: 1rem; }
+.gauge-row-ph {
+  display: flex;
+  gap: 1rem;
+}
 
-    /* ── HANDWRITTEN ANNOTATION ── */
-    .cs-annotation {
-      font-family: 'Caveat', cursive;
-      font-size: 1.2rem;
-      color: var(--accent);
-      transform: rotate(-1.5deg);
-      display: inline-block;
-      margin: 0.5rem 0 1.5rem;
-    }
+.gauge-ph {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 3px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600;
+}
 
-    /* ── NEXT PROJECT NAV ── */
-    .cs-next {
-      padding: 5rem 2.5rem;
-      text-align: center;
-      border-top: 1px solid var(--border);
-    }
-    .cs-next__label {
-      font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--text-muted); margin-bottom: 1rem; display: block;
-    }
-    .cs-next__title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      margin-bottom: 2rem;
-    }
-    .cs-next__links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.gauge-ph.green { border-color: #22C55E; color: #22C55E; }
+.gauge-ph.amber { border-color: #F59E0B; color: #F59E0B; }
+.gauge-ph.red { border-color: #EF4444; color: #EF4444; }
 
-    /* ── BUTTONS ── */
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1.75rem;
-      position: relative; overflow: hidden;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 6px;
-      font-size: 0.85rem; font-weight: 500;
-      letter-spacing: 0.04em;
-      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
-                  transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
-      border: 1px solid transparent;
-      cursor: pointer;
-    }
-    .btn:not(.btn--ghost)::after {
-      content: ''; position: absolute; top: -50%; left: -60%;
-      width: 28%; height: 200%;
-      background: rgba(255,255,255,0.22);
-      transform: skewX(-20deg); transition: left 0.5s ease; pointer-events: none;
-    }
-    .btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 28px rgba(91,155,213,0.3); }
-    .btn:not(.btn--ghost):hover::after { left: 130%; }
-    .btn:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.08s; }
-    .btn--ghost {
-      background: transparent;
-      border-color: var(--border);
-      color: var(--text-muted);
-    }
-    .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+.dash-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.4; }
 
-    /* ── IMAGE PLACEHOLDER ── */
-    .cs-img-block { margin: 2.5rem 0; }
-    .cs-img-block img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); display: block; }
-    .cs-img-block figcaption { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem; font-style: italic; }
-    .cs-placeholder {
-      width: 100%;
-      background: var(--bg-2);
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 0.5rem;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-align: center;
-      padding: 3rem 2rem;
-    }
-    .cs-placeholder strong { color: var(--text); font-size: 0.9rem; }
-    .cs-placeholder--tall { min-height: 360px; }
-    .cs-placeholder--short { min-height: 240px; }
-    .cs-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.5rem 0; }
-    @media (max-width: 600px) { .cs-img-row { grid-template-columns: 1fr; } }
+/* ── BODY ── */
+.body-wrap {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
 
-    /* ── FULL-WIDTH IMAGE WRAPPER ── */
-    .cs-img-full {
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-      background: var(--bg-3);
-      padding: 1px 0;
-    }
-    .cs-img-full img {
-      width: 100%; max-height: 600px; object-fit: cover; object-position: top;
-    }
-    .cs-img-caption {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.75rem;
-      letter-spacing: 0.06em;
-    }
+.section-block { padding: 5rem 0 0; }
+.section-block:last-of-type { padding-bottom: 5rem; }
 
-    /* ── FOOTER ── */
-    .footer {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.5rem 2.5rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.78rem; color: var(--text-muted);
-    }
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 200px;
+}
 
-    /* ── REVEAL ANIMATION ── */
-    .reveal {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .reveal.visible { opacity: 1; transform: none; }
+h2 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+  color: var(--ink);
+}
+h2 em { font-style: italic; color: var(--blue); font-weight: 300; }
 
-    @media (max-width: 768px) {
-      .cs-hero { padding: 0 1.5rem 4rem; }
-      .cs-body { padding: 4rem 1.5rem; }
-      .cs-equation { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-      .nav { padding: 1rem 1.5rem; }
-    }
-  </style>
+.lead {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+.body-p {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.85;
+  font-weight: 300;
+  margin-bottom: 1.25rem;
+}
+
+/* PULL QUOTE */
+.pull-quote {
+  margin: 2.5rem 0;
+  padding: 2rem 2.5rem;
+  border-left: 3px solid var(--blue);
+  background: var(--blue-faint);
+  border-radius: 0 14px 14px 0;
+}
+.pull-quote p {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* PROBLEM BOX */
+.problem-box {
+  margin: 2.5rem 0;
+  padding: 2rem 2.5rem;
+  background: var(--ink);
+  border-radius: 16px;
+}
+.problem-box p {
+  font-size: 1.05rem;
+  font-style: italic;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.82);
+  font-weight: 300;
+}
+
+/* STAT STRIP */
+.stat-strip {
+  background: var(--ink);
+  padding: 4rem 5vw;
+  margin: 4rem 0 0;
+}
+.stat-strip-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+.stat-item { display: flex; flex-direction: column; gap: 6px; }
+.stat-num {
+  font-size: 3rem;
+  font-weight: 200;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.stat-num span { color: var(--blue-light); font-weight: 600; }
+.stat-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; font-weight: 300; }
+
+/* IMAGE PLACEHOLDER */
+.img-ph {
+  background: var(--cream);
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 2rem;
+}
+.img-ph-icon {
+  width: 40px; height: 40px;
+  background: var(--border);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+}
+.img-ph span { font-size: 12px; opacity: 0.6; }
+
+.img-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+.img-3col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+.img-full { margin: 2rem 0; }
+
+hr.section-rule { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+/* PROCESS TIMELINE */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 2.5rem 0;
+}
+.tl-step {
+  background: var(--white);
+  padding: 1.75rem 1.5rem;
+  transition: background 0.2s;
+}
+.tl-step:hover { background: var(--cream); }
+.tl-num {
+  font-size: 2.5rem;
+  font-weight: 200;
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.04em;
+}
+.tl-phase { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.35rem; }
+.tl-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 0.6rem; }
+.tl-desc { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+.tl-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 1rem; }
+.tl-tag { font-size: 11px; color: var(--blue); background: var(--blue-faint); padding: 3px 9px; border-radius: 20px; font-weight: 500; }
+
+/* INSIGHT CARDS */
+.insight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+.insight-card {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  border-top: 3px solid var(--blue);
+  background: var(--cream);
+}
+.insight-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.6rem; }
+.insight-text { font-size: 14px; color: var(--ink); line-height: 1.65; font-weight: 300; }
+
+/* FEATURE LIST — dashboard features (no phone mockup, these are dashboard views) */
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+.feature-row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+  padding: 1.5rem;
+  background: var(--white);
+  transition: background 0.15s;
+}
+.feature-row:hover { background: var(--cream); }
+.feature-num { font-size: 1.4rem; font-weight: 200; color: var(--blue-light); letter-spacing: -0.03em; line-height: 1; padding-top: 3px; }
+.feature-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.feature-desc { font-size: 14px; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+/* RESULTS STRIP */
+.results-strip {
+  background: var(--blue);
+  padding: 5rem 5vw;
+  margin: 4rem 0 0;
+}
+.results-inner { max-width: var(--col); margin: 0 auto; }
+.results-strip .section-label { color: var(--blue-light); }
+.results-strip .section-label::after { background: rgba(255,255,255,0.2); }
+.results-strip h2 { color: var(--white); }
+.results-strip h2 em { color: var(--blue-light); }
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.result-card {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: background 0.25s, transform 0.25s;
+}
+.result-card:hover { background: rgba(255,255,255,0.18); transform: translateY(-4px); }
+.result-num {
+  font-size: 3.2rem;
+  font-weight: 200;
+  line-height: 1;
+  color: white;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.04em;
+}
+.result-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; font-weight: 300; }
+
+/* MY ROLE */
+.role-block { padding: 5rem 0; border-top: 1px solid var(--border); }
+
+.contribution-list { display: flex; flex-direction: column; gap: 1.1rem; margin: 2rem 0; }
+.contribution {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--cream);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.contribution:hover { border-color: var(--blue-light); transform: translateX(4px); }
+.contribution-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+.contribution p { font-size: 15px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+.contribution strong { color: var(--ink); font-weight: 500; }
+
+.reflection-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+.reflection-card {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--white);
+}
+.r-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-bottom: 0.6rem; }
+.r-label.worked { color: #2D7D46; }
+.r-label.improve { color: #B45A10; }
+.r-label.learned { color: var(--blue); }
+.r-text { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+/* TOOLS USED — replaces team section for solo project */
+.tools-strip {
+  background: var(--cream);
+  padding: 5rem 5vw;
+  border-top: 1px solid var(--border);
+}
+.tools-inner { max-width: var(--col); margin: 0 auto; }
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.tool-card {
+  padding: 1.75rem 1.5rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  border-top: 3px solid var(--border);
+  transition: border-top-color 0.2s, transform 0.2s;
+}
+.tool-card:hover { border-top-color: var(--blue-light); transform: translateY(-3px); }
+.tool-card-icon { font-size: 1.5rem; margin-bottom: 0.75rem; display: block; }
+.tool-card-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.tool-card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; font-weight: 300; }
+
+/* NEXT PROJECT */
+.next-project { background: var(--ink); padding: 5rem 5vw; }
+.next-inner { max-width: var(--col); margin: 0 auto; }
+.next-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 2rem; }
+
+.next-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.5rem 3rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.25s, border-color 0.25s;
+}
+.next-card:hover { background: rgba(255,255,255,0.1); border-color: var(--blue-light); transform: translateY(-4px); }
+.next-card-type { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-light); margin-bottom: 0.5rem; }
+.next-card-title { font-size: 1.6rem; font-weight: 600; color: white; letter-spacing: -0.02em; }
+.next-card-arrow { font-size: 2rem; color: rgba(255,255,255,0.3); transition: color 0.2s, transform 0.2s; }
+.next-card:hover .next-card-arrow { color: var(--blue-light); transform: translateX(6px); }
+
+footer {
+  background: #111;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  padding: 2.5rem;
+  font-size: 13px;
+  font-weight: 300;
+}
+footer a { color: var(--blue-light); text-decoration: none; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav class="nav" id="nav">
-    <a href="index.html" class="nav__logo">amorino</a>
-    <div class="nav__right">
-      <a href="index.html#work" class="nav__back">← All Work</a>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
+<!-- NAV -->
+<nav>
+  <a class="nav__logo" href="index.html">amorino</a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#results">Results</a></li>
+  </ul>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme"></button>
+</nav>
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <p class="eyebrow">Data Visualisation · UX Design · 2024</p>
+    <div class="hero-logo-row">
+      <!-- Swap the emoji box for an actual logo img if you have one:
+           <img src="assets/bofa-logo.png" alt="BOFA logo" class="hero-logo-img" style="width:56px;height:56px;object-fit:contain;"> -->
+      <div class="hero-icon-box">🌬️</div>
+      <span class="hero-wordmark">Breath of<br>Fresh <em>Air</em></span>
     </div>
-  </nav>
+    <p class="hero-tagline">Data that helps you breathe easier at work.</p>
+    <p class="hero-sub">An interactive IEQ dashboard that turns raw building sensor data into instant, actionable insight — giving office managers a clear picture of their workspace health before problems become complaints.</p>
 
-  <!-- HERO -->
-  <section class="cs-hero">
-    <div class="cs-hero__bg"></div>
-    <div class="cs-hero__grid"></div>
-    <div class="cs-hero__blob cs-hero__blob--1"></div>
-    <div class="cs-hero__blob cs-hero__blob--2"></div>
-    <div class="cs-hero__blob cs-hero__blob--3"></div>
-
-    <div class="cs-hero__content">
-      <span class="cs-hero__eyebrow">DECO3100 · Data Visualisation · 2025</span>
-      <h1 class="cs-hero__title">
-        Breath of<br />
-        <em>Fresh Air</em>
-      </h1>
-      <p style="color: #6b6560; max-width: 560px; font-size: 1.05rem; line-height: 1.75;">
-        An interactive IEQ dashboard that helps office managers detect ventilation problems
-        before staff ever need to complain.
-      </p>
-      <div class="cs-hero__meta">
-        <div class="cs-hero__meta-item">
-          <span class="cs-hero__meta-label">Role</span>
-          <span class="cs-hero__meta-value">UX/UI + Data Vis Designer</span>
-        </div>
-        <div class="cs-hero__meta-item">
-          <span class="cs-hero__meta-label">Tools</span>
-          <span class="cs-hero__meta-value">Figma · JavaScript · Plotly.js · CSV</span>
-        </div>
-        <div class="cs-hero__meta-item">
-          <span class="cs-hero__meta-label">Duration</span>
-          <span class="cs-hero__meta-value">Semester 1, 2025</span>
-        </div>
-        <div class="cs-hero__meta-item">
-          <span class="cs-hero__meta-label">Context</span>
-          <span class="cs-hero__meta-value">University of Sydney · DECO3100</span>
-        </div>
-      </div>
-    </div>
-    <div class="scroll-indicator">
-      <div class="scroll-indicator__line"></div>
-      Scroll
-    </div>
-  </section>
-
-  <!-- CASE STUDY BODY -->
-  <div class="cs-body">
-
-    <!-- 01 OVERVIEW -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">01 — Overview</span>
-      <h2>What if your office could tell you it was struggling?</h2>
-      <p>
-        Modern buildings track dozens of comfort metrics continuously — temperature, CO₂, airspeed, humidity — yet most office managers only hear about problems <strong>after staff complain</strong>. By then, the discomfort has persisted for hours, productivity has already taken a hit, and whatever caused it has often become harder to fix.
-      </p>
-      <p>
-        Breath of Fresh Air turns raw IEQ (Indoor Environmental Quality) sensor data from the University of Sydney's SAMBA system into a <strong>clear, scannable dashboard</strong> — designed specifically for the non-technical office manager who needs answers at a glance, not a spreadsheet.
-      </p>
-
-      <div class="cs-equation">
-        <span class="cs-equation__term">Healthier Space</span>
-        <span class="cs-equation__op">+</span>
-        <span class="cs-equation__term">Action</span>
-        <span class="cs-equation__op">=</span>
-        <span class="cs-equation__result">"Better" Results</span>
-      </div>
-    </section>
-
-    <!-- DASHBOARD HERO SCREENSHOT -->
-    <div class="cs-img-block reveal">
-      <div class="cs-placeholder cs-placeholder--tall">
-        <strong>Dashboard — hero screenshot</strong>
-        <span>Full view of the finished dashboard in browser — severity score, gauges, zone map, calendar</span>
-        <span style="opacity:0.5;">assets/images/bofa-dashboard.jpg</span>
-      </div>
-      <figcaption>Breath of Fresh Air — final dashboard, single-screen view</figcaption>
+    <div class="tool-row">
+      <span class="chip blue">JavaScript</span>
+      <span class="chip blue">Plotly.js</span>
+      <span class="chip blue">Data Analysis</span>
+      <span class="chip blue">UX Design</span>
+      <span class="chip blue">Usability Testing</span>
+      <span class="chip blue">Information Design</span>
     </div>
 
-    <!-- 02 PROBLEM -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">02 — Problem Statement</span>
-      <h2>The gap between data and decision</h2>
-      <p>
-        The IEQ Lab's SAMBA system captures 10 environmental metrics every <strong>5 minutes</strong> across multiple floors, for a full year. That's an extraordinary volume of data. But without clear visualisation, it's invisible to the people who need it most.
-      </p>
-
-      <div class="cs-problem">
-        <p class="cs-problem__quote">
-          "Although the IEQ Lab's SAMBA system continuously captures airflow, CO₂, and other comfort metrics every five minutes across all office zones, without clear, easy-to-digest visualisations, office managers can't detect under-ventilated areas until staff complain — by which time the problem has persisted, causing discomfort, health risks, and expensive emergency interventions."
-        </p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">My Role</span>
+        <span class="meta-value">Solo — Design & Dev</span>
       </div>
-
-      <p>
-        External research backed this up — a 2016 study by Allen et al. found that cognitive performance in better-ventilated spaces was measurably higher: workers in "Green+" environments scored <strong>over 100% better</strong> on cognitive tests than those in conventional offices. The stakes aren't abstract.
-      </p>
-    </section>
-
-    <!-- 03 DATA & INSIGHTS -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">03 — Data & Insights</span>
-      <h2>Finding the signal in the noise</h2>
-      <p>
-        I focused on three zones (48, 49, 50) from the SAMBA dataset — a full year of five-minute readings per zone. After running exploratory analysis in Tableau, five variables emerged as most meaningful for comfort monitoring:
-      </p>
-
-      <div class="cs-pills">
-        <span class="cs-pill cs-pill--red">🌡 Air Temperature (ta)</span>
-        <span class="cs-pill cs-pill--amber">💨 Air Speed (a_s)</span>
-        <span class="cs-pill cs-pill--green">🌿 CO₂ Levels (co2)</span>
-        <span class="cs-pill cs-pill--blue">📊 Predicted Mean Vote (PMV)</span>
-        <span class="cs-pill cs-pill--dark">📅 Date</span>
+      <div class="meta-item">
+        <span class="meta-label">Duration</span>
+        <span class="meta-value">12 weeks · 2024</span>
       </div>
-
-      <p>
-        Two key correlations shaped the entire dashboard design. First, there's a <strong>clear inverse relationship between CO₂ and airspeed</strong> — when airflow improves, CO₂ drops. Second, <strong>temperature and PMV track closely</strong> — warmer air reliably pushes PMV higher (towards "too warm"). These relationships aren't just interesting; they mean a manager who fixes airflow often fixes multiple metrics at once.
-      </p>
-
-      <div class="cs-stats">
-        <div class="cs-stat">
-          <span class="cs-stat__num">3</span>
-          <span class="cs-stat__label">Building zones analysed (48, 49, 50)</span>
-        </div>
-        <div class="cs-stat">
-          <span class="cs-stat__num">10</span>
-          <span class="cs-stat__label">IEQ metrics captured per reading</span>
-        </div>
-        <div class="cs-stat">
-          <span class="cs-stat__num">5 min</span>
-          <span class="cs-stat__label">Sensor reading frequency</span>
-        </div>
-        <div class="cs-stat">
-          <span class="cs-stat__num">1 yr</span>
-          <span class="cs-stat__label">Full dataset span (2019)</span>
-        </div>
+      <div class="meta-item">
+        <span class="meta-label">Course</span>
+        <span class="meta-value">DECO3100</span>
       </div>
-    </section>
-
-    <!-- TABLEAU / DATA EXPLORATION SCREENSHOT -->
-    <div class="cs-img-block reveal">
-      <div class="cs-placeholder cs-placeholder--short">
-        <strong>Tableau exploratory analysis</strong>
-        <span>Screenshot from your Tableau workbook — the CO₂ vs airspeed or temperature vs PMV correlation</span>
-        <span style="opacity:0.5;">assets/images/bofa-tableau.jpg</span>
-      </div>
-      <figcaption>Exploratory analysis in Tableau — finding the CO₂ / airspeed correlation</figcaption>
-    </div>
-
-    <!-- 04 DESIGN DECISIONS -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">04 — Design Decisions</span>
-      <h2>Designing for comprehension, not cleverness</h2>
-      <p>
-        My target user is an <strong>older office manager</strong> — someone who values getting things done, not learning a new interface. Two research-backed principles shaped every choice:
-      </p>
-      <p>
-        <strong>Large fonts, big visuals.</strong> Rello et al. (2016) found comprehension improved significantly at font sizes 18+ — so I leaned into large numbers, bold gauges, and spacious layouts rather than information density.
-      </p>
-      <p>
-        <strong>Familiar contextual cues.</strong> The colour system was directly inspired by the <em>NSW Fire Danger Rating signs</em> — one of the most universally understood severity scales in Australia. Red means bad. Green means good. Nobody needs to learn it.
-      </p>
-
-      <div class="cs-palette">
-        <div class="cs-swatch">
-          <div class="cs-swatch__block" style="background:#ea324c;"></div>
-          <span class="cs-swatch__label">Alert / Critical</span>
-          <span class="cs-swatch__hex">#ea324c</span>
-        </div>
-        <div class="cs-swatch">
-          <div class="cs-swatch__block" style="background:#f2ac42;"></div>
-          <span class="cs-swatch__label">Warning / Caution</span>
-          <span class="cs-swatch__hex">#f2ac42</span>
-        </div>
-        <div class="cs-swatch">
-          <div class="cs-swatch__block" style="background:#00b38a;"></div>
-          <span class="cs-swatch__label">Good / Comfortable</span>
-          <span class="cs-swatch__hex">#00b38a</span>
-        </div>
-      </div>
-
-      <p>
-        The dashboard lives on <strong>a single screen</strong> — no tabs, no drill-down navigation. A severity score gives an at-a-glance number. Gauge charts show the three key metrics. A zone map visualises spatial distribution. A monthly calendar lets managers track trends over time. Everything a manager needs is visible without scrolling.
-      </p>
-    </section>
-
-    <!-- DESIGN DECISIONS — WIREFRAME / SKETCH -->
-    <div class="cs-img-row reveal">
-      <div class="cs-img-block" style="margin:0;">
-        <div class="cs-placeholder cs-placeholder--short">
-          <strong>Early sketch / hand-drawn layout</strong>
-          <span>Your A1 hand-sketched dashboard layout with semicircle gauges, zone dropdown, and CTA</span>
-          <span style="opacity:0.5;">assets/images/bofa-sketch.jpg</span>
-        </div>
-        <figcaption>Early sketch — layout before any code</figcaption>
-      </div>
-      <div class="cs-img-block" style="margin:0;">
-        <div class="cs-placeholder cs-placeholder--short">
-          <strong>Figma wireframe / lo-fi</strong>
-          <span>Figma low-fidelity frames or component structure before building in JS</span>
-          <span style="opacity:0.5;">assets/images/bofa-wireframe.jpg</span>
-        </div>
-        <figcaption>Low fidelity — structure before colour and data</figcaption>
-      </div>
-    </div>
-
-    <!-- 05 ITERATION -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">05 — Iteration</span>
-      <h2>From A1 sketch to A2 dashboard</h2>
-      <p>
-        After A1 feedback, I had a clear brief for what was missing: stronger call-to-action design and clearer interpretation aids. Here's how the design evolved:
-      </p>
-
-      <div class="cs-timeline">
-        <div class="cs-step">
-          <div class="cs-step__dot">①</div>
-          <div class="cs-step__body">
-            <p class="cs-step__title">Early Sketch → Initial Prototype</p>
-            <p class="cs-step__desc">Hand-sketched layout with semicircle gauges for Temperature, CO₂, and Air Speed. Zone dropdown selector, severity score, time/date sliders, and a report/share CTA. Two views: detail panel and building floor map.</p>
-          </div>
-        </div>
-        <div class="cs-step">
-          <div class="cs-step__dot">②</div>
-          <div class="cs-step__body">
-            <p class="cs-step__title">A1 Feedback → Key Changes</p>
-            <p class="cs-step__desc">Added a "Today's Dashboard" status panel with live Current Status summary. Moved the zone map to the main screen. Improved gauge styling using Plotly.js with colour-coded arcs and labelled thresholds.</p>
-          </div>
-        </div>
-        <div class="cs-step">
-          <div class="cs-step__dot">③</div>
-          <div class="cs-step__body">
-            <p class="cs-step__title">Usability Testing → Final Polish</p>
-            <p class="cs-step__desc">Added "ⓘ" tooltip icons across all components. Introduced plain-English labels below gauges ("Comfortable", "Drafty", "Still"). Updated severity score with emoji and colour shifts. Improved spacing, contrast, and calendar interaction.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- A1 vs A2 BEFORE/AFTER COMPARISON -->
-    <div class="cs-img-row reveal">
-      <div class="cs-img-block" style="margin:0;">
-        <div class="cs-placeholder cs-placeholder--short">
-          <strong>A1 — initial prototype</strong>
-          <span>Screenshot of the A1 version before feedback — original gauge layout, no status panel</span>
-          <span style="opacity:0.5;">assets/images/bofa-a1.jpg</span>
-        </div>
-        <figcaption>A1 submission — before feedback iteration</figcaption>
-      </div>
-      <div class="cs-img-block" style="margin:0;">
-        <div class="cs-placeholder cs-placeholder--short">
-          <strong>A2 — final dashboard</strong>
-          <span>Screenshot of the A2 version with status panel, tooltips, and improved gauges added</span>
-          <span style="opacity:0.5;">assets/images/bofa-a2.jpg</span>
-        </div>
-        <figcaption>A2 submission — after iteration and usability testing</figcaption>
-      </div>
-    </div>
-
-    <!-- 06 USABILITY TESTING -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">06 — Usability Testing</span>
-      <h2>Testing with real people, not just peers</h2>
-      <p>
-        Testing ran in two rounds. The first — 3 design students — validated early prototype choices from A1 feedback. The second was more rigorous: 10 participants including <strong>4 non-design adults</strong> representing the actual target audience of office managers.
-      </p>
-
-      <div class="cs-participants">
-        <div class="cs-participant-group">
-          <div class="cs-participant-group__num">4</div>
-          <div class="cs-participant-group__label">Non-design adults (target audience)</div>
-        </div>
-        <div class="cs-participant-group">
-          <div class="cs-participant-group__num">5</div>
-          <div class="cs-participant-group__label">Design students (detailed critique)</div>
-        </div>
-        <div class="cs-participant-group">
-          <div class="cs-participant-group__num">1</div>
-          <div class="cs-participant-group__label">Industry designer</div>
-        </div>
-      </div>
-
-      <p>Each participant completed three tasks:</p>
-      <div class="cs-changes">
-        <div class="cs-change">
-          <span class="cs-change__icon">①</span>
-          Find the latest data on Zone 50 and interpret how it is performing.
-        </div>
-        <div class="cs-change">
-          <span class="cs-change__icon">②</span>
-          Navigate to January using the date slider and explain whether ventilation conditions were improving or worsening.
-        </div>
-        <div class="cs-change">
-          <span class="cs-change__icon">③</span>
-          Use the severity score and gauges to assess Zone 48's comfort level and identify contributing factors.
-        </div>
-      </div>
-    </section>
-
-    <!-- TESTING SESSION PHOTO -->
-    <div class="cs-img-block reveal">
-      <div class="cs-placeholder cs-placeholder--short">
-        <strong>Usability testing session</strong>
-        <span>Photo or screen-recording still from a think-aloud session with a participant</span>
-        <span style="opacity:0.5;">assets/images/bofa-testing.jpg</span>
-      </div>
-      <figcaption>Testing with non-design adults — the target office manager audience</figcaption>
-    </div>
-
-    <!-- 07 FINDINGS -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">07 — Key Findings</span>
-      <h2>What worked, what didn't</h2>
-
-      <div class="cs-findings">
-        <div class="cs-finding">
-          <div class="cs-finding__icon">✅</div>
-          <p class="cs-finding__title">Large numbers landed immediately</p>
-          <p class="cs-finding__body">Even the adult participants grasped the severity score and gauge values without prompting. The single-page layout reduced navigation confusion to zero.</p>
-        </div>
-        <div class="cs-finding">
-          <div class="cs-finding__icon">✅</div>
-          <p class="cs-finding__title">Colour system was universal</p>
-          <p class="cs-finding__body">All participants correctly identified red as "bad" and green as "good" without any instruction — the Fire Danger Rating inspiration paid off.</p>
-        </div>
-        <div class="cs-finding">
-          <div class="cs-finding__icon">⚠️</div>
-          <p class="cs-finding__title">Thresholds weren't obvious</p>
-          <p class="cs-finding__body">Several participants didn't know whether 26°C or 567 ppm CO₂ was "acceptable". The visual was clear; the benchmark wasn't.</p>
-        </div>
-        <div class="cs-finding">
-          <div class="cs-finding__icon">⚠️</div>
-          <p class="cs-finding__title">PMV was unfamiliar jargon</p>
-          <p class="cs-finding__body">Non-design adults consistently paused at PMV. The label alone wasn't enough — context was needed.</p>
-        </div>
-      </div>
-
-      <div class="cs-quote">
-        <p class="cs-quote__text">The colours and smiley face helped, but I didn't know what number was considered too high for CO₂ or Air Speed.</p>
-        <p class="cs-quote__source">— Usability testing participant</p>
-      </div>
-
-      <p>In response, I added tooltip "ⓘ" icons to every metric, plain-English labels under each gauge, and a "Did You Know?" callout in the sidebar that surfaced contextual facts (e.g. "Air speed below 0.1 m/s is considered still — try improving circulation!").</p>
-    </section>
-
-    <!-- 08 REFLECTION -->
-    <section class="cs-section reveal">
-      <span class="cs-section-label">08 — Reflection</span>
-      <h2>What I actually learned</h2>
-
-      <div class="cs-reflection">
-        <h3>Designing for non-designers is humbling</h3>
-        <p>
-          The biggest gap wasn't between the data and the interface — it was between <em>my</em> understanding of the data and the user's. I knew what 600 ppm CO₂ meant; my participants didn't. Usability testing made this gap impossible to ignore, and it's the kind of thing you simply cannot catch by testing with design students alone.
-        </p>
-        <p>
-          The Fire Danger Rating insight came early and held up throughout. When you anchor a new interface to something people already trust, you eliminate a whole category of confusion. Context borrowed from the real world is worth more than any custom icon system.
-        </p>
-        <p>
-          I also got more comfortable with Plotly.js than I expected. Working through async data loading, dual-axis graphs, and responsive gauge layouts taught me a lot about how data visualisation libraries actually behave in a browser — which is messier and more specific than the docs suggest.
-        </p>
-      </div>
-
-      <span class="cs-annotation">still think about the colour system for this one →</span>
-    </section>
-
-  </div><!-- /cs-body -->
-
-  <!-- NEXT PROJECT -->
-  <div class="cs-next">
-    <span class="cs-next__label">Keep exploring</span>
-    <h2 class="cs-next__title">See more work</h2>
-    <div class="cs-next__links">
-      <a href="casestudyroamy.html" class="btn">Roamy — Cultural Discovery App</a>
-      <a href="casestudyathlyst.html" class="btn btn--ghost">Athlyst — Olympic Card Trading App</a>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <span>© 2026 Amorino Toongart</span>
-    <span>Built by hand in VS Code.</span>
-  </footer>
+  <div class="hero-right">
+    <img src="assets/BOFA mockup.jpg" alt="Breath of Fresh Air dashboard mockup">
+  </div>
+</div>
 
-  <script>
-    // Theme toggle
+
+<!-- THE BRIEF -->
+<div class="body-wrap">
+  <div class="section-block reveal">
+    <p class="section-label">The Brief</p>
+    <h2>Designing for <em>data that already exists</em></h2>
+    <p class="lead">The brief was deliberately open-ended: given a year's worth of real IEQ sensor data from the University of Sydney's SAMBA system, what data visualisation product could it enable?</p>
+    <p class="body-p">SAMBA captures 10 comfort metrics — temperature, CO₂, airspeed, humidity, light, sound, and more — every five minutes, across three office zones, for an entire year. The data was rich. The opportunity was clear. But nobody was actually reading it in a useful way.</p>
+    <p class="body-p">I noticed that at industry events I'd attended, environmental conditions in workspaces were barely considered. If we expect people to do their best work, the spaces they occupy need to support that. That observation shaped everything from the problem statement to the final interface.</p>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+
+<!-- PROBLEM STATS -->
+<div class="stat-strip reveal" id="problem">
+  <div class="stat-strip-inner">
+    <div class="stat-item">
+      <div class="stat-num"><span>10</span></div>
+      <div class="stat-desc">IEQ metrics captured every 5 minutes across 3 floors — temperature, CO₂, airspeed, PMV, humidity, sound, and more</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">+<span>61</span>%</div>
+      <div class="stat-desc">improvement in cognitive scores in better-ventilated offices (Allen et al., 2016) — clean air directly affects how well people think</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span>0</span></div>
+      <div class="stat-desc">clear, accessible dashboards existed to surface these insights to the office managers who needed them most</div>
+    </div>
+  </div>
+</div>
+
+<div class="body-wrap">
+  <div class="section-block reveal">
+    <p class="section-label">The Problem</p>
+    <h2>Managers can't fix what they<br>can't <em>see</em></h2>
+    <p class="lead">The SAMBA system was collecting data constantly. But without a clear way to interpret it, office managers had no choice but to wait — until a staff member complained, until conditions were already uncomfortable, until the problem was too big to ignore.</p>
+    <p class="body-p">Poor ventilation doesn't just cause discomfort. It leads to increased sick leave, lower productivity, and expensive emergency maintenance. The gap wasn't the data — it was the interface.</p>
+
+    <div class="problem-box">
+      <p>"Although the IEQ Lab's SAMBA system continuously captures airflow, CO₂, and other comfort metrics every five minutes across all office zones — without clear, easy-to-digest visualisations, office managers can't detect under-ventilated areas until staff complain. By which time the problem has persisted, causing discomfort, health risks, and expensive emergency interventions."</p>
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+
+<!-- SOLUTION -->
+<div class="body-wrap" id="solution">
+  <div class="section-block reveal">
+    <p class="section-label">The Solution</p>
+    <h2>Breath of Fresh Air — data <em>at a glance</em></h2>
+    <p class="lead">An interactive, single-screen dashboard that turns a year's worth of raw sensor readings into something any office manager can understand in seconds — no data background required.</p>
+    <p class="body-p">Inspired by the immediate legibility of fire danger rating signs and the familiarity of traffic-light colour systems, the interface uses large colour-coded gauges, a severity score, a zone map, and a monthly calendar view to give a complete picture of workspace health — all without a single menu to dig through.</p>
+
+    <div class="pull-quote">
+      <p>"Healthier Space + Action = Better Results. That was the equation driving every design decision."</p>
+    </div>
+
+    <!-- Dashboard screenshot — replace placeholder when ready -->
+    <div class="img-full reveal">
+      <div class="img-ph" style="height:320px;">
+        <div class="img-ph-icon">🖥️</div>
+        <span>Final dashboard screenshot — replace with assets/bofa-dashboard.jpg</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- KEY FEATURES -->
+  <div class="section-block reveal">
+    <p class="section-label">Key Features</p>
+    <h2>What the dashboard <em>actually does</em></h2>
+
+    <div class="feature-list">
+      <div class="feature-row">
+        <div class="feature-num">01</div>
+        <div>
+          <div class="feature-name">Colour-Coded Gauges</div>
+          <div class="feature-desc">Large, instantly readable gauges for temperature, CO₂, and airspeed — each with a labelled severity state like "Comfortable", "Okay", or "Drafty" displayed below. No guessing what the number means.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-num">02</div>
+        <div>
+          <div class="feature-name">Severity Score</div>
+          <div class="feature-desc">A single weighted composite score (0–100) that aggregates all three key variables into one number. Colour-coded and paired with an emoji indicator — green face for good, concerned face for poor. Updates with the selected date.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-num">03</div>
+        <div>
+          <div class="feature-name">Zone Map</div>
+          <div class="feature-desc">A spatial overview of Zones 48, 49, and 50 with ventilation satisfaction percentages displayed in colour. Moved to the main screen after feedback — lets managers immediately see which zone needs attention.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-num">04</div>
+        <div>
+          <div class="feature-name">Dual-Axis Graph Carousel</div>
+          <div class="feature-desc">Explore relationships between variables over time — CO₂ vs Airspeed, Temperature vs PMV — using Plotly.js dual-axis charts. A carousel format keeps the layout clean without hiding the depth.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-num">05</div>
+        <div>
+          <div class="feature-name">Monthly Calendar & Date Slider</div>
+          <div class="feature-desc">Navigate across the full year of data using a date slider or clickable calendar. Each day's severity score is visible at a glance, making it easy to spot patterns and anomalies without running a query.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-num">06</div>
+        <div>
+          <div class="feature-name">Today's Dashboard Panel</div>
+          <div class="feature-desc">A status summary sidebar listing current conditions for each metric and a "Did You Know?" tip about ventilation. Contextualises the data for non-technical users and provides a nudge to take action.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+
+<!-- PROCESS -->
+<div class="body-wrap" id="process">
+  <div class="section-block reveal">
+    <p class="section-label">How I Got There</p>
+    <h2>From raw CSV to polished<br><em>interactive dashboard</em></h2>
+    <p class="lead">Every design decision was evidence-based — from the choice to use large fonts (backed by Rello et al., 2016) to the traffic-light colour system inspired by fire danger rating signs.</p>
+
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-num">01</div>
+        <div class="tl-phase">Data & Concept (A1)</div>
+        <div class="tl-title">Analysis & Low-Fidelity</div>
+        <div class="tl-desc">Analysed Zones 48, 49, and 50 to identify patterns. Found a clear inverse relationship between CO₂ and airspeed, and a link between temperature and PMV. Sketched dashboard concepts and presented findings.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">SAMBA data</span>
+          <span class="tl-tag">Tableau</span>
+          <span class="tl-tag">Sketching</span>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-num">02</div>
+        <div class="tl-phase">Build & Test (A2 Early)</div>
+        <div class="tl-title">Prototype & Round 1 Testing</div>
+        <div class="tl-desc">Built a working HTML/JS dashboard using Plotly.js. Tested with 3 design students — feedback flagged missing context around gauge thresholds. Redesigned the status panel, gauge labels, and map layout in response.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Plotly.js</span>
+          <span class="tl-tag">HTML/CSS/JS</span>
+          <span class="tl-tag">Think-aloud</span>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-num">03</div>
+        <div class="tl-phase">Final Polish (A2 Final)</div>
+        <div class="tl-title">10-Person Test & Final Build</div>
+        <div class="tl-desc">Second round with 10 participants across non-design adults, design students, and an industry designer. Added tooltips, "i" icons, emoji severity indicators, and improved spacing. Final dashboard was clear and actionable for all groups.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">10 participants</span>
+          <span class="tl-tag">Tooltips</span>
+          <span class="tl-tag">Final polish</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testing photos -->
+    <p style="font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; margin-top:2.5rem;">Usability Testing Participants</p>
+    <div class="img-3col reveal">
+      <div class="img-ph" style="height:180px;">
+        <div class="img-ph-icon">📸</div>
+        <span>Non-design student testing</span>
+      </div>
+      <div class="img-ph" style="height:180px;">
+        <div class="img-ph-icon">📸</div>
+        <span>Design background student</span>
+      </div>
+      <div class="img-ph" style="height:180px;">
+        <div class="img-ph-icon">📸</div>
+        <span>Adult participant (office manager)</span>
+      </div>
+    </div>
+
+    <!-- Lo-fi to hi-fi -->
+    <p style="font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; margin-top:2.5rem;">Sketches to Final Dashboard</p>
+    <div class="img-2col reveal">
+      <div class="img-ph" style="height:200px;">
+        <div class="img-ph-icon">✏️</div>
+        <span>Early gauge & zone sketches</span>
+      </div>
+      <div class="img-ph" style="height:200px;">
+        <div class="img-ph-icon">🖥️</div>
+        <span>Final hi-fi dashboard</span>
+      </div>
+    </div>
+
+    <!-- Key insights -->
+    <p class="section-label reveal" style="margin-top:3rem;">Key Insights from Testing</p>
+    <div class="insight-grid reveal">
+      <div class="insight-card">
+        <div class="insight-label">On Gauge Readability</div>
+        <div class="insight-text">Large numbers and colour were understood immediately by all groups — including non-design adults. But without labelled thresholds, users couldn't judge if a value was "bad" or not.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-label">On Context</div>
+        <div class="insight-text">Adding plain-English labels ("Comfortable", "Drafty") below each gauge resolved almost all confusion. Showing what the number means matters more than showing the number alone.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-label">On the Map</div>
+        <div class="insight-text">Moving the zone map to the main screen was one of the most impactful changes — users no longer had to navigate to see which zone needed attention. Spatial context is critical for building data.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-label">On Cognitive Load</div>
+        <div class="insight-text">Single-screen layout consistently reduced anxiety. Users across all groups said it felt "manageable" — a deliberate outcome of the design to avoid overwhelming non-technical audiences.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+
+<!-- RESULTS -->
+<div class="results-strip reveal" id="results">
+  <div class="results-inner">
+    <p class="section-label">The Results</p>
+    <h2>Validated by the people who <em>actually use it</em></h2>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-num">10</div>
+        <div class="result-desc">usability test participants across non-design adults, design students, and an industry designer — all groups found it clear and actionable</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">100%</div>
+        <div class="result-desc">of adult participants — the actual target audience of office managers — successfully completed all three test tasks without confusion</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">2×</div>
+        <div class="result-desc">rounds of testing with targeted redesigns between each — every iteration was driven by direct user feedback, not assumption</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MY ROLE -->
+<div class="body-wrap">
+  <div class="role-block reveal">
+    <p class="section-label">My Role</p>
+    <h2>Solo — Design, Data <em>& Development</em></h2>
+    <p class="lead">This was a solo project end-to-end. I owned everything from the initial data analysis through to the final coded, interactive dashboard.</p>
+
+    <div class="contribution-list">
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Data analysis and pattern identification</strong> — processed a full year of SAMBA sensor readings across Zones 48, 49, and 50, identifying key relationships between CO₂, airspeed, temperature, and PMV that shaped the dashboard's focus variables</p>
+      </div>
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>UX research and problem framing</strong> — defined the target audience (non-technical office managers), shaped the problem statement, and grounded every design decision in research on readability, accessibility, and environmental data communication</p>
+      </div>
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Interactive dashboard development</strong> — built the full working dashboard in HTML, CSS, and JavaScript using Plotly.js for gauge and graph rendering, including the severity score normalisation logic and date-based data filtering</p>
+      </div>
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Designed and ran two rounds of usability testing</strong> — recruited and facilitated testing with 13 participants across two phases, synthesised findings, and iterated the design in direct response to what users struggled with</p>
+      </div>
+      <div class="contribution">
+        <div class="contribution-dot"></div>
+        <p><strong>Information design and visual hierarchy</strong> — applied research-backed choices (large fonts, traffic-light colours, single-screen layout) to make complex sensor data immediately interpretable for non-expert users</p>
+      </div>
+    </div>
+
+    <div class="reflection-grid reveal">
+      <div class="reflection-card">
+        <div class="r-label worked">What Worked</div>
+        <div class="r-text">The single-screen constraint was the right call. Users consistently found it less overwhelming than multi-page dashboards. The plain-English gauge labels were the single biggest comprehension improvement across the whole project.</div>
+      </div>
+      <div class="reflection-card">
+        <div class="r-label improve">What I Would Change</div>
+        <div class="r-text">I would test with actual building facilities managers earlier, not just stand-in adults. The target user has domain-specific mental models — understanding those sooner would have shaped the information architecture from the start.</div>
+      </div>
+      <div class="reflection-card" style="border-top-color: var(--blue);">
+        <div class="r-label learned">What It Taught Me</div>
+        <div class="r-text">Data visualisation is fundamentally a communication problem, not a technical one. The hardest part was not building the charts — it was figuring out what to hide. Constraints are design tools.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- TOOLS USED -->
+<div class="tools-strip reveal">
+  <div class="tools-inner">
+    <p class="section-label">Tools & Technologies</p>
+    <h2>Built from scratch with <em>real code</em></h2>
+    <p class="body-p" style="max-width:560px;">No drag-and-drop dashboard builder — every interaction, chart, and data transformation was written by hand. That was the point.</p>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <span class="tool-card-icon">📊</span>
+        <div class="tool-card-name">Plotly.js</div>
+        <div class="tool-card-desc">Gauge charts, dual-axis line graphs, and bar charts. Gave precise control over appearance and interaction behaviour.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-card-icon">💻</span>
+        <div class="tool-card-name">HTML / CSS / JS</div>
+        <div class="tool-card-desc">Full front-end build — layout, styling, data loading, severity score logic, date filtering, and tooltip positioning all hand-written.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-card-icon">📈</span>
+        <div class="tool-card-name">Tableau</div>
+        <div class="tool-card-desc">Used in the A1 analysis phase to explore the dataset and validate hypotheses before committing to the dashboard's variable focus.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-card-icon">🗂️</span>
+        <div class="tool-card-name">SAMBA CSV Data</div>
+        <div class="tool-card-desc">A full year of 5-minute interval readings across 3 zones. Parsed and filtered client-side using JavaScript's Fetch API and Promise.all().</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-card-icon">🎨</span>
+        <div class="tool-card-name">Visual Research</div>
+        <div class="tool-card-desc">Fire danger rating signs informed the colour system. Font-size research (Rello et al., 2016) justified the large, bold readout approach.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-card-icon">🧪</span>
+        <div class="tool-card-name">Usability Testing</div>
+        <div class="tool-card-desc">Two structured rounds with 13 participants, think-aloud protocols, and targeted redesigns between each session based on findings.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- NEXT PROJECT -->
+<div class="next-project">
+  <div class="next-inner">
+    <p class="next-label">More Case Studies</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <a class="next-card" href="casestudyroamy.html">
+        <div class="next-card-left">
+          <div class="next-card-type">UX / Interaction Design · DECO3200</div>
+          <div class="next-card-title">Roamy</div>
+        </div>
+        <div class="next-card-arrow">→</div>
+      </a>
+      <a class="next-card" href="casestudyathlyst.html">
+        <div class="next-card-left">
+          <div class="next-card-type">Mobile App · DECO2200</div>
+          <div class="next-card-title">Athlyst</div>
+        </div>
+        <div class="next-card-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<footer>
+  <p>Breath of Fresh Air — DECO3100 · Amorino Toongart</p>
+  <p style="margin-top:6px; font-size:12px;">Part of <a href="index.html">Amorino's Portfolio</a></p>
+</footer>
+
+
+<script>
+  (function () {
+    const ICONS = {
+      light: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`,
+      dark:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+    };
     const toggle = document.getElementById('theme-toggle');
+    const htmlEl = document.documentElement;
+    function syncToggle() {
+      const isLight = htmlEl.getAttribute('data-theme') === 'light';
+      toggle.innerHTML = isLight ? ICONS.light : ICONS.dark;
+    }
+    syncToggle();
     toggle.addEventListener('click', () => {
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      if (isLight) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
+      const goingDark = htmlEl.getAttribute('data-theme') === 'light';
+      if (goingDark) { htmlEl.removeAttribute('data-theme'); localStorage.setItem('theme', 'dark'); }
+      else { htmlEl.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); }
+      syncToggle();
+    });
+  })();
+</script>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
       }
     });
+  }, { threshold: 0.07 });
+  reveals.forEach(el => io.observe(el));
 
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 80);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    reveals.forEach(el => observer.observe(el));
-  </script>
-
+  // stagger grid children
+  document.querySelectorAll('.stat-strip-inner, .results-grid, .insight-grid, .tools-grid, .img-3col, .img-2col').forEach(parent => {
+    parent.querySelectorAll('.stat-item, .result-card, .insight-card, .tool-card, .img-ph').forEach((child, i) => {
+      child.style.transitionDelay = `${i * 80}ms`;
+    });
+  });
+</script>
 </body>
 </html>
