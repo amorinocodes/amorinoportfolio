@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Athlyst — Case Study · Amorino Toongart</title>
+<!-- Social preview — replace YOUR_SITE_URL with your deployed domain -->
+<meta property="og:type"        content="website" />
+<meta property="og:title"       content="Athlyst — Case Study · Amorino Toongart" />
+<meta property="og:description" content="A gamified Olympic card-collection app connecting viewers with athletes through storytelling and social trading." />
+<meta property="og:image"       content="https://YOUR_SITE_URL/assets/clickbait.png" />
+<meta property="og:image:width"  content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card"       content="summary_large_image" />
+<meta name="twitter:image"      content="https://YOUR_SITE_URL/assets/clickbait.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
@@ -827,6 +836,69 @@ footer a { color: var(--lime); text-decoration: none; }
 
 /* DARK THEME */
 [data-theme="light"] { /* default light, no overrides needed */ }
+
+/* Next-project cards grid */
+.next-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.25rem; }
+  .nav-links { display: none; }
+
+  .hero {
+    grid-template-columns: 1fr;
+    height: auto;
+    max-height: none;
+    margin-top: 60px;
+  }
+  .hero-right { height: 240px; }
+  .hero-left { padding: 2rem 1.5rem; }
+
+  .body-wrap { padding: 0 1.25rem; }
+  .section-block { padding: 3rem 0 0; }
+
+  .stat-strip { padding: 3rem 1.5rem; }
+  .stat-strip-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+
+  .timeline { grid-template-columns: 1fr; }
+
+  .insight-grid { grid-template-columns: 1fr; }
+
+  .img-2col, .img-3col { grid-template-columns: 1fr; }
+
+  .team-cards-row { grid-template-columns: 1fr 1fr; }
+
+  .feature-showcase-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+  .feature-showcase-row:nth-child(even) .feature-showcase-text,
+  .feature-showcase-row:nth-child(even) .feature-showcase-mockup { order: unset; }
+  .feature-showcase-mockup { width: 100%; height: 280px; border-radius: 16px; }
+
+  .sus-strip { padding: 3rem 1.5rem; }
+  .sus-inner { grid-template-columns: 1fr; gap: 1rem; }
+
+  .reflection-grid { grid-template-columns: 1fr; }
+
+  .next-project { padding: 4rem 1.5rem; }
+  .next-cards-grid { grid-template-columns: 1fr; }
+  .next-card { padding: 1.75rem 1.5rem; }
+  .next-card-title { font-size: 1.3rem; }
+
+  .pull-quote { padding: 1.5rem; }
+  .problem-box { padding: 1.5rem; }
+
+  .figma-wrap iframe { height: 420px; }
+
+  .role-block { padding: 3.5rem 0; }
+}
+
+@media (max-width: 480px) {
+  .team-cards-row { grid-template-columns: 1fr; }
+  h2 { font-size: 1.6rem; }
+}
 </style>
 </head>
 <body>
@@ -1248,7 +1320,7 @@ footer a { color: var(--lime); text-decoration: none; }
 <div class="next-project">
   <div class="next-inner">
     <p class="next-label">More Case Studies</p>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+    <div class="next-cards-grid">
       <a class="next-card" href="casestudyroamy.html">
         <div class="next-card-left">
           <div class="next-card-type">Mobile App · DECO3200</div>
